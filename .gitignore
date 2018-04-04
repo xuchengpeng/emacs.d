@@ -1,0 +1,10 @@
+elpa/
+server/
+auto-save-list/
+magithub/
+snippets/
+tmp/
+lisp/init-preload-private.el
+lisp/init-afterload-private.el
+custom.el
+projectile-bookmarks.eld
