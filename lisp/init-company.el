@@ -1,11 +1,11 @@
 (use-package company
   :ensure t
   :defer 5
-  :init
-  (setq company-idle-delay 0.5)
-  (setq company-tooltip-limit 15)
-  (setq company-minimum-prefix-length 2)
   :config
+  (setq company-idle-delay 0.5
+        company-tooltip-limit 15
+        company-minimum-prefix-length 2
+        company-dabbrev-downcase nil)
   (global-company-mode 1)
   )
 
