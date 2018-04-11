@@ -1,8 +1,7 @@
 (use-package recentf
   :defer 1
   :config
-  (defconst savefile-dir (expand-file-name "tmp/recentf" user-emacs-directory))
-  (setq recentf-save-file (expand-file-name "recentf" savefile-dir)
+  (setq recentf-save-file (concat dotemacs-cache-directory "recentf")
         recentf-max-saved-items 500
         recentf-max-menu-items 15
         ;; disable recentf-cleanup on Emacs start, because it can cause

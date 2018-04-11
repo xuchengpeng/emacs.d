@@ -4,7 +4,7 @@
   :diminish undo-tree-mode
   :config
   (progn
-    (setq undo-tree-history-directory-alist `((".*" . "~/.emacs.d/tmp/undo"))
+    (setq undo-tree-history-directory-alist `(("." . ,(concat dotemacs-cache-directory "undo")))
           undo-tree-auto-save-history t
           undo-tree-visualizer-timestamps t
           undo-tree-visualizer-diff t)

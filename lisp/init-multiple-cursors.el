@@ -6,7 +6,7 @@
          ("C-<"         . mc/mark-previous-like-this)
          ("C-c C-<"     . mc/mark-all-like-this))
   :config
-  (setq mc/list-file "~/.emacs.d/tmp/.mc-lists.el")
+  (setq mc/list-file (concat dotemacs-cache-directory ".mc-lists.el"))
   )
 
 (provide 'init-multiple-cursors)

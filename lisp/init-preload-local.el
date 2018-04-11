@@ -101,14 +101,14 @@ locate PACKAGE."
 (setq display-time-24hr-format t)
 (display-time-mode 1)
 
-;; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist
-      `((".*" . "~/.emacs.d/tmp/backup")))
-(setq auto-save-file-name-transforms
-      `((".*" "~/.emacs.d/tmp/autosave" t)))
+(defvar dotemacs-cache-directory (concat user-emacs-directory "cache/"))
 
-(setq make-backup-files nil  ; stop creating backup~ files
-      auto-save-default nil) ; stop creating #autosave# files
+(setq-default
+  make-backup-files nil
+  auto-save-default nil
+  auto-save-list-file-name (concat dotemacs-cache-directory "autosave")
+  backup-directory-alist   (list (cons "." (concat dotemacs-cache-directory "backup/")))
+  )
 
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)

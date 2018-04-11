@@ -12,8 +12,8 @@
        eshell-error-if-no-glob t
        eshell-glob-case-insensitive t
        eshell-scroll-to-bottom-on-input 'all
-       eshell-directory-name (concat user-emacs-directory "tmp/eshell")
-       eshell-aliases-file (concat user-emacs-directory "eshell/alias")
+       eshell-directory-name (concat dotemacs-cache-directory "eshell")
+       eshell-aliases-file (concat dotemacs-cache-directory "eshell/alias")
        )
   )
 
