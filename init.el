@@ -55,8 +55,6 @@
 
 ;; ivy & swiper & counsel
 ;; (require 'init-ivy)
-;; (require 'init-swiper)
-;; (require 'init-counsel)
 
 (require 'init-uniquify)
 (require 'init-program)
