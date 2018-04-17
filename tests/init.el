@@ -82,6 +82,7 @@
 (require 'init-aggressive-indent)
 (require 'init-rainbow-delimiters)
 (require 'init-rainbow-mode)
+(require 'init-hideshow)
 
 (require 'server)
 (unless (server-running-p)
