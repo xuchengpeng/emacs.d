@@ -5,8 +5,7 @@
         recentf-max-saved-items 500
         recentf-max-menu-items 15
         recentf-auto-cleanup 600
-        recentf-exclude (list "/tmp/" "/ssh:"
-                              (concat user-emacs-directory "elpa/")))
+        recentf-exclude '("/tmp/" "/ssh:" "/elpa/"))
   (recentf-mode +1))
 
 (provide 'init-recentf)
