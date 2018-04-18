@@ -1,12 +1,10 @@
 (use-package recentf
-  :defer 1
+  :defer 10
   :config
   (setq recentf-save-file (concat dotemacs-cache-directory "recentf")
         recentf-max-saved-items 500
         recentf-max-menu-items 15
-        ;; disable recentf-cleanup on Emacs start, because it can cause
-        ;; problems with remote files
-        recentf-auto-cleanup 'never
+        recentf-auto-cleanup 600
         recentf-exclude (list "/tmp/" "/ssh:"
                               (concat user-emacs-directory "elpa/")))
   (recentf-mode +1))
