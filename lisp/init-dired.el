@@ -1,5 +1,5 @@
 (use-package dired
-  :defer 1
+  :defer t
   :config
   ;; dired - reuse current buffer by pressing 'a'
   (put 'dired-find-alternate-file 'disabled nil)
