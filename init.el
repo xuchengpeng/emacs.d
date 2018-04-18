@@ -7,6 +7,7 @@
 
 (defvar file-name-handler-alist-old file-name-handler-alist)
 
+(setq garbage-collection-messages t)
 (setq file-name-handler-alist nil
       gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
