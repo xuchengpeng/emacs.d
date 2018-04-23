@@ -1,5 +1,5 @@
 (use-package recentf
-  :defer 10
+  :defer 8
   :config
   (setq recentf-save-file (concat dotemacs-cache-directory "recentf")
         recentf-max-saved-items 500

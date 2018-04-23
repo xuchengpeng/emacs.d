@@ -1,6 +1,6 @@
 (use-package projectile
   :ensure t
-  :defer t
+  :defer 10
   :diminish projectile-mode
   :bind-keymap ("C-c p" . projectile-command-map)
   :config
