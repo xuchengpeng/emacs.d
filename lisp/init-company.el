@@ -7,7 +7,7 @@
         company-minimum-prefix-length 2
         company-dabbrev-downcase nil)
   
-  (global-set-key (kbd "M-/") 'company-yasnippet)
+  ;; (global-set-key (kbd "M-/") 'company-yasnippet)
   
   (defvar company-mode/enable-yas t
     "Enable yasnippet for all backends.")
@@ -18,7 +18,7 @@
       (append (if (consp backend) backend (list backend))
               '(:with company-yasnippet))))
   
-  ;; (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
   
   (global-company-mode 1)
   )
