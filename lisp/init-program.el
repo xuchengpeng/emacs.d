@@ -1,3 +1,6 @@
+;; text-mode
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+
 ;; c
 (setq-default c-basic-offset 4
               default-tab-width 4
@@ -80,9 +83,5 @@
   :ensure t
   :mode ("\\.yaml\\'" "\\.yml\\'")
   )
-
-(use-package eldoc
-  :defer t
-  :diminish)
 
 (provide 'init-program)
