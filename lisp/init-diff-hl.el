@@ -1,6 +1,7 @@
 (use-package diff-hl
   :ensure t
   :defer 6
+  :diminish diff-hl-mode
   :config
   (global-diff-hl-mode)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)

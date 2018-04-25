@@ -1,6 +1,7 @@
 (use-package company
   :ensure t
   :defer 5
+  :diminish company-mode
   :config
   (setq company-idle-delay 0.2
         company-tooltip-limit 20

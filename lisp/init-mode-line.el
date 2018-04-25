@@ -1,8 +1,7 @@
 (use-package powerline
   :ensure t
-  :init
-  (setq powerline-default-separator 'arrow)
   :config
+  (setq powerline-default-separator 'arrow)
   (powerline-default-theme)
   )
 

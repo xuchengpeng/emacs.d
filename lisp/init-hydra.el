@@ -1,5 +1,6 @@
 (use-package hydra
   :ensure t
+  :defer t
   :bind (("C-x t" . hydra-toggle/body)
          ("C-M-o" . hydra-window/body))
   :config
