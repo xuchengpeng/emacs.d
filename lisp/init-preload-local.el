@@ -38,6 +38,14 @@ locate PACKAGE."
 
 (setq use-package-verbose t)
 
+;; Required by `use-package'
+(use-package diminish
+  :ensure t
+  :defer t)
+(use-package bind-key
+  :ensure t
+  :defer t)
+
 (setq load-prefer-newer t)
 
 (setq user-full-name "Chuck"
@@ -114,5 +122,13 @@ locate PACKAGE."
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (diminish 'abbrev-mode "Abv")
+            (diminish 'eldoc-mode)
+            (diminish 'auto-fill-function)
+            (diminish 'visual-line-mode)
+            ))
 
 (provide 'init-preload-local)
