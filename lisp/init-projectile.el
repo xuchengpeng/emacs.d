@@ -1,7 +1,6 @@
 (use-package projectile
   :ensure t
   :defer 10
-  :diminish projectile-mode
   :bind-keymap ("C-c p" . projectile-command-map)
   :config
   (setq projectile-completion-system 'helm
@@ -9,6 +8,7 @@
         projectile-cache-file (concat dotemacs-cache-directory "projectile.cache")
         projectile-known-projects-file (concat dotemacs-cache-directory "projectile-bookmarks.eld")
         )
+  (setq-default projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
   (projectile-global-mode)
   (helm-projectile-on)
   )
