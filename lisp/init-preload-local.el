@@ -46,6 +46,14 @@ locate PACKAGE."
   :ensure t
   :defer t)
 
+(eval-after-load "abbrev" '(diminish 'abbrev-mode "Abv"))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "autorevert" '(diminish 'auto-revert-mode))
+(eval-after-load "simple"
+                 '(progn
+                    (diminish 'auto-fill-function)
+                    (diminish 'visual-line-mode)))
+
 (setq load-prefer-newer t)
 
 (setq user-full-name "Chuck"
@@ -122,13 +130,5 @@ locate PACKAGE."
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
-
-(add-hook 'after-init-hook
-          (lambda ()
-            (diminish 'abbrev-mode "Abv")
-            (diminish 'eldoc-mode)
-            (diminish 'auto-fill-function)
-            (diminish 'visual-line-mode)
-            ))
 
 (provide 'init-preload-local)
