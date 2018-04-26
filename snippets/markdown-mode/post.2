@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: Hugo Post
+# key: post
+# --
++++
+title = "$1"
+date = `(format-time-string "%Y-%m-%dT%H:%M:%S+08:00")`
+draft: false
+categories = [ "$2" ]
+tags = [ "$3" ]
++++
+$0
