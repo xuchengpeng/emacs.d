@@ -17,4 +17,16 @@
        )
   )
 
+(use-package shell-pop
+  :ensure t
+  :defer t
+  :bind ("C-c t" . shell-pop)
+  :config
+  (custom-set-variables
+   '(shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))))
+   '(shell-pop-window-size 30)
+   '(shell-pop-full-span t)
+   '(shell-pop-window-position "bottom"))
+  )
+
 (provide 'init-eshell)
