@@ -4,6 +4,10 @@ cache:
   directories:
     - $HOME/.evm
 
+addons:
+  apt:
+    update: true
+
 before_install:
   - (cd $HOME/.evm && git pull) || git clone https://github.com/rejeep/evm.git $HOME/.evm
   - export PATH=$HOME/.evm/bin:$PATH
