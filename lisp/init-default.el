@@ -1,10 +1,13 @@
-(eval-after-load "abbrev" '(diminish 'abbrev-mode "Abv"))
-(eval-after-load "eldoc" '(diminish 'eldoc-mode))
-(eval-after-load "autorevert" '(diminish 'auto-revert-mode))
-(eval-after-load "simple"
-                 '(progn
-                    (diminish 'auto-fill-function)
-                    (diminish 'visual-line-mode)))
+(after-load 'abbrev
+  (diminish 'abbrev-mode "Abv"))
+(after-load 'eldoc
+  (diminish 'eldoc-mode))
+(after-load 'autorevert
+  (diminish 'auto-revert-mode))
+(after-load 'simple
+                 (progn
+                   (diminish 'auto-fill-function)
+                   (diminish 'visual-line-mode)))
 
 (setq user-full-name "Chuck"
       user-mail-address "me@xuchengpeng.com")
