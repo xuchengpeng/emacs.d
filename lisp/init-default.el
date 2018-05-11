@@ -5,9 +5,8 @@
 (after-load 'autorevert
   (diminish 'auto-revert-mode))
 (after-load 'simple
-                 (progn
-                   (diminish 'auto-fill-function)
-                   (diminish 'visual-line-mode)))
+              (diminish 'auto-fill-function)
+              (diminish 'visual-line-mode))
 
 (setq user-full-name "Chuck"
       user-mail-address "me@xuchengpeng.com")
