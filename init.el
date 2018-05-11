@@ -28,7 +28,9 @@
 ;;----------------------------------------------------------------------------
 (require 'init-preload-private nil t)
 
-(require 'init-preload-local)
+(require 'init-utils)
+(require 'init-package)
+(require 'init-default)
 (require 'init-frame)
 (require 'init-mode-line)
 (require 'init-themes)

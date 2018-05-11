@@ -1,56 +1,3 @@
-(require 'package)
-
-(defun require-package (package &optional min-version no-refresh)
-  "Install given PACKAGE, optionally requiring MIN-VERSION.
-If NO-REFRESH is non-nil, the available package lists will not be
-re-downloaded in order to locate PACKAGE."
-  (if (package-installed-p package min-version)
-      t
-    (if (or (assoc package package-archive-contents) no-refresh)
-        (if (boundp 'package-selected-packages)
-            ;; Record this as a package the user installed explicitly
-            (package-install package nil)
-          (package-install package))
-      (progn
-        (package-refresh-contents)
-        (require-package package min-version t)))))
-
-(defun maybe-require-package (package &optional min-version no-refresh)
-  "Try to install PACKAGE, and return non-nil if successful.
-In the event of failure, return nil and print a warning message.
-Optionally require MIN-VERSION.  If NO-REFRESH is non-nil, the
-available package lists will not be re-downloaded in order to
-locate PACKAGE."
-  (condition-case err
-      (require-package package min-version no-refresh)
-    (error
-     (message "Couldn't install optional package `%s': %S" package err)
-     nil)))
-
-(setq package-enable-at-startup nil)
-(package-initialize)
-
-;; update the package metadata is the local cache is missing
-(unless package-archive-contents
-  (package-refresh-contents))
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-
-(setq use-package-verbose t)
-
-;; Required by `use-package'
-(use-package diminish
-  :ensure t
-  :defer t)
-(use-package bind-key
-  :ensure t
-  :defer t)
-
 (eval-after-load "abbrev" '(diminish 'abbrev-mode "Abv"))
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
@@ -58,8 +5,6 @@ locate PACKAGE."
                  '(progn
                     (diminish 'auto-fill-function)
                     (diminish 'visual-line-mode)))
-
-(setq load-prefer-newer t)
 
 (setq user-full-name "Chuck"
       user-mail-address "me@xuchengpeng.com")
@@ -136,4 +81,4 @@ locate PACKAGE."
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-(provide 'init-preload-local)
+(provide 'init-default)
