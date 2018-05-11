@@ -1,3 +1,5 @@
+(require 'package)
+
 (defun require-package (package &optional min-version no-refresh)
   "Install given PACKAGE, optionally requiring MIN-VERSION.
 If NO-REFRESH is non-nil, the available package lists will not be
@@ -24,6 +26,9 @@ locate PACKAGE."
     (error
      (message "Couldn't install optional package `%s': %S" package err)
      nil)))
+
+(setq package-enable-at-startup nil)
+(package-initialize)
 
 ;; update the package metadata is the local cache is missing
 (unless package-archive-contents

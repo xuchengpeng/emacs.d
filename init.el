@@ -3,8 +3,6 @@
 (when (< emacs-major-version 25)
   (error "Emacs should be version 25 or greater"))
 
-(setq package-enable-at-startup nil)
-
 (defvar file-name-handler-alist-old file-name-handler-alist)
 
 (setq garbage-collection-messages t)
@@ -18,11 +16,7 @@
                   gc-cons-threshold 16777216
                   gc-cons-percentage 0.1)))
 
-(require 'package)
-
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
-
-(package-initialize)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
