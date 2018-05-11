@@ -1,5 +1,6 @@
-;; text-mode
-(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+;; turn on visual-line-mode
+(dolist (hook '(text-mode-hook org-mode-hook markdown-mode-hook gfm-mode-hook))
+  (add-hook hook 'visual-line-mode))
 
 ;; c
 (setq-default c-basic-offset 4
@@ -9,13 +10,10 @@
 (setq c-default-style "linux")
 
 ;;shell
-(add-to-list 'auto-mode-alist '("\\.bash_profile\\'" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\.bash_history\\'" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\.sh\\'" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\.bash\\'" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\.bashrc.local\\'" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\.bashrc\\'" . sh-mode))
+(add-auto-mode 'sh-mode
+               "\\.sh\\'" "\\.zsh\\'"
+               "\\.bash_profile\\'" "\\.bash_history\\'"
+               "\\.bash\\'" "\\.bashrc.local\\'" "\\.bashrc\\'")
 
 ;; markdown
 (use-package markdown-mode
@@ -42,16 +40,17 @@
          ("\\.djhtml\\'" . web-mode))
 
   :config  
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-auto-expanding t)
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-enable-current-element-highlight t
+        web-mode-enable-auto-expanding t)
   )
 
 ;;js
 (use-package js2-mode
   :ensure t
+  :defer t
   :mode "\\.js\\'"
   :diminish (js2-mode . "JS2")
   :config
@@ -60,15 +59,15 @@
                 js2-bounce-indent-p nil
                 js2-mode-show-parse-errors nil
                 js2-mode-show-strict-warnings nil)
-  (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
+  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+  (add-hook 'js2-mode-hook 'js2-refactor-mode)
   )
 
 (use-package js2-refactor
   :ensure t
+  :defer t
   :diminish
-  :after js2-mode
-  :config
-  (add-hook 'js2-mode-hook 'js2-refactor-mode)
+  :commands (js2-refactor-mode)
   )
 
 ;; toml
@@ -81,6 +80,7 @@
 ;; yaml
 (use-package yaml-mode
   :ensure t
+  :defer t
   :mode ("\\.yaml\\'" "\\.yml\\'")
   )
 
