@@ -16,11 +16,16 @@
 
 (defun s-font()
   (interactive)
-  (set-default-font "Source Code Pro 11")
+  
+  ;; Setting English Font
+  (set-face-attribute 'default nil
+                      :font "Source Code Pro 11")
+  
+  ;; Chinese font
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font)
                       charset
-                      (font-spec :family "Microsoft YaHei" :size 14)))
+                      (font-spec :family "Microsoft YaHei" :size 16)))
   ;; tune rescale so that Chinese character width = 2 * English character width
   ;; (setq face-font-rescale-alist '(("monospace" . 1.0) ("WenQuanYi" . 1.23)))
   )
