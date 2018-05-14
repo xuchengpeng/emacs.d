@@ -1,13 +1,3 @@
-(after-load 'abbrev
-  (diminish 'abbrev-mode "Abv"))
-(after-load 'eldoc
-  (diminish 'eldoc-mode))
-(after-load 'autorevert
-  (diminish 'auto-revert-mode))
-(after-load 'simple
-              (diminish 'auto-fill-function)
-              (diminish 'visual-line-mode))
-
 (setq user-full-name "Chuck"
       user-mail-address "me@xuchengpeng.com")
 
@@ -82,6 +72,20 @@
   auto-save-list-file-name (concat dotemacs-cache-directory "autosave")
   backup-directory-alist   (list (cons "." (concat dotemacs-cache-directory "backup/")))
   )
+
+(add-hook 'after-init-hook 'global-auto-revert-mode)
+(setq global-auto-revert-non-file-buffers t
+      auto-revert-verbose nil)
+
+(after-load 'abbrev
+  (diminish 'abbrev-mode "Abv"))
+(after-load 'eldoc
+  (diminish 'eldoc-mode))
+(after-load 'autorevert
+  (diminish 'auto-revert-mode))
+(after-load 'simple
+              (diminish 'auto-fill-function)
+              (diminish 'visual-line-mode))
 
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
