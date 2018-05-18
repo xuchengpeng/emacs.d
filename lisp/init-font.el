@@ -24,40 +24,51 @@
 ;;         (zh-font (font-spec :family (find-if #'dotemacs-font-existsp chinese-fonts)
 ;;                             :size chinese-font-size)))
 ;; 
-;;     ;; Set the default English font
-;;     (message "Set English Font to %s" en-font)
+;;     ;; Set English font
+;;     ;; (message "Set English Font to %s" en-font)
 ;;     (set-face-attribute 'default nil :font en-font)
 ;; 
 ;;     ;; Set Chinese font
-;;     (message "Set Chinese Font to %s" zh-font)
+;;     ;; (message "Set Chinese Font to %s" zh-font)
 ;;     (dolist (charset '(kana han symbol cjk-misc bopomofo))
 ;;       (set-fontset-font (frame-parameter nil 'font)
-;;                         charset zh-font))))
+;;                         charset zh-font)))
+;;     
+;;     ;; Fix chinese font width and rescale
+;;     (setq face-font-rescale-alist '(("STHeiti" . 1.2) ("STFangsong" . 1.2) ("Microsoft Yahei" . 1.2) ("WenQuanYi Micro Hei Mono" . 1.2))))
 ;; 
-;; (dotemacs-set-font
-;;   '("DejaVu Sans Mono" "Monaco" "Source Code Pro" "Consolas") ":pixelsize=14"
-;;   '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体") 16)
+;; (defun set-font()
+;;   (interactive)
+;;   (dotemacs-set-font
+;;     '("DejaVu Sans Mono" "Monaco" "Source Code Pro" "Consolas") ":pixelsize=14"
+;;     '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体") 16)
+;;   )
 
 ;; Solution 2
-;; (setq fonts
-;;       (cond ((eq system-type 'darwin)     '("Monaco"           "STHeiti"))
-;;             ((eq system-type 'gnu/linux)  '("Menlo"            "WenQuanYi Zen Hei"))
-;;             ((eq system-type 'windows-nt) '("DejaVu Sans Mono" "Microsoft Yahei"))))
-;; (set-face-attribute 'default nil :font
-;;                     (format "%s:pixelsize=%d" (car fonts) 14))
-;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
-;;   (set-fontset-font (frame-parameter nil 'font) charset
-;;                     (font-spec :family (car (cdr fonts)) :size 16)))
-;; ;; Fix chinese font width and rescale
-;; (setq face-font-rescale-alist '(("Microsoft Yahei" . 1.2) ("WenQuanYi Micro Hei Mono" . 1.2) ("STHeiti". 1.2)))
+;; (defun set-font()
+;;   (interactive)
+;;   (setq fonts
+;;         (cond ((eq system-type 'darwin)     '("Monaco"           "STHeiti"))
+;;               ((eq system-type 'gnu/linux)  '("Menlo"            "WenQuanYi Zen Hei"))
+;;               ((eq system-type 'windows-nt) '("DejaVu Sans Mono" "Microsoft Yahei"))))
+;;   (set-face-attribute 'default nil :font
+;;                       (format "%s:pixelsize=%d" (car fonts) 14))
+;;   (dolist (charset '(kana han symbol cjk-misc bopomofo))
+;;     (set-fontset-font (frame-parameter nil 'font) charset
+;;                       (font-spec :family (car (cdr fonts)) :size 16)))
+;;   ;; Fix chinese font width and rescale
+;;   (setq face-font-rescale-alist '(("STHeiti" . 1.2) ("STFangsong" . 1.2) ("Microsoft Yahei" . 1.2) ("WenQuanYi Micro Hei Mono" . 1.2)))
+;;   )
 
 ;; Solution 3
 (defun set-font()
   (interactive)
   
   ;; Setting English Font
-  (set-face-attribute 'default nil :font
-                      (format "%s:pixelsize=%d" "DejaVu Sans Mono" 14))
+  (when (member "DejaVu Sans Mono" (font-family-list))
+    (set-face-attribute 'default nil :font
+                        (format "%s:pixelsize=%d" "DejaVu Sans Mono" 14))
+    )
   
   ;; Setting Chinese font
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
