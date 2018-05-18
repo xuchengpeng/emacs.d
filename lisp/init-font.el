@@ -1,8 +1,15 @@
 ;; Solution 1
 ;; (defun dotemacs-font-existsp (font)
+;;   "Detect if a font exists"
 ;;   (if (null (x-list-fonts font))
 ;;       nil
 ;;     t))
+;; or
+;; (defun dotemacs-font-existsp (font)
+;;   "Detect if a font exists"
+;;   (if (find-font (font-spec :family font))
+;;         t
+;;       nil))
 ;; 
 ;; (defun dotemacs-make-font-string (font-name font-size)
 ;;   (if (and (stringp font-size)
