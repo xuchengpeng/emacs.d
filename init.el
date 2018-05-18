@@ -31,6 +31,7 @@
 (require 'init-utils)
 (require 'init-package)
 (require 'init-default)
+(require 'init-font)
 (require 'init-frame)
 (require 'init-mode-line)
 (require 'init-themes)

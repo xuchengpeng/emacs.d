@@ -50,7 +50,7 @@ If you need initialisation code which executes earlier in the startup process, y
 
 ## Install fonts(Optional)
 
-Install [Source Code Pro](https://github.com/adobe-fonts/source-code-pro).
+Install [Source Code Pro](https://github.com/adobe-fonts/source-code-pro) or [DejaVu Sans Mono](https://dejavu-fonts.github.io/).
 
 ## Supported Emacs versions
 

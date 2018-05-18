@@ -6,31 +6,6 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
-(defun s-font()
-  (interactive)
-  
-  ;; Setting English Font
-  (set-face-attribute 'default nil
-                      :font "Source Code Pro 11")
-  
-  ;; Chinese font
-  (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font (frame-parameter nil 'font)
-                      charset
-                      (font-spec :family "Microsoft YaHei" :size 16)))
-  ;; tune rescale so that Chinese character width = 2 * English character width
-  ;; (setq face-font-rescale-alist '(("monospace" . 1.0) ("WenQuanYi" . 1.23)))
-  )
-
-(add-to-list 'after-make-frame-functions
-             (lambda (new-frame)
-               (select-frame new-frame)
-               (if window-system
-                   (s-font))))
-
-(if window-system
-    (s-font))
-
 ;; (global-linum-mode t)
 (if (version< emacs-version "26")
     (use-package nlinum
