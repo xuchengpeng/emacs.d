@@ -35,6 +35,7 @@
 (require 'init-frame)
 (require 'init-mode-line)
 (require 'init-themes)
+(require 'init-filetree)
 (require 'init-exec-path)
 (require 'init-eshell)
 (require 'init-helm)
@@ -47,7 +48,6 @@
 (require 'init-undo-tree)
 (require 'init-diff-hl)
 (require 'init-which-key)
-;; (require 'init-neotree)
 ;; (require 'init-winum)
 (require 'init-ace-window)
 

@@ -39,7 +39,7 @@
 (setq display-time-24hr-format t)
 (display-time-mode 1)
 
-(defvar dotemacs-cache-directory (concat user-emacs-directory "cache/"))
+(defvar dotemacs-cache-directory (concat user-emacs-directory ".cache/"))
 
 (setq-default
   make-backup-files nil
