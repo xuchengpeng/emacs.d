@@ -42,15 +42,9 @@ locate PACKAGE."
 
 (eval-when-compile
   (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
 (setq use-package-verbose t)
-
-;; Required by `use-package'
-(use-package diminish
-  :ensure t
-  :defer t)
-(use-package bind-key
-  :ensure t
-  :defer t)
 
 (provide 'init-package)
