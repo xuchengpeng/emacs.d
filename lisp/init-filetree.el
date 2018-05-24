@@ -16,4 +16,9 @@
   (treemacs-filewatch-mode t)
   )
 
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t
+  :defer t)
+
 (provide 'init-filetree)
