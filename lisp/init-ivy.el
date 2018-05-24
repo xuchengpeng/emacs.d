@@ -1,4 +1,5 @@
 (use-package ivy
+  :disabled
   :ensure t
   :defer 1
   :config

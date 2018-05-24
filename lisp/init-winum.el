@@ -1,4 +1,5 @@
 (use-package winum
+  :disabled
   :ensure t
   :bind (("M-0" . winum-select-window-0-or-10)
          ("M-1" . winum-select-window-1)

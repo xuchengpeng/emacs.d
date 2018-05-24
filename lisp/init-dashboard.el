@@ -1,4 +1,5 @@
 (use-package dashboard
+  :disabled
   :ensure t
   :config
   (dashboard-setup-startup-hook)
