@@ -9,7 +9,7 @@
         projectile-known-projects-file (concat dotemacs-cache-directory "projectile-bookmarks.eld")
         )
   (setq-default projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
-  (projectile-global-mode)
+  (projectile-mode)
   (helm-projectile-on)
   )
 
