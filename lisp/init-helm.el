@@ -12,7 +12,7 @@
   (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-z") 'helm-select-action)
-  (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number --vimgrep %s %s %s")
+  (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
   (helm-mode 1)
   )
 
