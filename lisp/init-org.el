@@ -1,6 +1,7 @@
 (use-package org
   :ensure org-plus-contrib
-  :mode ("\\.org$" . org-mode)
+  :mode (("\\.org$" . org-mode)
+         ("\\.txt$" . org-mode))
   :bind ("C-c a" . org-agenda)
   :config
   (defvar dotemacs-org-directory (concat user-emacs-directory "org/"))
