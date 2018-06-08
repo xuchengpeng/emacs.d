@@ -1,6 +1,7 @@
 .cache/
 elpa/
 magithub/
+org/
 server/
 lisp/init-preload-private.el
 lisp/init-afterload-private.el
