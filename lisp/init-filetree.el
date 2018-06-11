@@ -8,6 +8,7 @@
   :ensure t
   :defer t
   :commands (treemacs)
+  :bind ("<f8>" . treemacs)
   :config
   (setq treemacs-follow-after-init t
         treemacs--persist-file (concat dotemacs-cache-directory "treemacs-persist"))

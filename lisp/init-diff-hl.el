@@ -1,6 +1,6 @@
 (use-package diff-hl
   :ensure t
-  :defer 6
+  :defer 3
   :diminish diff-hl-mode
   :config
   (global-diff-hl-mode)

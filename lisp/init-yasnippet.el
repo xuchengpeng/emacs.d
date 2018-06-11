@@ -1,6 +1,6 @@
 (use-package yasnippet
   :ensure t
-  :defer 10
+  :defer 5
   :diminish yas-minor-mode
   :config
   (setq yas-snippet-dirs (list (concat user-emacs-directory "snippets/")))

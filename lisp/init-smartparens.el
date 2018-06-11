@@ -1,6 +1,6 @@
 (use-package smartparens
   :ensure t
-  :defer 6
+  :defer 4
   :diminish smartparens-mode
   :hook (prog-mode . smartparens-strict-mode)
   :config

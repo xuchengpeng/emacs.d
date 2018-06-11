@@ -1,6 +1,6 @@
 (use-package projectile
   :ensure t
-  :defer 10
+  :defer 5
   :bind-keymap ("C-c p" . projectile-command-map)
   :config
   (setq projectile-completion-system 'helm

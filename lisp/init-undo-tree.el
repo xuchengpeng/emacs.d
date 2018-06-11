@@ -1,6 +1,7 @@
 (use-package undo-tree
   :ensure t
-  :defer 3
+  :defer 1
+
   :diminish undo-tree-mode
   :config
   (progn

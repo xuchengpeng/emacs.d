@@ -1,6 +1,6 @@
 (use-package which-key
   :ensure t
-  :defer 2
+  :defer 1
   :diminish which-key-mode
   :commands which-key-mode
   :config
