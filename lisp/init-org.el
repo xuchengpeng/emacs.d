@@ -10,6 +10,9 @@
   (setq org-todo-keywords
       '((sequence "TODO" "WAITING" "SOMEDAY" "|" "DONE" "CANCELLED")
         (sequence "LEARN" "TRY" "TEACH" "|" "COMPLETE")))
+  (setq org-log-done 'time
+        org-startup-indented t
+        org-startup-folded nil)
   )
 
 (provide 'init-org)
