@@ -1,4 +1,4 @@
-;; init-default.el --- Initialize default configurations.
+;; init-edit.el --- Initialize editing configurations.
 ;;
 ;; Copyright (C) 2018 xuchengpeng
 ;;
@@ -26,47 +26,17 @@
 
 ;;; Commentary:
 ;;
-;; Default configurations.
+;; Editing configurations.
 ;;
 
 ;;; Code:
-
-(setq user-full-name "Chuck"
-      user-mail-address "me@xuchengpeng.com")
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
-;; (global-linum-mode t)
-(if (version< emacs-version "26")
-    (use-package nlinum
-      :ensure t
-      :init (add-hook 'after-init-hook #'global-nlinum-mode)
-      )
-  (add-hook 'after-init-hook #'global-display-line-numbers-mode))
-
-(line-number-mode t)
-(column-number-mode t)
-
-(setq scroll-preserve-screen-position 'always)
-
-;; enable y/n answers
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(setq ring-bell-function 'ignore)
-
-(setq-default indent-tabs-mode nil
-              tab-width 4)
-
-;; smart tab behavior - indent or complete
-(setq tab-always-indent 'complete)
-
-(setq display-time-24hr-format t)
-(add-hook 'after-init-hook #'display-time-mode)
-
-(defvar dotemacs-cache-directory (concat user-emacs-directory ".cache/"))
+(setq-default major-mode 'text-mode)
 
 (setq-default
   make-backup-files nil
@@ -89,11 +59,57 @@
               (diminish 'auto-fill-function)
               (diminish 'visual-line-mode))
 
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
+;; Minor mode to aggressively keep your code always indented
+(use-package aggressive-indent
+  :ensure t
+  :diminish aggressive-indent-mode
+  :hook (prog-mode . aggressive-indent-mode)
+  :config
+  ;; (global-aggressive-indent-mode)
+  )
 
-(provide 'init-default)
+;; Increase selected region by semantic units
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region)
+  )
 
-;;; init-default.el ends here
+;; Multiple cursors
+(use-package multiple-cursors
+  :ensure t
+  :defer t
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this))
+  :config
+  (setq mc/list-file (concat dotemacs-cache-directory ".mc-lists.el"))
+  )
+
+;; Treat undo history as a tree
+(use-package undo-tree
+  :ensure t
+  :defer 1
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (setq undo-tree-history-directory-alist `(("." . ,(concat dotemacs-cache-directory "undo")))
+          undo-tree-auto-save-history t
+          undo-tree-visualizer-timestamps t
+          undo-tree-visualizer-diff t)
+    (global-undo-tree-mode)
+    )
+  )
+
+;; Hideshow
+(use-package hideshow
+  :diminish hs-minor-mode
+  :commands (hs-toggle-hiding)
+  :hook (prog-mode . hs-minor-mode)
+  :bind (:map prog-mode-map
+              ("C-c h" . hs-toggle-hiding))
+  )
+
+(provide 'init-edit)
+
+;;; init-edit.el ends here

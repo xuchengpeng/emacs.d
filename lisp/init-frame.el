@@ -18,4 +18,7 @@
       initial-scratch-message ""
       initial-major-mode 'text-mode)
 
-(provide 'init-frame)
+(setq display-time-24hr-format t)
+(add-hook 'after-init-hook #'display-time-mode)
+
+(provide 'init-ui)
