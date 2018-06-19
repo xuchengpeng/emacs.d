@@ -1,3 +1,36 @@
+;; init-default.el --- Initialize default configurations.
+;;
+;; Copyright (C) 2018 xuchengpeng
+;;
+;; Author: xuchengpeng <xucp@outlook.com>
+;; URL: https://github.com/xuchengpeng/emacs.d
+
+;; This file is not part of GNU Emacs.
+
+;;; License:
+
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+;;; Commentary:
+;;
+;; Default configurations.
+;;
+
+;;; Code:
+
 (setq user-full-name "Chuck"
       user-mail-address "me@xuchengpeng.com")
 
@@ -10,20 +43,14 @@
 (if (version< emacs-version "26")
     (use-package nlinum
       :ensure t
-      :config
-      (global-nlinum-mode 1))
-  (global-display-line-numbers-mode))
-
-;; highlight the current line
-(global-hl-line-mode t)
+      :init (add-hook 'after-init-hook #'global-nlinum-mode)
+      )
+  (add-hook 'after-init-hook #'global-display-line-numbers-mode))
 
 (line-number-mode t)
 (column-number-mode t)
 
 (setq scroll-preserve-screen-position 'always)
-
-(show-paren-mode t)
-;; (setq show-paren-style 'expression)
 
 ;; enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -37,7 +64,7 @@
 (setq tab-always-indent 'complete)
 
 (setq display-time-24hr-format t)
-(display-time-mode 1)
+(add-hook 'after-init-hook #'display-time-mode)
 
 (defvar dotemacs-cache-directory (concat user-emacs-directory ".cache/"))
 
@@ -68,3 +95,5 @@
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
 (provide 'init-default)
+
+;;; init-default.el ends here
