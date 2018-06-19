@@ -34,36 +34,24 @@
 (setq user-full-name "Chuck"
       user-mail-address "me@xuchengpeng.com")
 
-;; (global-linum-mode t)
-(if (version< emacs-version "26")
-    (use-package nlinum
-      :ensure t
-      :init (add-hook 'after-init-hook #'global-nlinum-mode)
-      )
-  (add-hook 'after-init-hook #'global-display-line-numbers-mode))
-
-(line-number-mode t)
-(column-number-mode t)
-
-(setq scroll-preserve-screen-position 'always)
-
-;; enable y/n answers
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(setq ring-bell-function 'ignore)
-
-(setq-default indent-tabs-mode nil
-              tab-width 4)
-
-;; smart tab behavior - indent or complete
-(setq tab-always-indent 'complete)
-
 (defvar dotemacs-cache-directory (concat user-emacs-directory ".cache/"))
 
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
+(if (fboundp 'with-eval-after-load)
+    (defalias 'after-load 'with-eval-after-load)
+  (defmacro after-load (feature &rest body)
+    "After FEATURE is loaded, evaluate BODY."
+    (declare (indent defun))
+    `(eval-after-load ,feature
+       '(progn ,@body))))
+
+
+;;----------------------------------------------------------------------------
+;; Handier way to add modes to auto-mode-alist
+;;----------------------------------------------------------------------------
+(defun add-auto-mode (mode &rest patterns)
+  "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
+  (dolist (pattern patterns)
+    (add-to-list 'auto-mode-alist (cons pattern mode))))
 
 (provide 'init-basic)
 

@@ -36,6 +36,14 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
+(setq-default indent-tabs-mode nil
+              tab-width 4)
+
+;; smart tab behavior - indent or complete
+(setq tab-always-indent 'complete)
+
+(setq ring-bell-function 'ignore)
+
 (setq-default major-mode 'text-mode)
 
 (setq-default
@@ -58,6 +66,11 @@
 (after-load 'simple
               (diminish 'auto-fill-function)
               (diminish 'visual-line-mode))
+
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
 
 ;; Minor mode to aggressively keep your code always indented
 (use-package aggressive-indent
@@ -109,6 +122,24 @@
   :bind (:map prog-mode-map
               ("C-c h" . hs-toggle-hiding))
   )
+
+;; recent files
+(use-package recentf
+  :defer 2
+  :config
+  (setq recentf-save-file (concat dotemacs-cache-directory "recentf")
+        recentf-max-saved-items 500
+        recentf-max-menu-items 15
+        recentf-auto-cleanup 600
+        recentf-exclude '("/tmp/" "/ssh:" "/elpa/"))
+  (recentf-mode +1))
+
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'forward
+        uniquify-separator "/"
+        uniquify-after-kill-buffer-p t
+        uniquify-ignore-buffers-re "^\\*"))
 
 (provide 'init-edit)
 
