@@ -67,24 +67,30 @@
 (setq display-time-24hr-format t)
 (add-hook 'after-init-hook #'display-time-mode)
 
-(use-package color-theme-sanityinc-tomorrow
-  :ensure t
-  :config
-  (load-theme 'sanityinc-tomorrow-night t)
-  )
+;; Color theme
+(cond
+ ((eq dotemacs-theme 'tomorrow)
+  (use-package color-theme-sanityinc-tomorrow
+    :ensure t
+    :config
+    (load-theme 'sanityinc-tomorrow-night t)
+    ))
 
-(use-package base16-theme
-  :disabled
-  :ensure t
-  :config
-  (load-theme 'base16-tomorrow-night t))
+ ((eq dotemacs-theme 'base16)
+  (use-package base16-theme
+    :ensure t
+    :config
+    (load-theme 'base16-tomorrow-night t)))
 
-(use-package dracula-theme
-  :disabled
-  :ensure t
-  :config
-  (load-theme 'dracula t)
-  )
+ ((eq dotemacs-theme 'dracula)
+  (use-package dracula-theme
+    :ensure t
+    :config
+    (load-theme 'dracula t)
+    ))
+
+ (t
+  (ignore-errors (load-theme dotemacs-theme t))))
 
 ;; modeline configurations
 (use-package powerline

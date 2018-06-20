@@ -47,18 +47,9 @@
                   gc-cons-threshold 16777216
                   gc-cons-percentage 0.1)))
 
-(setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
-
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-;; config changes made through the customize UI will be stored here
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-
-;;----------------------------------------------------------------------------
-;; Allow users to provide an optional "init-preload-private.el"
-;;----------------------------------------------------------------------------
-(require 'init-preload-private nil t)
-
+(require 'init-custom)
 (require 'init-package)
 (require 'init-basic)
 (require 'init-ui)
@@ -85,13 +76,10 @@
 (unless (server-running-p)
   (server-start))
 
-(when (file-exists-p custom-file)
-  (load custom-file))
-
 ;;--------------------------------------------------------------------------------------------
-;; Allow users to provide an optional "init-afterload-private.el" containing personal settings
+;; Allow users to provide an optional "init-private.el" containing personal settings
 ;;--------------------------------------------------------------------------------------------
-(require 'init-afterload-private nil t)
+(require 'init-private nil t)
 
 (provide 'init)
 

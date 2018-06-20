@@ -62,6 +62,37 @@ locate PACKAGE."
      (message "Couldn't install optional package `%s': %S" package err)
      nil)))
 
+(defvar-local package-archives-list '(melpa emacs-china tuna custom))
+(defun set-package-archives (archives)
+  "Switch to specific package ARCHIVES repository."
+  (interactive
+   (list
+    (intern (completing-read "Switch to archives: "
+                             package-archives-list))))
+  (cond
+   ((eq archives 'melpa)
+    (setq package-archives '(("gnu"   . "http://elpa.gnu.org/packages/")
+                             ("melpa" . "http://melpa.org/packages/")
+                             ("org"   . "http://orgmode.org/elpa/"))))
+   ((eq archives 'emacs-china)
+    (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+                             ("melpa" . "http://elpa.emacs-china.org/melpa/")
+                             ("org"   . "http://elpa.emacs-china.org/org/"))))
+   ((eq archives 'tuna)
+    (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                             ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+                             ("org"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"))))
+   ((eq archives 'custom)
+    (setq package-archives dotemacs-custom-package-archives))
+   (t
+    (error "Unknown archives: '%s'" archives)))
+
+  (message "Set package archives to '%s'." archives))
+
+(set-package-archives dotemacs-package-archives)
+
+(setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
+
 (setq package-enable-at-startup nil)
 (package-initialize)
 

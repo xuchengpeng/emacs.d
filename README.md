@@ -14,43 +14,40 @@ $ git clone https://github.com/xuchengpeng/emacs.d.git ~/.emacs.d
 ```
 
 ## ELPA mirror
-可以在 `~/.emacs.d/lisp/init-preload-private.el` 文件里面定义自己使用的 ELPA 镜像。
+Set package archives in `~/.emacs.d/custom.el` file.
 ```el
-(setq package-archives
-      '(("melpa" . "E:/GitHub/elpa-mirror/melpa")
-        ("org"   . "E:/GitHub/elpa-mirror/org")
-        ("gnu"   . "E:/GitHub/elpa-mirror/gnu")
-       )
+(setq dotemacs-package-archives         'custom     ; Package repo: melpa, emacs-china, tuna or custom
+      dotemacs-custom-package-archives  '(("gnu"   . "D:/Software/emacs/elpa-mirror/gnu/")
+                                          ("melpa" . "D:/Software/emacs/elpa-mirror/melpa/")
+                                          ("org"   . "D:/Software/emacs/elpa-mirror/org/")
+                                         )
 )
-
-(provide 'init-preload-private)
 ```
 *可以从 [d12frosted/elpa-mirror](https://github.com/d12frosted/elpa-mirror) 下载到本地。*
 
 或者可以使用其他的镜像：
 
-* [清华ELPA镜像](https://mirror.tuna.tsinghua.edu.cn/help/elpa/)
 * [Emacs China ELPA镜像](https://elpa.emacs-china.org/)
+* [清华ELPA镜像](https://mirror.tuna.tsinghua.edu.cn/help/elpa/)
+
+## Color theme
+Default color theme is color-theme-sanityinc-tomorrow, you can also set color theme in `~/.emacs.d/custom.el` file.
+```el
+(setq dotemacs-theme 'tomorrow)  ; tomorrow, base16, dracula
+```
 
 ## Customization
 
-To add your own customization,  create a file `~/.emacs.d/lisp/init-afterload-private.el` which looks like this:
+To add your own customization,  create a file `~/.emacs.d/lisp/init-private.el` which looks like this:
 ```el
 ... your code here ...
 
-(provide 'init-afterload-private)
-```
-
-If you need initialisation code which executes earlier in the startup process, you can also create an `~/.emacs.d/lisp/init-preload-private.el` file which looks like this:
-```el
-... your code here ...
-
-(provide 'init-preload-private)
+(provide 'init-private)
 ```
 
 ## Install fonts(Optional)
 
-Install [Source Code Pro](https://github.com/adobe-fonts/source-code-pro) or [DejaVu Sans Mono](https://dejavu-fonts.github.io/).
+Install [DejaVu Sans Mono](https://dejavu-fonts.github.io/) or [Source Code Pro](https://github.com/adobe-fonts/source-code-pro).
 
 ## Supported Emacs versions
 
