@@ -64,24 +64,22 @@
 (require 'init-ui)
 (require 'init-edit)
 (require 'init-utils)
-(require 'init-exec-path)
-(require 'init-eshell)
 (require 'init-helm)
-(require 'init-projectile)
-(require 'init-dired)
-(require 'init-company)
-(require 'init-flycheck)
-(require 'init-window)
-
 ;; ivy & swiper & counsel
 ;; (require 'init-ivy)
-
-(require 'init-program)
-(require 'init-magit)
-(require 'init-org)
+(require 'init-company)
 (require 'init-yasnippet)
-(require 'init-smartparens)
+(require 'init-dired)
 (require 'init-highlight)
+(require 'init-window)
+
+(require 'init-eshell)
+(require 'init-projectile)
+(require 'init-flycheck)
+(require 'init-magit)
+
+(require 'init-org)
+(require 'init-program)
 
 (require 'server)
 (unless (server-running-p)

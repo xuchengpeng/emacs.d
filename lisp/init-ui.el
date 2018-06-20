@@ -44,9 +44,6 @@
 (when (fboundp 'horizontal-scroll-bar-mode)
   (horizontal-scroll-bar-mode -1))
 
-(when (fboundp 'winner-mode)
-  (winner-mode 1))
-
 (setq inhibit-startup-message t
       initial-scratch-message ""
       initial-major-mode 'text-mode)

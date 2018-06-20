@@ -90,7 +90,6 @@
 ;; Multiple cursors
 (use-package multiple-cursors
   :ensure t
-  :defer t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->"         . mc/mark-next-like-this)
          ("C-<"         . mc/mark-previous-like-this)
@@ -102,16 +101,13 @@
 ;; Treat undo history as a tree
 (use-package undo-tree
   :ensure t
-  :defer 1
   :diminish undo-tree-mode
+  :hook (after-init . global-undo-tree-mode)
   :config
-  (progn
-    (setq undo-tree-history-directory-alist `(("." . ,(concat dotemacs-cache-directory "undo")))
-          undo-tree-auto-save-history t
-          undo-tree-visualizer-timestamps t
-          undo-tree-visualizer-diff t)
-    (global-undo-tree-mode)
-    )
+  (setq undo-tree-history-directory-alist `(("." . ,(concat dotemacs-cache-directory "undo")))
+        undo-tree-auto-save-history t
+        undo-tree-visualizer-timestamps t
+        undo-tree-visualizer-diff t)
   )
 
 ;; Hideshow
@@ -125,14 +121,14 @@
 
 ;; recent files
 (use-package recentf
-  :defer 2
+  :hook (after-init . recentf-mode)
   :config
   (setq recentf-save-file (concat dotemacs-cache-directory "recentf")
         recentf-max-saved-items 500
         recentf-max-menu-items 15
         recentf-auto-cleanup 600
         recentf-exclude '("/tmp/" "/ssh:" "/elpa/"))
-  (recentf-mode +1))
+  )
 
 (use-package uniquify
   :config
@@ -140,6 +136,17 @@
         uniquify-separator "/"
         uniquify-after-kill-buffer-p t
         uniquify-ignore-buffers-re "^\\*"))
+
+(use-package smartparens
+  :ensure t
+  :diminish smartparens-mode
+  :hook ((after-init . smartparens-global-mode)
+         (prog-mode . smartparens-strict-mode))
+  :config
+  (progn
+    (require 'smartparens-config)
+    )
+  )
 
 (provide 'init-edit)
 

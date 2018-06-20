@@ -1,13 +1,48 @@
+;; init-program.el --- Initialize program configurations.
+;;
+;; Copyright (C) 2018 xuchengpeng
+;;
+;; Author: xuchengpeng <xucp@outlook.com>
+;; URL: https://github.com/xuchengpeng/emacs.d
+
+;; This file is not part of GNU Emacs.
+
+;;; License:
+
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+;;; Commentary:
+;;
+;; Program configurations.
+;;
+
+;;; Code:
+
 ;; turn on visual-line-mode
 (dolist (hook '(text-mode-hook org-mode-hook markdown-mode-hook gfm-mode-hook))
   (add-hook hook 'visual-line-mode))
 
 ;; c
-(setq-default c-basic-offset 4
-              default-tab-width 4
-              tab-width 4
-              indent-tabs-mode nil)
-(setq c-default-style "linux")
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (c-set-style "linux")
+            (setq c-basic-offset 4
+                  default-tab-width 4
+                  tab-width 4
+                  indent-tabs-mode nil)))
 
 ;;shell
 ;; (dolist (exp '("\\.sh\\'" "\\.zsh\\'"
@@ -23,7 +58,6 @@
 ;; markdown
 (use-package markdown-mode
   :ensure t
-  :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -33,7 +67,6 @@
 ;; web
 (use-package web-mode
   :ensure t
-  :defer t
   :commands (web-mode)
   :mode (("\\.html?\\'" . web-mode)
          ("\\.phtml\\'" . web-mode)
@@ -55,8 +88,7 @@
 ;;js
 (use-package js2-mode
   :ensure t
-  :defer t
-  :mode "\\.js\\'"
+  :mode ("\\.js\\'" . js2-mode)
   :diminish (js2-mode . "JS2")
   :config
   (setq-default js2-basic-offset 2
@@ -70,7 +102,6 @@
 
 (use-package js2-refactor
   :ensure t
-  :defer t
   :diminish
   :commands (js2-refactor-mode)
   )
@@ -78,15 +109,15 @@
 ;; toml
 (use-package toml-mode
   :ensure t
-  :defer t
   :mode ("\\.toml$" . toml-mode)
   )
 
 ;; yaml
 (use-package yaml-mode
   :ensure t
-  :defer t
   :mode ("\\.yaml\\'" "\\.yml\\'")
   )
 
 (provide 'init-program)
+
+;;; init-program.el ends here

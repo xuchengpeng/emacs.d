@@ -31,6 +31,9 @@
 
 ;;; Code:
 
+(when (fboundp 'winner-mode)
+  (add-hook 'after-init-hook #'winner-mode))
+
 (use-package ace-window
   :ensure t
   :bind ("M-o" . ace-window)
@@ -38,7 +41,6 @@
 
 (use-package hydra
   :ensure t
-  :defer t
   :bind (("C-x t" . hydra-toggle/body)
          ("C-M-o" . hydra-window/body))
   :config

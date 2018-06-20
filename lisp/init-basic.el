@@ -53,6 +53,15 @@
   (dolist (pattern patterns)
     (add-to-list 'auto-mode-alist (cons pattern mode))))
 
+;; Environment
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns x))
+  :config
+  ;; (setq exec-path-from-shell-variables '("PATH" "GOPATH"))
+  (exec-path-from-shell-initialize)
+  )
+
 (provide 'init-basic)
 
 ;;; init-basic.el ends here

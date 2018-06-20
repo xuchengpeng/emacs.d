@@ -33,11 +33,10 @@
 
 (use-package which-key
   :ensure t
-  :defer 1
   :diminish which-key-mode
   :commands which-key-mode
-  :config
-  (which-key-mode))
+  :hook (after-init . which-key-mode)
+  )
 
 ;; filetree configurations
 (use-package neotree
@@ -48,7 +47,6 @@
 
 (use-package treemacs
   :ensure t
-  :defer t
   :commands (treemacs)
   :bind ("<f8>" . treemacs)
   :config
@@ -79,13 +77,11 @@
 
 (use-package treemacs-projectile
   :after treemacs projectile
-  :ensure t
-  :defer t)
+  :ensure t)
 
 (use-package pt
   :disabled
   :ensure t
-  :defer t
   :commands (pt-regexp projectile-pt)
   )
 

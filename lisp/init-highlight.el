@@ -38,7 +38,6 @@
 (use-package highlight-symbol
   :disabled
   :ensure t
-  :defer t
   :diminish highlight-symbol-mode
   :commands (highlight-symbol-mode)
   :hook (prog-mode . highlight-symbol-mode)
@@ -49,7 +48,6 @@
 ;; Highlight symbols
 (use-package symbol-overlay
   :ensure t
-  :defer t
   :diminish symbol-overlay-mode
   :commands symbol-overlay-mode
   :hook (prog-mode . symbol-overlay-mode)
@@ -62,7 +60,6 @@
 ;; Highlight brackets according to their depth
 (use-package rainbow-delimiters
   :ensure t
-  :defer t
   :diminish rainbow-delimiters-mode
   :hook (prog-mode . rainbow-delimiters-mode)
   )
@@ -70,7 +67,6 @@
 ;; Colorize color names in buffers
 (use-package rainbow-mode
   :ensure t
-  :defer t
   :diminish rainbow-mode
   :commands (rainbow-mode)
   )
@@ -78,10 +74,9 @@
 ;; Highlight uncommitted changes
 (use-package diff-hl
   :ensure t
-  :defer 3
   :diminish diff-hl-mode
+  :hook (after-init . global-diff-hl-mode)
   :config
-  (global-diff-hl-mode)
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   )
