@@ -31,8 +31,8 @@
 
 ;;; Code:
 
-(when (< emacs-major-version 25)
-  (error "Emacs should be version 25 or greater"))
+(when (version< emacs-version "25.3")
+  (error "Emacs version should be 25.3 or higher"))
 
 (defvar file-name-handler-alist-old file-name-handler-alist)
 
