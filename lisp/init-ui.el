@@ -170,7 +170,6 @@
                                     ("WenQuanYi Micro Hei Mono" . ,chinese-fonts-scale))))
 
 (defun set-font()
-  (interactive)
   (dotemacs-set-font
     '("DejaVu Sans Mono" "Monaco" "Source Code Pro" "Consolas") ":pixelsize=14"
     '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体") 16)
@@ -178,7 +177,6 @@
 
 ;; Solution 2
 ;; (defun set-font()
-;;   (interactive)
 ;;   (setq fonts
 ;;         (cond ((eq system-type 'darwin)     '("Monaco"           "STHeiti"))
 ;;               ((eq system-type 'gnu/linux)  '("Menlo"            "WenQuanYi Zen Hei"))
@@ -194,7 +192,6 @@
 
 ;; Solution 3
 ;; (defun set-font()
-;;   (interactive)
 ;;   
 ;;   ;; Setting English Font
 ;;   (when (member "DejaVu Sans Mono" (font-family-list))

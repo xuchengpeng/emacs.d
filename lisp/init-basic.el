@@ -34,8 +34,6 @@
 (setq user-full-name "Chuck"
       user-mail-address "me@xuchengpeng.com")
 
-(defvar dotemacs-cache-directory (concat user-emacs-directory ".cache/"))
-
 (if (fboundp 'with-eval-after-load)
     (defalias 'after-load 'with-eval-after-load)
   (defmacro after-load (feature &rest body)

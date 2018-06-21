@@ -49,6 +49,20 @@
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+(defvar dotemacs-personal-dir (expand-file-name "personal" user-emacs-directory)
+  "This directory is for your personal configuration.
+Users of Emacs Prelude are encouraged to keep their personal configuration
+changes in this directory.  All Emacs Lisp files there are loaded automatically
+by Prelude.")
+(defvar dotemacs-personal-preload-dir (expand-file-name "preload" dotemacs-personal-dir)
+  "This directory is for your personal configuration, that you want loaded before dotemacs.")
+(defvar dotemacs-cache-directory (concat user-emacs-directory ".cache/"))
+
+;; preload the personal settings from `dotemacs-personal-preload-dir'
+(when (file-exists-p dotemacs-personal-preload-dir)
+  (message "Loading personal configuration files in %s..." dotemacs-personal-preload-dir)
+  (mapc 'load (directory-files dotemacs-personal-preload-dir 't "^[^#\.].*el$")))
+
 (require 'init-custom)
 (require 'init-package)
 (require 'init-basic)
@@ -76,10 +90,10 @@
 (unless (server-running-p)
   (server-start))
 
-;;--------------------------------------------------------------------------------------------
-;; Allow users to provide an optional "init-private.el" containing personal settings
-;;--------------------------------------------------------------------------------------------
-(require 'init-private nil t)
+;; load the personal settings from `dotemacs-personal-dir`
+(when (file-exists-p dotemacs-personal-dir)
+  (message "Loading personal configuration files in %s..." dotemacs-personal-dir)
+  (mapc 'load (directory-files dotemacs-personal-dir 't "^[^#\.].*el$")))
 
 (provide 'init)
 

@@ -14,7 +14,7 @@ $ git clone https://github.com/xuchengpeng/emacs.d.git ~/.emacs.d
 ```
 
 ## ELPA mirror
-Set package archives in `~/.emacs.d/custom.el` file.
+Set package archives in `~/.emacs.d/personal/preload` file.
 ```el
 (setq dotemacs-package-archives         'custom     ; Package repo: melpa, emacs-china, tuna or custom
       dotemacs-custom-package-archives  '(("gnu"   . "D:/Software/emacs/elpa-mirror/gnu/")
@@ -31,19 +31,14 @@ Set package archives in `~/.emacs.d/custom.el` file.
 * [清华ELPA镜像](https://mirror.tuna.tsinghua.edu.cn/help/elpa/)
 
 ## Color theme
-Default color theme is color-theme-sanityinc-tomorrow, you can also set color theme in `~/.emacs.d/custom.el` file.
+Default color theme is [color-theme-sanityinc-tomorrow](https://github.com/purcell/color-theme-sanityinc-tomorrow), you can also set color theme in `~/.emacs.d/personal/preload`.
 ```el
 (setq dotemacs-theme 'tomorrow)  ; tomorrow, base16, dracula
 ```
 
 ## Customization
 
-To add your own customization,  create a file `~/.emacs.d/lisp/init-private.el` which looks like this:
-```el
-... your code here ...
-
-(provide 'init-private)
-```
+To add your own customization,  create a file in `~/.emacs.d/personal`. Sometimes you might want to load code before dotemacs has started loading, create a file in `~/.emacs.d/personal/preload`.
 
 ## Install fonts(Optional)
 

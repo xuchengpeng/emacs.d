@@ -2,7 +2,8 @@
 elpa/
 magithub/
 org/
+personal/*.el*
+personal/preload/*.el*
 server/
-lisp/init-private.el
 custom.el
 *.elc
