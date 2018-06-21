@@ -14,7 +14,7 @@ $ git clone https://github.com/xuchengpeng/emacs.d.git ~/.emacs.d
 ```
 
 ## ELPA mirror
-Set package archives in `~/.emacs.d/personal/preload` file.
+Set package archives in `~/.emacs.d/personal/preload`.
 ```el
 (setq dotemacs-package-archives         'custom     ; Package repo: melpa, emacs-china, tuna or custom
       dotemacs-custom-package-archives  '(("gnu"   . "D:/Software/emacs/elpa-mirror/gnu/")

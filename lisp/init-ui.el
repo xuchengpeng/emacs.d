@@ -137,10 +137,10 @@
       (format "%s%s" font-name font-size)
     (format "%s %s" font-name font-size)))
 
-(defun dotemacs-set-font (english-fonts
-                          english-font-size
-                          chinese-fonts
-                          &optional chinese-font-size chinese-fonts-scale)
+(defun dotemacs-set-english-chinese-font (english-fonts
+                                          english-font-size
+                                          chinese-fonts
+                                          &optional chinese-font-size chinese-fonts-scale)
   (setq chinese-font-size (or chinese-font-size 16)
         chinese-fonts-scale (or chinese-fonts-scale 1.2))
 
@@ -169,14 +169,14 @@
                                     ("Microsoft Yahei" . ,chinese-fonts-scale)
                                     ("WenQuanYi Micro Hei Mono" . ,chinese-fonts-scale))))
 
-(defun set-font()
-  (dotemacs-set-font
+(defun dotemacs-set-font()
+  (dotemacs-set-english-chinese-font
     '("DejaVu Sans Mono" "Monaco" "Source Code Pro" "Consolas") ":pixelsize=14"
     '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体") 16)
   )
 
 ;; Solution 2
-;; (defun set-font()
+;; (defun dotemacs-set-font()
 ;;   (setq fonts
 ;;         (cond ((eq system-type 'darwin)     '("Monaco"           "STHeiti"))
 ;;               ((eq system-type 'gnu/linux)  '("Menlo"            "WenQuanYi Zen Hei"))
@@ -191,7 +191,7 @@
 ;;   )
 
 ;; Solution 3
-;; (defun set-font()
+;; (defun dotemacs-set-font()
 ;;   
 ;;   ;; Setting English Font
 ;;   (when (member "DejaVu Sans Mono" (font-family-list))
@@ -214,10 +214,10 @@
              (lambda (new-frame)
                (select-frame new-frame)
                (if window-system
-                   (set-font))))
+                   (dotemacs-set-font))))
 
 (if window-system
-    (set-font))
+    (dotemacs-set-font))
 
 (provide 'init-ui)
 

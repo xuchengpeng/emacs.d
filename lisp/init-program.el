@@ -50,10 +50,10 @@
 ;;                "\\.bash\\'" "\\.bashrc.local\\'" "\\.bashrc\\'"))
 ;;   (add-to-list 'auto-mode-alist
 ;;                (cons exp 'sh-mode)))
-(add-auto-mode 'sh-mode
-               "\\.sh\\'" "\\.zsh\\'"
-               "\\.bash_profile\\'" "\\.bash_history\\'"
-               "\\.bash\\'" "\\.bashrc.local\\'" "\\.bashrc\\'")
+(dotemacs-add-auto-mode 'sh-mode
+                        "\\.sh\\'" "\\.zsh\\'"
+                        "\\.bash_profile\\'" "\\.bash_history\\'"
+                        "\\.bash\\'" "\\.bashrc.local\\'" "\\.bashrc\\'")
 
 ;; markdown
 (use-package markdown-mode

@@ -34,9 +34,10 @@
 (setq user-full-name "Chuck"
       user-mail-address "me@xuchengpeng.com")
 
+;; alias with-eval-after-load
 (if (fboundp 'with-eval-after-load)
-    (defalias 'after-load 'with-eval-after-load)
-  (defmacro after-load (feature &rest body)
+    (defalias 'dotemacs-after-load 'with-eval-after-load)
+  (defmacro dotemacs-after-load (feature &rest body)
     "After FEATURE is loaded, evaluate BODY."
     (declare (indent defun))
     `(eval-after-load ,feature
@@ -45,19 +46,10 @@
 ;;----------------------------------------------------------------------------
 ;; Handier way to add modes to auto-mode-alist
 ;;----------------------------------------------------------------------------
-(defun add-auto-mode (mode &rest patterns)
+(defun dotemacs-add-auto-mode (mode &rest patterns)
   "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
   (dolist (pattern patterns)
     (add-to-list 'auto-mode-alist (cons pattern mode))))
-
-;; Environment
-(use-package exec-path-from-shell
-  :ensure t
-  :if (memq window-system '(mac ns x))
-  :config
-  ;; (setq exec-path-from-shell-variables '("PATH" "GOPATH"))
-  (exec-path-from-shell-initialize)
-  )
 
 (provide 'init-basic)
 

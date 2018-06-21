@@ -63,7 +63,7 @@ locate PACKAGE."
      nil)))
 
 (defvar-local package-archives-list '(melpa emacs-china tuna custom))
-(defun set-package-archives (archives)
+(defun dotemacs-set-package-archives (archives)
   "Switch to specific package ARCHIVES repository."
   (interactive
    (list
@@ -89,7 +89,7 @@ locate PACKAGE."
 
   (message "Set package archives to '%s'." archives))
 
-(set-package-archives dotemacs-package-archives)
+(dotemacs-set-package-archives dotemacs-package-archives)
 
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
 

@@ -57,13 +57,13 @@
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
 
-(after-load 'abbrev
+(dotemacs-after-load 'abbrev
   (diminish 'abbrev-mode "Abv"))
-(after-load 'eldoc
+(dotemacs-after-load 'eldoc
   (diminish 'eldoc-mode))
-(after-load 'autorevert
+(dotemacs-after-load 'autorevert
   (diminish 'auto-revert-mode))
-(after-load 'simple
+(dotemacs-after-load 'simple
               (diminish 'auto-fill-function)
               (diminish 'visual-line-mode))
 
