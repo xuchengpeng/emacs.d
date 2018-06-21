@@ -31,8 +31,8 @@
 
 ;;; Code:
 
-(setq user-full-name "Chuck"
-      user-mail-address "me@xuchengpeng.com")
+(setq user-full-name    dotemacs-full-name
+      user-mail-address dotemacs-mail-address)
 
 ;; alias with-eval-after-load
 (if (fboundp 'with-eval-after-load)

@@ -48,7 +48,7 @@
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous)
   
-  (defvar company-mode/enable-yas t
+  (defvar company-mode/enable-yas dotemacs-company-enable-yas
     "Enable yasnippet for all backends.")
 
   (defun company-mode/backend-with-yas (backend)

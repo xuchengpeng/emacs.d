@@ -33,7 +33,17 @@
 
 (defgroup dotemacs nil
   "Custom configuration for dotemacs."
-  :group 'local)
+  :group 'convenience)
+
+(defcustom dotemacs-full-name "Chuck"
+  "Set user full name."
+  :type 'string
+  :group 'dotemacs)
+
+(defcustom dotemacs-mail-address "xucp@outlook.com"
+  "Set user email address."
+  :type 'string
+  :group 'dotemacs)
 
 (defcustom dotemacs-package-archives 'melpa
   "Set package archives from which to fetch."
@@ -51,6 +61,11 @@
           (const :tag "Base16" base16)
           (const :tag "Dracula" dracula)
           symbol)
+  :group 'dotemacs)
+
+(defcustom dotemacs-company-enable-yas nil
+  "Enable/disable(t/nil) yasnippet for company backends."
+  :type 'boolean
   :group 'dotemacs)
 
 ;; config changes made through the customize UI will be stored here
