@@ -32,12 +32,10 @@
 ;;; Code:
 
 (use-package ivy
-  :disabled
   :ensure t
+  :diminish
   :hook (after-init . ivy-mode)
   :config
-  (use-package swiper
-    :ensure t)
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   (global-set-key "\C-s" 'swiper)
@@ -57,6 +55,16 @@
   (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
   )
+
+(use-package swiper
+  :ensure t
+  :after ivy
+  :diminish)
+
+(use-package counsel
+  :ensure t
+  :after ivy
+  :diminish)
 
 (provide 'init-ivy)
 
