@@ -47,16 +47,20 @@
                   gc-cons-threshold 16777216
                   gc-cons-percentage 0.1)))
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-(defvar dotemacs-personal-dir (expand-file-name "personal" user-emacs-directory)
+(defvar dotemacs-dir (file-truename user-emacs-directory)
+  "The path to this emacs.d directory.")
+(defvar dotemacs-lisp-dir (concat dotemacs-dir "lisp/")
+  "Where essential files are stored.")
+(defvar dotemacs-personal-dir (expand-file-name "personal" dotemacs-dir)
   "This directory is for your personal configuration.
 Users of Emacs Prelude are encouraged to keep their personal configuration
 changes in this directory.  All Emacs Lisp files there are loaded automatically
 by Prelude.")
 (defvar dotemacs-personal-preload-dir (expand-file-name "preload" dotemacs-personal-dir)
   "This directory is for your personal configuration, that you want loaded before dotemacs.")
-(defvar dotemacs-cache-directory (concat user-emacs-directory ".cache/"))
+(defvar dotemacs-cache-directory (concat dotemacs-dir ".cache/"))
+
+(add-to-list 'load-path dotemacs-lisp-dir)
 
 ;; preload the personal settings from `dotemacs-personal-preload-dir'
 (when (file-exists-p dotemacs-personal-preload-dir)

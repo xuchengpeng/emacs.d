@@ -91,7 +91,7 @@ locate PACKAGE."
 
 (dotemacs-set-package-archives dotemacs-package-archives)
 
-(setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
+(setq package-user-dir (expand-file-name "elpa" dotemacs-dir))
 
 (setq package-enable-at-startup nil)
 (package-initialize)
