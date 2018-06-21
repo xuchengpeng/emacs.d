@@ -68,6 +68,11 @@
   :type 'boolean
   :group 'dotemacs)
 
+(defcustom dotemacs-benchmark-enabled nil
+  "Enable/disable(t/nil) the init benchmark."
+  :type 'boolean
+  :group 'dotemacs)
+
 ;; config changes made through the customize UI will be stored here
 (setq custom-file (expand-file-name "custom.el" dotemacs-dir))
 

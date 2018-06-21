@@ -33,7 +33,8 @@
 
 (require 'package)
 
-(setq load-prefer-newer t)
+(when dotemacs-benchmark-enabled
+  (require 'init-benchmark))
 
 (defun require-package (package &optional min-version no-refresh)
   "Install given PACKAGE, optionally requiring MIN-VERSION.
@@ -97,6 +98,7 @@ locate PACKAGE."
                          dotemacs-dir)))
   (setq package-user-dir versioned-package-dir))
 
+(setq load-prefer-newer t)
 (setq package-enable-at-startup nil)
 (package-initialize)
 
