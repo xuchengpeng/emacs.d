@@ -49,12 +49,12 @@
       initial-major-mode 'text-mode)
 
 ;; (global-linum-mode t)
-(if (version< emacs-version "26")
-    (use-package nlinum
-      :ensure t
-      :init (add-hook 'after-init-hook #'global-nlinum-mode)
-      )
-  (add-hook 'after-init-hook #'global-display-line-numbers-mode))
+(if (fboundp 'display-line-numbers-mode)
+    (add-hook 'after-init-hook #'global-display-line-numbers-mode)
+  (use-package nlinum
+    :ensure t
+    :hook (after-init . global-nlinum-mode)
+    ))
 
 (line-number-mode t)
 (column-number-mode t)
