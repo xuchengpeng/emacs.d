@@ -1,4 +1,4 @@
-;; init-dired.el --- Initialize dired configurations.
+;; init-core.el --- Initialize core configurations.
 ;;
 ;; Copyright (C) 2018 xuchengpeng
 ;;
@@ -26,28 +26,31 @@
 
 ;;; Commentary:
 ;;
-;; Directory configurations.
+;; Core configurations.
 ;;
 
 ;;; Code:
 
-(use-package dired
-  :defer t
-  :config
-  ;; dired - reuse current buffer by pressing 'a'
-  (put 'dired-find-alternate-file 'disabled nil)
+(setq user-full-name    dotemacs-full-name
+      user-mail-address dotemacs-mail-address)
 
-  ;; always delete and copy recursively
-  (setq dired-recursive-deletes 'always)
-  (setq dired-recursive-copies 'always)
+;; alias with-eval-after-load
+(if (fboundp 'with-eval-after-load)
+    (defalias 'dotemacs-after-load 'with-eval-after-load)
+  (defmacro dotemacs-after-load (feature &rest body)
+    "After FEATURE is loaded, evaluate BODY."
+    (declare (indent defun))
+    `(eval-after-load ,feature
+       '(progn ,@body))))
 
-  ;; if there is a dired buffer displayed in the next window, use its
-  ;; current subdir, instead of the current subdir of this dired buffer
-  (setq dired-dwim-target t)
+;;----------------------------------------------------------------------------
+;; Handier way to add modes to auto-mode-alist
+;;----------------------------------------------------------------------------
+(defun dotemacs-add-auto-mode (mode &rest patterns)
+  "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
+  (dolist (pattern patterns)
+    (add-to-list 'auto-mode-alist (cons pattern mode))))
 
-  ;; enable some really cool extensions like C-x C-j(dired-jump)
-  (require 'dired-x))
+(provide 'init-core)
 
-(provide 'init-dired)
-
-;;; init-dired.el ends here
+;;; init-core.el ends here

@@ -1,4 +1,4 @@
-;; init-edit.el --- Initialize editing configurations.
+;; init-editor.el --- Initialize editor configurations.
 ;;
 ;; Copyright (C) 2018 xuchengpeng
 ;;
@@ -26,7 +26,7 @@
 
 ;;; Commentary:
 ;;
-;; Editing configurations.
+;; Editor configurations.
 ;;
 
 ;;; Code:
@@ -71,6 +71,33 @@
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
+
+;; Highlight the current line
+(add-hook 'after-init-hook #'global-hl-line-mode)
+
+;; Highlight matching paren
+(add-hook 'after-init-hook #'show-paren-mode)
+;; (setq show-paren-style 'expression)
+
+(when (fboundp 'winner-mode)
+  (add-hook 'after-init-hook #'winner-mode))
+
+(use-package dired
+  :defer t
+  :config
+  ;; dired - reuse current buffer by pressing 'a'
+  (put 'dired-find-alternate-file 'disabled nil)
+
+  ;; always delete and copy recursively
+  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies 'always)
+
+  ;; if there is a dired buffer displayed in the next window, use its
+  ;; current subdir, instead of the current subdir of this dired buffer
+  (setq dired-dwim-target t)
+
+  ;; enable some really cool extensions like C-x C-j(dired-jump)
+  (require 'dired-x))
 
 ;; Minor mode to aggressively keep your code always indented
 (use-package aggressive-indent
@@ -148,6 +175,6 @@
     )
   )
 
-(provide 'init-edit)
+(provide 'init-editor)
 
-;;; init-edit.el ends here
+;;; init-editor.el ends here

@@ -49,7 +49,7 @@
 
 (defvar dotemacs-dir (file-truename user-emacs-directory)
   "The path to this emacs.d directory.")
-(defvar dotemacs-lisp-dir (concat dotemacs-dir "lisp/")
+(defvar dotemacs-lisp-dir (expand-file-name "lisp" dotemacs-dir)
   "Where essential files are stored.")
 (defvar dotemacs-personal-dir (expand-file-name "personal" dotemacs-dir)
   "This directory is for your personal configuration.
@@ -58,7 +58,7 @@ changes in this directory.  All Emacs Lisp files there are loaded automatically
 by Prelude.")
 (defvar dotemacs-personal-preload-dir (expand-file-name "preload" dotemacs-personal-dir)
   "This directory is for your personal configuration, that you want loaded before dotemacs.")
-(defvar dotemacs-cache-directory (concat dotemacs-dir ".cache/"))
+(defvar dotemacs-cache-directory (expand-file-name ".cache/" dotemacs-dir))
 
 (add-to-list 'load-path dotemacs-lisp-dir)
 
@@ -69,21 +69,20 @@ by Prelude.")
 
 (require 'init-custom)
 (require 'init-package)
-(require 'init-basic)
+(require 'init-core)
 (require 'init-ui)
-(require 'init-edit)
+(require 'init-editor)
+
 (require 'init-utils)
 (require 'init-helm)
 ;; ivy & swiper & counsel
 (require 'init-ivy)
 (require 'init-company)
 (require 'init-yasnippet)
-(require 'init-dired)
 (require 'init-highlight)
-(require 'init-window)
+(require 'init-projectile)
 
 (require 'init-eshell)
-(require 'init-projectile)
 (require 'init-flycheck)
 (require 'init-magit)
 

@@ -31,9 +31,6 @@
 
 ;;; Code:
 
-;; Highlight the current line
-(add-hook 'after-init-hook #'global-hl-line-mode)
-
 ;; Highlight symbols
 (use-package highlight-symbol
   :disabled
@@ -52,10 +49,6 @@
   :commands symbol-overlay-mode
   :hook (prog-mode . symbol-overlay-mode)
   )
-
-;; Highlight matching paren
-(add-hook 'after-init-hook #'show-paren-mode)
-;; (setq show-paren-style 'expression)
 
 ;; Highlight brackets according to their depth
 (use-package rainbow-delimiters

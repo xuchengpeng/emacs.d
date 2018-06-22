@@ -219,6 +219,13 @@
 (if window-system
     (dotemacs-set-font))
 
+(use-package which-key
+  :ensure t
+  :diminish which-key-mode
+  :commands which-key-mode
+  :hook (after-init . which-key-mode)
+  )
+
 (provide 'init-ui)
 
 ;;; init-ui.el ends here

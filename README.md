@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/xuchengpeng/emacs.d.svg?branch=master)](https://travis-ci.org/xuchengpeng/emacs.d)
 [![](https://tokei.rs/b1/github/xuchengpeng/emacs.d?category=lines)](https://github.com/xuchengpeng/emacs.d)
+[![License GPL 3][badge-license]](http://www.gnu.org/licenses/gpl-3.0.txt)
 
 ## Documents
 
@@ -13,8 +14,21 @@ http://xuchengpeng.com/emacs.d/
 $ git clone https://github.com/xuchengpeng/emacs.d.git ~/.emacs.d
 ```
 
-## ELPA mirror
-Set package archives in `~/.emacs.d/personal/preload`.
+## Customization
+
+Create a `*.el` file in `~/.emacs.d/personal/preload`, and change the configurations, then restart emacs.
+
+For example:
+```el
+(setq dotemacs-full-name "user name")           ; User full name
+(setq dotemacs-mail-address "user@email.com")   ; Email address
+(setq dotemacs-package-archives 'emacs-china)   ; Package repo: melpa, emacs-china, tuna or custom
+(setq dotemacs-theme 'tomorrow)                 ; Color theme: tomorrow, base16 or dracula
+(setq dotemacs-company-enable-yas t)            ; Enable/disable yasnippet for company: t or nil
+(setq dotemacs-benchmark-enabled t)             ; Enable/disable initialization benchmark: t or nil
+```
+
+If `dotemacs-package-archives` is set to `custom`, you need to set `dotemacs-custom-package-archives`.
 ```el
 (setq dotemacs-package-archives         'custom     ; Package repo: melpa, emacs-china, tuna or custom
       dotemacs-custom-package-archives  '(("gnu"   . "D:/Software/emacs/elpa-mirror/gnu/")
@@ -23,22 +37,12 @@ Set package archives in `~/.emacs.d/personal/preload`.
                                          )
 )
 ```
-*可以从 [d12frosted/elpa-mirror](https://github.com/d12frosted/elpa-mirror) 下载到本地。*
 
-或者可以使用其他的镜像：
+You and can use [emacs-china](https://elpa.emacs-china.org/) or [tuna](https://mirror.tuna.tsinghua.edu.cn/help/elpa/), or clone it from [d12frosted/elpa-mirror](https://github.com/d12frosted/elpa-mirror) to local disk.
 
-* [Emacs China ELPA镜像](https://elpa.emacs-china.org/)
-* [清华ELPA镜像](https://mirror.tuna.tsinghua.edu.cn/help/elpa/)
+## Personalizing
 
-## Color theme
-Default color theme is [color-theme-sanityinc-tomorrow](https://github.com/purcell/color-theme-sanityinc-tomorrow), you can also set color theme in `~/.emacs.d/personal/preload`.
-```el
-(setq dotemacs-theme 'tomorrow)  ; tomorrow, base16, dracula
-```
-
-## Customization
-
-To add your own customization,  create a file in `~/.emacs.d/personal`. Sometimes you might want to load code before dotemacs has started loading, create a file in `~/.emacs.d/personal/preload`.
+To add your own configurations,  create `*.el` files in `~/.emacs.d/personal`. Sometimes you might want to load code before dotemacs has started loading, create `*.el` files in `~/.emacs.d/personal/preload`.
 
 ## Install fonts(Optional)
 
