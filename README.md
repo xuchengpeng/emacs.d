@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/xuchengpeng/emacs.d.svg?branch=master)](https://travis-ci.org/xuchengpeng/emacs.d)
 [![](https://tokei.rs/b1/github/xuchengpeng/emacs.d?category=lines)](https://github.com/xuchengpeng/emacs.d)
-[![License GPL 3][badge-license]](http://www.gnu.org/licenses/gpl-3.0.txt)
+[![License GPL 3](https://img.shields.io/badge/license-GPL_3-green.svg)](http://www.gnu.org/licenses/gpl-3.0.txt)
 
 ## Documents
 
