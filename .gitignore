@@ -1,5 +1,5 @@
 .cache/
-elpa*/
+elpa/
 magithub/
 org/
 personal/*.el*

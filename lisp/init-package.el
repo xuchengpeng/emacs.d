@@ -92,11 +92,7 @@ locate PACKAGE."
 
 (dotemacs-set-package-archives dotemacs-package-archives)
 
-;;; Install into separate package dirs for each Emacs version, to prevent bytecode incompatibility
-(let ((versioned-package-dir
-       (expand-file-name (format "elpa-%s" emacs-version)
-                         dotemacs-dir)))
-  (setq package-user-dir versioned-package-dir))
+(setq package-user-dir (expand-file-name "elpa" dotemacs-dir))
 
 (setq load-prefer-newer t)
 (setq package-enable-at-startup nil)
