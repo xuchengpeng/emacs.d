@@ -38,8 +38,7 @@
   :bind ("C-c a" . org-agenda)
   :config
   (defvar dotemacs-org-directory (concat dotemacs-dir "org/"))
-  (setq org-agenda-files (list (concat dotemacs-org-directory "work.org")
-                               (concat dotemacs-org-directory "gtd.org")))
+  (setq org-agenda-files (list dotemacs-org-directory))
   (setq org-todo-keywords
       '((sequence "TODO(t)" "WAITING(w@/!)" "|" "DONE(d!)" "CANCELLED(c@)")
         (sequence "LEARN" "TRY" "TEACH" "|" "COMPLETE")))
