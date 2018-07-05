@@ -68,10 +68,6 @@
 (add-hook 'after-init-hook #'display-time-mode)
 
 ;; Color theme
-(defun dotemacs-is-doom-theme-p (theme)
-  "Check whether the THEME is a doom theme. THEME is a symbol."
-  (string-prefix-p "doom" (symbol-name theme)))
-
 (cond
  ((eq dotemacs-theme 'default)
   (use-package monokai-theme
@@ -92,19 +88,6 @@
     :ensure t
     :config
     (load-theme 'sanityinc-tomorrow-day t)
-    ))
-
- ((dotemacs-is-doom-theme-p dotemacs-theme)
-  (use-package doom-themes
-    :ensure t
-    :init
-    (let ((theme (if (eq dotemacs-theme 'doom)
-                     'doom-one
-                   dotemacs-theme)))
-      (load-theme theme t))
-    :config
-    (doom-themes-visual-bell-config)
-    (doom-themes-org-config)
     ))
 
  (t

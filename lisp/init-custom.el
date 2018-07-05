@@ -60,7 +60,6 @@
           (const :tag "Default theme" default)
           (const :tag "Dark theme" dark)
           (const :tag "Light theme" light)
-          (const :tag "Doom theme" doom)
           symbol)
   :group 'dotemacs)
 
