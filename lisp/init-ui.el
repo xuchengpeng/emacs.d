@@ -68,25 +68,43 @@
 (add-hook 'after-init-hook #'display-time-mode)
 
 ;; Color theme
+(defun dotemacs-is-doom-theme-p (theme)
+  "Check whether the THEME is a doom theme. THEME is a symbol."
+  (string-prefix-p "doom" (symbol-name theme)))
+
 (cond
- ((eq dotemacs-theme 'tomorrow)
+ ((eq dotemacs-theme 'default)
+  (use-package monokai-theme
+    :ensure t
+    :config
+    (load-theme 'monokai t)
+    ))
+
+ ((eq dotemacs-theme 'dark)
   (use-package color-theme-sanityinc-tomorrow
     :ensure t
     :config
     (load-theme 'sanityinc-tomorrow-night t)
     ))
 
- ((eq dotemacs-theme 'base16)
-  (use-package base16-theme
+ ((eq dotemacs-theme 'light)
+  (use-package color-theme-sanityinc-tomorrow
     :ensure t
     :config
-    (load-theme 'base16-tomorrow-night t)))
+    (load-theme 'sanityinc-tomorrow-day t)
+    ))
 
- ((eq dotemacs-theme 'dracula)
-  (use-package dracula-theme
+ ((dotemacs-is-doom-theme-p dotemacs-theme)
+  (use-package doom-themes
     :ensure t
+    :init
+    (let ((theme (if (eq dotemacs-theme 'doom)
+                     'doom-one
+                   dotemacs-theme)))
+      (load-theme theme t))
     :config
-    (load-theme 'dracula t)
+    (doom-themes-visual-bell-config)
+    (doom-themes-org-config)
     ))
 
  (t

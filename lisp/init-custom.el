@@ -54,12 +54,13 @@
           (const :tag "Custom" custom))
   :group 'dotemacs)
 
-(defcustom dotemacs-theme 'tomorrow
+(defcustom dotemacs-theme 'default
   "Set color theme."
   :type '(choice
-          (const :tag "Tomorrow" tomorrow)
-          (const :tag "Base16" base16)
-          (const :tag "Dracula" dracula)
+          (const :tag "Default theme" default)
+          (const :tag "Dark theme" dark)
+          (const :tag "Light theme" light)
+          (const :tag "Doom theme" doom)
           symbol)
   :group 'dotemacs)
 

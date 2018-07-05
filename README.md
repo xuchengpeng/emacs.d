@@ -23,7 +23,7 @@ For example:
 (setq dotemacs-full-name "user name")           ; User full name
 (setq dotemacs-mail-address "user@email.com")   ; Email address
 (setq dotemacs-package-archives 'emacs-china)   ; Package repo: melpa, emacs-china, tuna or custom
-(setq dotemacs-theme 'tomorrow)                 ; Color theme: tomorrow, base16 or dracula
+(setq dotemacs-theme 'doom)                     ; Color theme: default, dark, light or doom
 (setq dotemacs-company-enable-yas t)            ; Enable/disable yasnippet for company: t or nil
 (setq dotemacs-benchmark-enabled t)             ; Enable/disable initialization benchmark: t or nil
 ```
