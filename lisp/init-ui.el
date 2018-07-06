@@ -119,14 +119,40 @@
                  mode-line-front-space
                  ;; mode-line-mule-info
                  ;; mode-line-client
-                 mode-line-modified
+                 ;; mode-line-modified
                  ;; mode-line-remote
                  ;; mode-line-frame-identification
                  " "
                  ;; mode-line-buffer-identification
                  '(:eval (propertize "%b" 'face 'font-lock-keyword-face
                                      'help-echo (buffer-file-name)))
-                 " "
+                 
+                 " [" ;; insert vs overwrite mode, input-method in a tooltip
+                 '(:eval (propertize (if overwrite-mode "Ovr" "Ins")
+                                     'face 'font-lock-preprocessor-face
+                                     'help-echo (concat "Buffer is in "
+                                                        (if overwrite-mode
+                                                            "overwrite"
+                                                          "insert") " mode")))
+
+                 ;; was this buffer modified since the last save?
+                 '(:eval (when (buffer-modified-p)
+                           (concat "," (propertize "Mod"
+                                                   'face 'font-lock-warning-face
+                                                   'help-echo "Buffer has been modified"))))
+
+                 ;; is this buffer read-only?
+                 '(:eval (when buffer-read-only
+                           (concat "," (propertize "RO"
+                                                   'face 'font-lock-type-face
+                                                   'help-echo "Buffer is read-only"))))
+                 "] "
+                 
+                 "["
+                 (propertize "%p" 'face 'font-lock-constant-face)
+                 "/"
+                 (propertize "%I" 'face 'font-lock-constant-face)
+                 "] "
                  
                  mode-line-modes
                  
@@ -136,7 +162,12 @@
                  
                  ;; (dotemacs-mode-line-fill 'mode-line 35)
                  
-                 mode-line-position
+                 ;;mode-line-position
+                 " ("
+                 (propertize "%l" 'face 'font-lock-type-face)
+                 ","
+                 (propertize "%c" 'face 'font-lock-type-face)
+                 ") "
                  
                  '(:eval (dotemacs-buffer-encoding-abbrev))
                  "  "
