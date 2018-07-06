@@ -58,7 +58,7 @@
 
 (line-number-mode t)
 (column-number-mode t)
-;; (size-indication-mode t)
+(size-indication-mode t)
 
 (setq scroll-preserve-screen-position 'always)
 
@@ -95,19 +95,38 @@
   (error "Unknown color theme: '%s'" dotemacs-theme)))
 
 ;; modeline configurations
+(defun dotemacs-mode-line-fill (face reserve)
+  "Return empty space using FACE and leaving RESERVE space on the right."
+  (unless reserve
+    (setq reserve 20))
+  (when (and (display-graphic-p) (eq 'right (get-scroll-bar-mode)))
+    (setq reserve (- reserve 3)))
+  (propertize " "
+              'display `((space :align-to
+                                (- (+ right right-fringe right-margin) ,reserve)))
+              'face face))
+
+(defun dotemacs-buffer-encoding-abbrev ()
+  "The line ending convention used in the buffer."
+  (let ((buf-coding (format "%s" buffer-file-coding-system)))
+    (if (string-match "\\(dos\\|unix\\|mac\\)" buf-coding)
+        (match-string 1 buf-coding)
+      buf-coding)))
+
 (setq-default mode-line-format
                 (list
+                 "%e"
                  mode-line-front-space
-                 mode-line-mule-info
+                 ;; mode-line-mule-info
                  ;; mode-line-client
                  mode-line-modified
                  ;; mode-line-remote
                  ;; mode-line-frame-identification
-                 " ["
+                 " "
                  ;; mode-line-buffer-identification
                  '(:eval (propertize "%b" 'face 'font-lock-keyword-face
                                      'help-echo (buffer-file-name)))
-                 "] "
+                 " "
                  
                  mode-line-modes
                  
@@ -115,18 +134,12 @@
                  '(:eval `(vc-mode vc-mode))
                  "   "
                  
-                 ;; mode-line-position
-                 " ["
-                 (propertize "%p" 'face 'font-lock-constant-face)
-                 "/"
-                 (propertize "%I" 'face 'font-lock-constant-face)
-                 "]"
-                 "(" ;;
-                 (propertize "%l" 'face 'font-lock-type-face)
-                 ","
-                 (propertize "%c" 'face 'font-lock-type-face)
-                 ") "
+                 ;; (dotemacs-mode-line-fill 'mode-line 35)
                  
+                 mode-line-position
+                 
+                 '(:eval (dotemacs-buffer-encoding-abbrev))
+                 "  "
                  '(:eval mode-line-misc-info)
                  
                  mode-line-end-spaces
