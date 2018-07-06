@@ -58,6 +58,7 @@
 
 (line-number-mode t)
 (column-number-mode t)
+;; (size-indication-mode t)
 
 (setq scroll-preserve-screen-position 'always)
 
@@ -91,32 +92,67 @@
     ))
 
  (t
-  (ignore-errors (load-theme dotemacs-theme t))))
+  (error "Unknown color theme: '%s'" dotemacs-theme)))
 
 ;; modeline configurations
-(use-package powerline
-  :ensure t
-  :config
-  (setq powerline-default-separator 'arrow)
-  (powerline-default-theme)
-  )
+(setq-default mode-line-format
+                (list
+				 mode-line-front-space
+				 mode-line-mule-info
+				 ;; mode-line-client
+                 mode-line-modified
+                 ;; mode-line-remote
+                 ;; mode-line-frame-identification
+				 " ["
+				 ;; mode-line-buffer-identification
+				 '(:eval (propertize "%b" 'face 'font-lock-keyword-face
+                                     'help-echo (buffer-file-name)))
+				 "] "
 
-(use-package spaceline
-  :disabled
-  :ensure t
-  :config
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme)
-  )
+				 mode-line-modes
 
-(use-package smart-mode-line
-  :disabled
-  :ensure t
-  :config
-  (setq sml/no-confirm-load-theme t)
-  (setq sml/theme 'respectful)
-  (sml/setup)
-  )
+                 "   "
+				 '(:eval `(vc-mode vc-mode))
+				 "   "
+				 
+				 ;; mode-line-position
+				 " ["
+                 (propertize "%p" 'face 'font-lock-constant-face)
+                 "/"
+                 (propertize "%I" 'face 'font-lock-constant-face)
+                 "]"
+                 "(" ;;
+                 (propertize "%l" 'face 'font-lock-type-face)
+                 ","
+                 (propertize "%c" 'face 'font-lock-type-face)
+                 ") "
+				 
+				 '(:eval mode-line-misc-info)
+				 
+				 mode-line-end-spaces
+				 ))
+
+;; (use-package powerline
+;;   :ensure t
+;;   :config
+;;   (setq powerline-default-separator 'arrow)
+;;   (powerline-default-theme)
+;;   )
+;; 
+;; (use-package spaceline
+;;   :ensure t
+;;   :config
+;;   (require 'spaceline-config)
+;;   (spaceline-spacemacs-theme)
+;;   )
+;; 
+;; (use-package smart-mode-line
+;;   :ensure t
+;;   :config
+;;   (setq sml/no-confirm-load-theme t)
+;;   (setq sml/theme 'respectful)
+;;   (sml/setup)
+;;   )
 
 ;; font configurations
 ;; Solution 1
