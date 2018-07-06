@@ -97,26 +97,26 @@
 ;; modeline configurations
 (setq-default mode-line-format
                 (list
-				 mode-line-front-space
-				 mode-line-mule-info
-				 ;; mode-line-client
+                 mode-line-front-space
+                 mode-line-mule-info
+                 ;; mode-line-client
                  mode-line-modified
                  ;; mode-line-remote
                  ;; mode-line-frame-identification
-				 " ["
-				 ;; mode-line-buffer-identification
-				 '(:eval (propertize "%b" 'face 'font-lock-keyword-face
+                 " ["
+                 ;; mode-line-buffer-identification
+                 '(:eval (propertize "%b" 'face 'font-lock-keyword-face
                                      'help-echo (buffer-file-name)))
-				 "] "
-
-				 mode-line-modes
-
+                 "] "
+                 
+                 mode-line-modes
+                 
                  "   "
-				 '(:eval `(vc-mode vc-mode))
-				 "   "
-				 
-				 ;; mode-line-position
-				 " ["
+                 '(:eval `(vc-mode vc-mode))
+                 "   "
+                 
+                 ;; mode-line-position
+                 " ["
                  (propertize "%p" 'face 'font-lock-constant-face)
                  "/"
                  (propertize "%I" 'face 'font-lock-constant-face)
@@ -126,11 +126,11 @@
                  ","
                  (propertize "%c" 'face 'font-lock-type-face)
                  ") "
-				 
-				 '(:eval mode-line-misc-info)
-				 
-				 mode-line-end-spaces
-				 ))
+                 
+                 '(:eval mode-line-misc-info)
+                 
+                 mode-line-end-spaces
+                 ))
 
 ;; (use-package powerline
 ;;   :ensure t
@@ -250,10 +250,10 @@
 (add-to-list 'after-make-frame-functions
              (lambda (new-frame)
                (select-frame new-frame)
-               (if window-system
+               (if (display-graphic-p)
                    (dotemacs-set-font))))
 
-(if window-system
+(if (display-graphic-p)
     (dotemacs-set-font))
 
 (use-package which-key
