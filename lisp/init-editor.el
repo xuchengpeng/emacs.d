@@ -58,7 +58,7 @@
       auto-revert-verbose nil)
 
 (dotemacs-after-load 'abbrev
-  (diminish 'abbrev-mode "Abv"))
+  (diminish 'abbrev-mode))
 (dotemacs-after-load 'eldoc
   (diminish 'eldoc-mode))
 (dotemacs-after-load 'autorevert
