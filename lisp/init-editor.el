@@ -154,7 +154,8 @@
         recentf-max-saved-items 500
         recentf-max-menu-items 15
         recentf-auto-cleanup 600
-        recentf-exclude '("/tmp/" "/ssh:" "/elpa/"))
+        recentf-exclude (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$"
+                              "^/var/folders/.+$" "/elpa/"))
   )
 
 (use-package uniquify
