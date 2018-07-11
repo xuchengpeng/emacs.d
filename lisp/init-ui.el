@@ -256,7 +256,7 @@
 (defun dotemacs-set-font()
   (dotemacs-set-english-chinese-font
     '("DejaVu Sans Mono" "Monaco" "Source Code Pro" "Consolas") ":pixelsize=14"
-    '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体") 16)
+    '("思源黑体 Regular" "Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体") 16)
   )
 
 ;; Solution 2
