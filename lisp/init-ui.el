@@ -71,31 +71,41 @@
 (setq display-time-24hr-format t)
 (add-hook 'after-init-hook #'display-time-mode)
 
+(defvar-local themes-list '(default dark light))
+(defun dotemacs-set-theme (theme)
+  "Switch themes."
+  (interactive
+   (list
+    (intern (completing-read "Switch to theme: "
+                             themes-list))))
+  (cond
+   ((eq theme 'default)
+    (use-package monokai-theme
+      :ensure t
+      :config
+      (load-theme 'monokai t)
+      ))
+  
+   ((eq theme 'dark)
+    (use-package color-theme-sanityinc-tomorrow
+      :ensure t
+      :config
+      (load-theme 'sanityinc-tomorrow-night t)
+      ))
+  
+   ((eq theme 'light)
+    (use-package color-theme-sanityinc-tomorrow
+      :ensure t
+      :config
+      (load-theme 'sanityinc-tomorrow-day t)
+      ))
+  
+   (t
+    (error "Unknown color theme: '%s'" dotemacs-theme)))
+  )
+
 ;; Color theme
-(cond
- ((eq dotemacs-theme 'default)
-  (use-package monokai-theme
-    :ensure t
-    :config
-    (load-theme 'monokai t)
-    ))
-
- ((eq dotemacs-theme 'dark)
-  (use-package color-theme-sanityinc-tomorrow
-    :ensure t
-    :config
-    (load-theme 'sanityinc-tomorrow-night t)
-    ))
-
- ((eq dotemacs-theme 'light)
-  (use-package color-theme-sanityinc-tomorrow
-    :ensure t
-    :config
-    (load-theme 'sanityinc-tomorrow-day t)
-    ))
-
- (t
-  (error "Unknown color theme: '%s'" dotemacs-theme)))
+(dotemacs-set-theme dotemacs-theme)
 
 ;; modeline configurations
 (defun dotemacs-mode-line-fill (face reserve)
