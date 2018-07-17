@@ -6,7 +6,7 @@
 
 ## Documents
 
-http://xuchengpeng.com/emacs.d/
+http://xuchengpeng.com/
 
 ## Install
 
