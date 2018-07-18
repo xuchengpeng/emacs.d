@@ -260,13 +260,12 @@
     ;; Fix chinese font width and rescale
     (setq face-font-rescale-alist '(("STHeiti" . ,chinese-fonts-scale)
                                     ("STFangsong" . ,chinese-fonts-scale)
-                                    ("Microsoft Yahei" . ,chinese-fonts-scale)
-                                    ("WenQuanYi Micro Hei Mono" . ,chinese-fonts-scale))))
+                                    ("Microsoft Yahei" . ,chinese-fonts-scale))))
 
 (defun dotemacs-set-font()
   (dotemacs-set-english-chinese-font
-    '("DejaVu Sans Mono" "Monaco" "Source Code Pro" "Consolas") ":pixelsize=14"
-    '("思源黑体 Regular" "Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体") 16)
+    '("Source Code Pro" "DejaVu Sans Mono" "Monaco" "Consolas") ":pixelsize=14"
+    '("STXihei" "STHeiti" "STFangsong" "STZhongsong" "Microsoft Yahei" "黑体" "新宋体" "宋体") 16)
   )
 
 ;; Solution 2
