@@ -53,6 +53,9 @@
   backup-directory-alist   (list (cons "." (concat dotemacs-cache-directory "backup/")))
   )
 
+(setq bookmark-default-file  (concat dotemacs-cache-directory "bookmarks")
+      bookmark-save-flag     1)
+
 (add-hook 'after-init-hook 'global-auto-revert-mode)
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
