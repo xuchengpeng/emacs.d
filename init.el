@@ -51,6 +51,8 @@
   "The path to this emacs.d directory.")
 (defvar dotemacs-lisp-dir (expand-file-name "lisp" dotemacs-dir)
   "Where essential files are stored.")
+(defvar dotemacs-themes-dir (expand-file-name "themes" dotemacs-dir)
+  "Where themes files are stored.")
 (defvar dotemacs-personal-dir (expand-file-name "personal" dotemacs-dir)
   "This directory is for your personal configuration.
 Users of Emacs Prelude are encouraged to keep their personal configuration
@@ -61,6 +63,7 @@ by Prelude.")
 (defvar dotemacs-cache-directory (expand-file-name ".cache/" dotemacs-dir))
 
 (add-to-list 'load-path dotemacs-lisp-dir)
+(add-to-list 'load-path dotemacs-themes-dir)
 
 ;; preload the personal settings from `dotemacs-personal-preload-dir'
 (when (file-exists-p dotemacs-personal-preload-dir)

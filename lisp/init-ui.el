@@ -71,6 +71,25 @@
 (setq display-time-24hr-format t)
 (add-hook 'after-init-hook #'display-time-mode)
 
+(defun dotemacs-load-custom-theme (theme)
+  "load dotemacs-themes"
+  (require 'dotemacs-themes)
+  
+  ;; Global settings (defaults)
+  (setq dotemacs-themes-enable-bold t    ; if nil, bold is universally disabled
+        dotemacs-themes-enable-italic t) ; if nil, italics is universally disabled
+  
+  ;; Load the theme (dotemacs-one, dotemacs-molokai, etc); keep in mind that each theme
+  ;; may have their own settings.
+  (load-theme theme t)
+  
+  ;; Enable flashing mode-line on errors
+  (dotemacs-themes-visual-bell-config)
+  
+  ;; Corrects (and improves) org-mode's native fontification.
+  (dotemacs-themes-org-config)
+  )
+
 (defvar-local themes-list '(default dark light))
 (defun dotemacs-set-theme (theme)
   "Switch themes."
@@ -99,13 +118,18 @@
       :config
       (load-theme 'sanityinc-tomorrow-day t)
       ))
-  
+   
+   ((string-prefix-p "dotemacs" (symbol-name theme))
+     (dotemacs-load-custom-theme theme))
+   
    (t
-    (error "Unknown color theme: '%s'" dotemacs-theme)))
+    (error "Unknown color theme: '%s'" theme)))
+  
+  (message "Set color theme '%s'." theme)
   )
 
 ;; Color theme
-(dotemacs-set-theme dotemacs-theme)
+(dotemacs-set-theme dotemacs-color-theme)
 
 ;; modeline configurations
 (defun dotemacs-mode-line-fill (face reserve)
