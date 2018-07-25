@@ -92,13 +92,8 @@
   (message "Set custom color theme '%s'." theme)
   )
 
-(defvar-local themes-list '(default dark light))
 (defun dotemacs-set-theme (theme)
-  "Switch themes."
-  (interactive
-   (list
-    (intern (completing-read "Switch to theme: "
-                             themes-list))))
+  "Set color theme."
   (cond
    ((eq theme 'default)
     (dotemacs-set-custom-theme 'dotemacs-one))
