@@ -54,7 +54,7 @@
           (const :tag "Custom" custom))
   :group 'dotemacs)
 
-(defcustom dotemacs-color-theme 'dotemacs-one
+(defcustom dotemacs-color-theme 'default
   "Set color theme."
   :type '(choice
           (const :tag "Default theme" default)

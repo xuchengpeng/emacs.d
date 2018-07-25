@@ -71,8 +71,8 @@
 (setq display-time-24hr-format t)
 (add-hook 'after-init-hook #'display-time-mode)
 
-(defun dotemacs-load-custom-theme (theme)
-  "load dotemacs-themes"
+(defun dotemacs-set-custom-theme (theme)
+  "Set dotemacs-themes"
   (require 'dotemacs-themes)
   
   ;; Global settings (defaults)
@@ -88,6 +88,8 @@
   
   ;; Corrects (and improves) org-mode's native fontification.
   (dotemacs-themes-org-config)
+  
+  (message "Set custom color theme '%s'." theme)
   )
 
 (defvar-local themes-list '(default dark light))
@@ -99,11 +101,7 @@
                              themes-list))))
   (cond
    ((eq theme 'default)
-    (use-package monokai-theme
-      :ensure t
-      :config
-      (load-theme 'monokai t)
-      ))
+    (dotemacs-set-custom-theme 'dotemacs-one))
   
    ((eq theme 'dark)
     (use-package color-theme-sanityinc-tomorrow
@@ -120,12 +118,10 @@
       ))
    
    ((string-prefix-p "dotemacs" (symbol-name theme))
-     (dotemacs-load-custom-theme theme))
+     (dotemacs-set-custom-theme theme))
    
    (t
     (error "Unknown color theme: '%s'" theme)))
-  
-  (message "Set color theme '%s'." theme)
   )
 
 ;; Color theme
