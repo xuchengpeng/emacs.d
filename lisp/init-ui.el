@@ -120,7 +120,20 @@
   )
 
 ;; Color theme
-(dotemacs-set-theme dotemacs-color-theme)
+;; (dotemacs-set-theme dotemacs-color-theme)
+
+(defun dotemacs-init-theme (&optional frame)
+  "Set the theme and load the font, in that order."
+  (dotemacs-set-theme dotemacs-color-theme))
+
+(defun dotemacs-reload-theme-in-daemon (frame)
+  "Reload the theme in an daemon frame."
+  (when (or (daemonp) (not (display-graphic-p)))
+    (with-selected-frame frame
+      (run-with-timer 0.1 nil #'dotemacs-init-theme))))
+
+(dotemacs-init-theme)
+(add-hook 'after-make-frame-functions #'dotemacs-reload-theme-in-daemon)
 
 ;; modeline configurations
 (defun dotemacs-mode-line-fill (face reserve)
