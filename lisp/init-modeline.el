@@ -31,7 +31,7 @@
 
 ;;; Code:
 
-(defmacro def-modeline-segment! (name &rest forms)
+(defmacro dotemacs-modeline-def-modeline-segment (name &rest forms)
   "Defines a modeline segment and byte compiles it."
   (declare (indent defun) (doc-string 2))
   (let ((sym (intern (format "dotemacs-modeline-segment--%s" name))))
@@ -48,12 +48,12 @@
            else
             collect (list (intern (format "dotemacs-modeline-segment--%s" (symbol-name seg))))))
 
-(defmacro def-modeline! (name lhs &optional rhs)
+(defmacro dotemacs-modeline-def-modeline (name lhs &optional rhs)
   "Defines a modeline format and byte-compiles it. NAME is a symbol to identify
 it (used by `dotemacs-modeline' for retrieval). LHS and RHS are lists of symbols of
-modeline segments defined with `def-modeline-segment!'.
+modeline segments defined with `dotemacs-modeline-def-modeline-segment'.
 Example:
-  (def-modeline! minimal
+  (dotemacs-modeline-def-modeline minimal
     (bar matches \" \" buffer-info)
     (media-info major-mode))
   (dotemacs-set-modeline 'minimal t)"
@@ -277,7 +277,7 @@ active."
 ;; Modeline helpers
 ;;
 
-(defsubst active ()
+(defsubst dotemacs-modeline--active ()
   (eq (selected-window) dotemacs-modeline-current-window))
 
 ;; Inspired from `powerline's `pl/make-xpm'.
@@ -320,7 +320,7 @@ active."
                              'face
                              (let ((face (or (and (buffer-modified-p)
                                                   'dotemacs-modeline-buffer-modified)
-                                             (and (active)
+                                             (and (dotemacs-modeline--active)
                                                   'dotemacs-modeline-buffer-file))))
                                (when face `(:inherit ,face))))))
    'help-echo buffer-file-truename))
@@ -329,7 +329,7 @@ active."
   "Propertized `buffer-file-name' that truncates every dir along path.
 If TRUNCATE-TAIL is t also truncate the parent directory of the file."
   (let ((dirs (shrink-path-prompt (file-name-directory buffer-file-truename)))
-        (active (active)))
+        (active (dotemacs-modeline--active)))
     (if (null dirs)
         (propertize "%b" 'face (if active 'dotemacs-modeline-buffer-file))
       (let ((modified-faces (if (buffer-modified-p) 'dotemacs-modeline-buffer-modified)))
@@ -347,7 +347,7 @@ If TRUNCATE-TAIL is t also truncate the parent directory of the file."
 (defun dotemacs-modeline--buffer-file-name-relative (&optional include-project)
   "Propertized `buffer-file-name' showing directories relative to project's root only."
   (let ((root (dotemacs-modeline-project-root))
-        (active (active)))
+        (active (dotemacs-modeline--active)))
     (if (null root)
         (propertize "%b" 'face (if active 'dotemacs-modeline-buffer-file))
       (let* ((modified-faces (if (buffer-modified-p) 'dotemacs-modeline-buffer-modified))
@@ -371,7 +371,7 @@ Example:
          (file-name-split (shrink-path-file-mixed project-root
                                                   (file-name-directory buffer-file-truename)
                                                   buffer-file-truename))
-         (active (active)))
+         (active (dotemacs-modeline--active)))
     (if (null file-name-split)
         (propertize "%b" 'face (if active 'dotemacs-modeline-buffer-file))
       (pcase-let ((`(,root-path-parent ,project ,relative-path ,filename) file-name-split))
@@ -397,10 +397,10 @@ Example:
 ;; Segments
 ;;
 
-(def-modeline-segment! buffer-default-directory
+(dotemacs-modeline-def-modeline-segment buffer-default-directory
   "Displays `default-directory'. This is for special buffers like the scratch
 buffer where knowing the current project directory is important."
-  (let ((face (if (active) 'dotemacs-modeline-buffer-path)))
+  (let ((face (if (dotemacs-modeline--active) 'dotemacs-modeline-buffer-path)))
     (concat (if (display-graphic-p) " ")
             (all-the-icons-octicon
              "file-directory"
@@ -411,7 +411,7 @@ buffer where knowing the current project directory is important."
                         'face face))))
 
 ;;
-(def-modeline-segment! buffer-info
+(dotemacs-modeline-def-modeline-segment buffer-info
   "Combined information about the current buffer, including the current working
 directory, the file name, and its state (modified, read-only or non-existent)."
   (concat (cond (buffer-read-only
@@ -444,16 +444,16 @@ directory, the file name, and its state (modified, read-only or non-existent)."
             "%b")))
 
 ;;
-(def-modeline-segment! buffer-info-simple
+(dotemacs-modeline-def-modeline-segment buffer-info-simple
   "Display only the current buffer's name, but with fontification."
   (propertize
    "%b"
    'face (cond ((and buffer-file-name (buffer-modified-p))
                 'dotemacs-modeline-buffer-modified)
-               ((active) 'dotemacs-modeline-buffer-file))))
+               ((dotemacs-modeline--active) 'dotemacs-modeline-buffer-file))))
 
 ;;
-(def-modeline-segment! buffer-encoding
+(dotemacs-modeline-def-modeline-segment buffer-encoding
   "Displays the encoding and eol style of the buffer the same way Atom does."
   (concat (pcase (coding-system-eol-type buffer-file-coding-system)
             (0 "LF  ")
@@ -466,7 +466,7 @@ directory, the file name, and its state (modified, read-only or non-existent)."
           "  "))
 
 ;;
-(def-modeline-segment! major-mode
+(dotemacs-modeline-def-modeline-segment major-mode
   "The major mode, including process, environment and text-scale info."
   (propertize
    (concat (format-mode-line mode-name)
@@ -475,16 +475,16 @@ directory, the file name, and its state (modified, read-only or non-existent)."
            (and (featurep 'face-remap)
                 (/= text-scale-mode-amount 0)
                 (format " (%+d)" text-scale-mode-amount)))
-   'face (if (active) 'dotemacs-modeline-buffer-major-mode)))
+   'face (if (dotemacs-modeline--active) 'dotemacs-modeline-buffer-major-mode)))
 
 ;;
-(def-modeline-segment! vcs
+(dotemacs-modeline-def-modeline-segment vcs
   "Displays the current branch, colored based on its state."
   (when (and vc-mode buffer-file-name)
     (let* ((backend (vc-backend buffer-file-name))
            (state   (vc-state buffer-file-name backend)))
       (let ((face    'mode-line-inactive)
-            (active  (active))
+            (active  (dotemacs-modeline--active))
             (all-the-icons-default-adjust -0.1))
         (concat "  "
                 (cond ((memq state '(edited added))
@@ -526,7 +526,7 @@ directory, the file name, and its state (modified, read-only or non-existent)."
             (propertize text 'face face))
           (if vc-mode "  " " ")))
 
-(def-modeline-segment! flycheck
+(dotemacs-modeline-def-modeline-segment flycheck
   "Displays color-coded flycheck error status in the current buffer with pretty
 icons."
   (when (boundp 'flycheck-last-status-change)
@@ -550,10 +550,10 @@ icons."
   (save-excursion (goto-char pos)
                   (current-column)))
 
-(def-modeline-segment! selection-info
+(dotemacs-modeline-def-modeline-segment selection-info
   "Information about the current selection, such as how many characters and
 lines are selected, or the NxM dimensions of a block selection."
-  (when (and (active) (or mark-active (eq evil-state 'visual)))
+  (when (and (dotemacs-modeline--active) (or mark-active (eq evil-state 'visual)))
     (let ((reg-beg (region-beginning))
           (reg-end (region-end)))
       (propertize
@@ -575,7 +575,7 @@ lines are selected, or the NxM dimensions of a block selection."
 ;;
 (defun dotemacs-modeline--macro-recording ()
   "Display current Emacs or evil macro being recorded."
-  (when (and (active) (or defining-kbd-macro executing-kbd-macro))
+  (when (and (dotemacs-modeline--active) (or defining-kbd-macro executing-kbd-macro))
     (let ((sep (propertize " " 'face 'dotemacs-modeline-panel)))
       (concat sep
               (propertize (if (bound-and-true-p evil-this-macro)
@@ -603,7 +603,7 @@ lines are selected, or the NxM dimensions of a block selection."
               (format " %s+ " total))
              (t
               (format " %s/%d " here total))))
-     'face (if (active) 'dotemacs-modeline-panel))))
+     'face (if (dotemacs-modeline--active) 'dotemacs-modeline-panel))))
 
 (defsubst dotemacs-modeline--evil-substitute ()
   "Show number of matches for evil-ex substitutions and highlights in real time."
@@ -619,7 +619,7 @@ lines are selected, or the NxM dimensions of a block selection."
        (if pattern
            (format " %s matches " (how-many pattern (car range) (cdr range)))
          " - "))
-     'face (if (active) 'dotemacs-modeline-panel))))
+     'face (if (dotemacs-modeline--active) 'dotemacs-modeline-panel))))
 
 (defun dotemacs-themes--overlay-sort (a b)
   (< (overlay-start a) (overlay-start b)))
@@ -641,9 +641,9 @@ lines are selected, or the NxM dimensions of a block selection."
                       -1)
                  "-")
                length))
-     'face (if (active) 'dotemacs-modeline-panel))))
+     'face (if (dotemacs-modeline--active) 'dotemacs-modeline-panel))))
 
-(def-modeline-segment! matches
+(dotemacs-modeline-def-modeline-segment matches
   "Displays: 1. the currently recording macro, 2. A current/total for the
 current search term (with anzu), 3. The number of substitutions being conducted
 with `evil-ex-substitute', and/or 4. The number of active `iedit' regions."
@@ -655,19 +655,19 @@ with `evil-ex-substitute', and/or 4. The number of active `iedit' regions."
          (if buffer-file-name " %I "))))
 
 ;; TODO Include other information
-(def-modeline-segment! media-info
+(dotemacs-modeline-def-modeline-segment media-info
   "Metadata regarding the current file, such as dimensions for images."
   (cond ((eq major-mode 'image-mode)
          (cl-destructuring-bind (width . height)
              (image-size (image-get-display-property) :pixels)
            (format "  %dx%d  " width height)))))
 
-(def-modeline-segment! bar
+(dotemacs-modeline-def-modeline-segment bar
   "The bar regulates the height of the mode-line in GUI Emacs.
 Returns \"\" to not break --no-window-system."
   (if (display-graphic-p)
       (dotemacs-modeline--make-xpm
-       (face-background (if (active)
+       (face-background (if (dotemacs-modeline--active)
                             'dotemacs-modeline-bar
                           'dotemacs-modeline-inactive-bar)
                         nil t)
@@ -680,23 +680,23 @@ Returns \"\" to not break --no-window-system."
 ;; Mode lines
 ;;
 
-(def-modeline! main
+(dotemacs-modeline-def-modeline main
   (bar matches " " buffer-info "  %l:%c %p  " selection-info)
   (buffer-encoding major-mode vcs flycheck))
 
-(def-modeline! minimal
+(dotemacs-modeline-def-modeline minimal
   (bar matches " " buffer-info)
   (media-info major-mode))
 
-(def-modeline! special
+(dotemacs-modeline-def-modeline special
   (bar matches " " buffer-info-simple "  %l:%c %p  " selection-info)
   (buffer-encoding major-mode flycheck))
 
-(def-modeline! project
+(dotemacs-modeline-def-modeline project
   (bar buffer-default-directory)
   (major-mode))
 
-(def-modeline! media
+(dotemacs-modeline-def-modeline media
   (bar " %b  ")
   (media-info major-mode))
 
