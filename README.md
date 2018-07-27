@@ -50,4 +50,4 @@ Install [DejaVu Sans Mono](https://dejavu-fonts.github.io/) or [Source Code Pro]
 
 ## Supported Emacs versions
 
-The config should run on Emacs 25.3 or greater and is designed to degrade smoothly - see the [Travis build](https://travis-ci.org/xuchengpeng/emacs.d).
+The config should run on Emacs 25.2 or greater and is designed to degrade smoothly - see the [Travis build](https://travis-ci.org/xuchengpeng/emacs.d).
