@@ -44,7 +44,7 @@
 (add-hook 'after-init-hook
           (lambda ()
             (setq file-name-handler-alist file-name-handler-alist-old
-                  gc-cons-threshold 16777216
+                  gc-cons-threshold 800000
                   gc-cons-percentage 0.1)))
 
 (defvar dotemacs-dir (file-truename user-emacs-directory)
