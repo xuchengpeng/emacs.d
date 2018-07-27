@@ -136,26 +136,26 @@
 (add-hook 'after-make-frame-functions #'dotemacs-reload-theme-in-daemon)
 
 ;; modeline configurations
-(defun dotemacs-mode-line-fill (face reserve)
-  "Return empty space using FACE and leaving RESERVE space on the right."
-  (unless reserve
-    (setq reserve 20))
-  (when (and (display-graphic-p) (eq 'right (get-scroll-bar-mode)))
-    (setq reserve (- reserve 3)))
-  (propertize " "
-              'display `((space :align-to
-                                (- (+ right right-fringe right-margin) ,reserve)))
-              'face face))
-
-(defun dotemacs-buffer-encoding-abbrev ()
-  "The line ending convention used in the buffer."
-  (let ((buf-coding (format "%s" buffer-file-coding-system)))
-    (if (string-match "\\(dos\\|unix\\|mac\\)" buf-coding)
-        (match-string 1 buf-coding)
-      buf-coding)))
-
 (require 'init-modeline)
 
+;; (defun dotemacs-mode-line-fill (face reserve)
+;;   "Return empty space using FACE and leaving RESERVE space on the right."
+;;   (unless reserve
+;;     (setq reserve 20))
+;;   (when (and (display-graphic-p) (eq 'right (get-scroll-bar-mode)))
+;;     (setq reserve (- reserve 3)))
+;;   (propertize " "
+;;               'display `((space :align-to
+;;                                 (- (+ right right-fringe right-margin) ,reserve)))
+;;               'face face))
+;; 
+;; (defun dotemacs-buffer-encoding-abbrev ()
+;;   "The line ending convention used in the buffer."
+;;   (let ((buf-coding (format "%s" buffer-file-coding-system)))
+;;     (if (string-match "\\(dos\\|unix\\|mac\\)" buf-coding)
+;;         (match-string 1 buf-coding)
+;;       buf-coding)))
+;; 
 ;; (setq-default mode-line-format
 ;;                 (list
 ;;                  "%e"
