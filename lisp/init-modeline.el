@@ -85,7 +85,7 @@ error if it doesn't exist."
 (defun dotemacs-set-modeline (key &optional default)
   "Set the modeline format. Does nothing if the modeline KEY doesn't exist. If
 DEFAULT is non-nil, set the default mode-line for all buffers."
-  (let ((modeline (dotemacs-modeline key)))
+  (when-let* ((modeline (dotemacs-modeline key)))
     (setf (if default
               (default-value 'mode-line-format)
             (buffer-local-value 'mode-line-format (current-buffer)))

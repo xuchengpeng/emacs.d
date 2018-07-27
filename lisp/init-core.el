@@ -34,6 +34,12 @@
 (setq user-full-name    dotemacs-full-name
       user-mail-address dotemacs-mail-address)
 
+(eval-and-compile
+  (when (version< emacs-version "26")
+    (with-no-warnings
+      (defalias 'if-let* #'if-let)
+      (defalias 'when-let* #'when-let))))
+
 ;; alias with-eval-after-load
 (if (fboundp 'with-eval-after-load)
     (defalias 'dotemacs-after-load 'with-eval-after-load)
