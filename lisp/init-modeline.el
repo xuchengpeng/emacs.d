@@ -486,7 +486,8 @@ directory, the file name, and its state (modified, read-only or non-existent)."
       (let ((face    'mode-line-inactive)
             (active  (dotemacs-modeline--active))
             (all-the-icons-default-adjust -0.1))
-        (concat "  "
+        (concat (when (eq system-type 'gnu/linux)
+                "  "
                 (cond ((memq state '(edited added))
                        (if active (setq face 'dotemacs-modeline-info))
                        (all-the-icons-octicon
@@ -507,7 +508,7 @@ directory, the file name, and its state (modified, read-only or non-existent)."
                        (all-the-icons-octicon
                         "git-compare"
                         :face face
-                        :v-adjust -0.05)))
+                        :v-adjust -0.05))))
                 " "
                 (propertize (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2))
                             'face (if active face))
