@@ -338,6 +338,13 @@ Returns \"\" to not break --no-window-system."
     ""))
 
 ;;
+;; misc-info
+;;
+(dotemacs-modeline-def-modeline-segment misc-info
+  (propertize (format-time-string " %H:%M ")
+              'help-echo (format-time-string "%c")))
+
+;;
 ;; position
 ;;
 
