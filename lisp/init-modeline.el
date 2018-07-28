@@ -91,16 +91,6 @@ DEFAULT is non-nil, set the default mode-line for all buffers."
             (buffer-local-value 'mode-line-format (current-buffer)))
           modeline)))
 
-(defun dotemacs-modeline-project-root ()
-  "Get the path to the root of your project.
-If STRICT-P, return nil if no project was found, otherwise return
-`default-directory'."
-  (let (projectile-require-project-root)
-    (projectile-project-root)))
-
-(use-package all-the-icons
-  :ensure t)
-
 (use-package eldoc-eval
   :disabled
   :ensure t
@@ -163,12 +153,6 @@ If STRICT-P, return nil if no project was found, otherwise return
 (advice-add #'handle-switch-frame :after #'dotemacs-modeline|set-selected-window)
 (advice-add #'select-window :after #'dotemacs-modeline|set-selected-window)
 
-;; fish-style modeline
-(use-package shrink-path
-  :ensure t
-  :commands (shrink-path-prompt shrink-path-file-mixed))
-
-
 ;;
 ;; Variables
 ;;
@@ -179,30 +163,12 @@ If STRICT-P, return nil if no project was found, otherwise return
 (defvar dotemacs-modeline-bar-width 3
   "How wide the mode-line bar should be (only respected in GUI emacs).")
 
-(defvar dotemacs-modeline-vspc
-  (propertize " " 'face 'variable-pitch)
-  "TODO")
-
-(defvar dotemacs-modeline-buffer-file-name-style 'truncate-upto-project
-  "Determines the style used by `dotemacs-modeline-buffer-file-name'.
-
-Given ~/Projects/FOSS/emacs/lisp/comint.el
-truncate-upto-project => ~/P/F/emacs/lisp/comint.el
-truncate-upto-root => ~/P/F/e/lisp/comint.el
-truncate-all => ~/P/F/e/l/comint.el
-relative-from-project => emacs/lisp/comint.el
-relative-to-project => lisp/comint.el
-file-name => comint.el")
-
 ;; externs
 (defvar anzu--state nil)
 (defvar evil-mode nil)
 (defvar evil-state nil)
 (defvar evil-visual-selection nil)
 (defvar iedit-mode nil)
-(defvar all-the-icons-scale-factor)
-(defvar all-the-icons-default-adjust)
-
 
 ;;
 ;; Custom faces
@@ -243,9 +209,9 @@ file-name => comint.el")
 `iedit'"
   :group 'dotemacs-modeline)
 
-(defface dotemacs-modeline-info
+(defface dotemacs-modeline-success
   `((t (:inherit (success bold))))
-  "Face for info-level messages in the modeline. Used by `*vc'."
+  "Face for success messages in the modeline. Used by `*flycheck'."
   :group 'dotemacs-modeline)
 
 (defface dotemacs-modeline-warning
@@ -253,7 +219,7 @@ file-name => comint.el")
   "Face for warnings in the modeline. Used by `*flycheck'"
   :group 'dotemacs-modeline)
 
-(defface dotemacs-modeline-urgent
+(defface dotemacs-modeline-error
   `((t (:inherit (error bold))))
   "Face for errors in the modeline. Used by `*flycheck'"
   :group 'dotemacs-modeline)
@@ -276,21 +242,6 @@ active."
 ;;
 ;; Modeline helpers
 ;;
-
-(defun dotemacs-modeline-maybe-icon-octicon (&rest args)
-  "Display octicon via `ARGS'."
-  (when (display-graphic-p)
-    (apply 'all-the-icons-octicon args)))
-
-(defun dotemacs-modeline-maybe-icon-faicon (&rest args)
-  "Display font awesome icon via `ARGS'."
-  (when (display-graphic-p)
-    (apply 'all-the-icons-faicon args)))
-
-(defun dotemacs-modeline-maybe-icon-material (&rest args)
-  "Display material icon via `ARGS'."
-  (when (display-graphic-p)
-    (apply 'all-the-icons-material args)))
 
 (defsubst dotemacs-modeline--active ()
   (eq (selected-window) dotemacs-modeline-current-window))
@@ -322,92 +273,6 @@ active."
                                (if (eq idx len) "\"};" "\",\n")))))
       'xpm t :ascent 'center))))
 
-(defun dotemacs-modeline-buffer-file-name ()
-  "Propertized `buffer-file-name' based on `dotemacs-modeline-buffer-file-name-style'."
-  (propertize
-   (pcase dotemacs-modeline-buffer-file-name-style
-     ('truncate-upto-project (dotemacs-modeline--buffer-file-name 'shrink))
-     ('truncate-upto-root (dotemacs-modeline--buffer-file-name-truncate))
-     ('truncate-all (dotemacs-modeline--buffer-file-name-truncate t))
-     ('relative-to-project (dotemacs-modeline--buffer-file-name-relative))
-     ('relative-from-project (dotemacs-modeline--buffer-file-name-relative 'include-project))
-     ('file-name (propertize (file-name-nondirectory buffer-file-name)
-                             'face
-                             (let ((face (or (and (buffer-modified-p)
-                                                  'dotemacs-modeline-buffer-modified)
-                                             (and (dotemacs-modeline--active)
-                                                  'dotemacs-modeline-buffer-file))))
-                               (when face `(:inherit ,face))))))
-   'help-echo buffer-file-truename))
-
-(defun dotemacs-modeline--buffer-file-name-truncate (&optional truncate-tail)
-  "Propertized `buffer-file-name' that truncates every dir along path.
-If TRUNCATE-TAIL is t also truncate the parent directory of the file."
-  (let ((dirs (shrink-path-prompt (file-name-directory buffer-file-truename)))
-        (active (dotemacs-modeline--active)))
-    (if (null dirs)
-        (propertize "%b" 'face (if active 'dotemacs-modeline-buffer-file))
-      (let ((modified-faces (if (buffer-modified-p) 'dotemacs-modeline-buffer-modified)))
-        (let ((dirname (car dirs))
-              (basename (cdr dirs))
-              (dir-faces (or modified-faces (if active 'dotemacs-modeline-project-root-dir)))
-              (file-faces (or modified-faces (if active 'dotemacs-modeline-buffer-file))))
-          (concat (propertize (concat dirname
-                                      (if truncate-tail (substring basename 0 1) basename)
-                                      "/")
-                              'face (if dir-faces `(:inherit ,dir-faces)))
-                  (propertize (file-name-nondirectory buffer-file-name)
-                              'face (if file-faces `(:inherit ,file-faces)))))))))
-
-(defun dotemacs-modeline--buffer-file-name-relative (&optional include-project)
-  "Propertized `buffer-file-name' showing directories relative to project's root only."
-  (let ((root (dotemacs-modeline-project-root))
-        (active (dotemacs-modeline--active)))
-    (if (null root)
-        (propertize "%b" 'face (if active 'dotemacs-modeline-buffer-file))
-      (let* ((modified-faces (if (buffer-modified-p) 'dotemacs-modeline-buffer-modified))
-             (relative-dirs (file-relative-name (file-name-directory buffer-file-truename)
-                                                (if include-project (concat root "../") root)))
-             (relative-faces (or modified-faces (if active 'dotemacs-modeline-buffer-path)))
-             (file-faces (or modified-faces (if active 'dotemacs-modeline-buffer-file))))
-        (if (equal "./" relative-dirs) (setq relative-dirs ""))
-        (concat (propertize relative-dirs 'face (if relative-faces `(:inherit ,relative-faces)))
-                (propertize (file-name-nondirectory buffer-file-truename)
-                            'face (if file-faces `(:inherit ,file-faces))))))))
-
-(defun dotemacs-modeline--buffer-file-name (truncate-project-root-parent)
-  "Propertized `buffer-file-name'.
-If TRUNCATE-PROJECT-ROOT-PARENT is t space will be saved by truncating it down
-fish-shell style.
-
-Example:
-~/Projects/FOSS/emacs/lisp/comint.el => ~/P/F/emacs/lisp/comint.el"
-  (let* ((project-root (dotemacs-modeline-project-root))
-         (file-name-split (shrink-path-file-mixed project-root
-                                                  (file-name-directory buffer-file-truename)
-                                                  buffer-file-truename))
-         (active (dotemacs-modeline--active)))
-    (if (null file-name-split)
-        (propertize "%b" 'face (if active 'dotemacs-modeline-buffer-file))
-      (pcase-let ((`(,root-path-parent ,project ,relative-path ,filename) file-name-split))
-        (let ((modified-faces (if (buffer-modified-p) 'dotemacs-modeline-buffer-modified)))
-          (let ((sp-faces       (or modified-faces (if active 'font-lock-comment-face)))
-                (project-faces  (or modified-faces (if active 'font-lock-string-face)))
-                (relative-faces (or modified-faces (if active 'dotemacs-modeline-buffer-path)))
-                (file-faces     (or modified-faces (if active 'dotemacs-modeline-buffer-file))))
-            (let ((sp-props       `(,@(if sp-faces       `(:inherit ,sp-faces))      ,@(if active '(:weight bold))))
-                  (project-props  `(,@(if project-faces  `(:inherit ,project-faces)) ,@(if active '(:weight bold))))
-                  (relative-props `(,@(if relative-faces `(:inherit ,relative-faces))))
-                  (file-props     `(,@(if file-faces     `(:inherit ,file-faces)))))
-              (concat (propertize (if truncate-project-root-parent
-                                      root-path-parent
-                                    (abbreviate-file-name project-root))
-                                  'face sp-props)
-                      (propertize (concat project "/") 'face project-props)
-                      (if relative-path (propertize relative-path 'face relative-props))
-                      (propertize filename 'face file-props)))))))))
-
-
 ;;
 ;; Segments
 ;;
@@ -417,49 +282,11 @@ Example:
 buffer where knowing the current project directory is important."
   (let ((face (if (dotemacs-modeline--active) 'dotemacs-modeline-buffer-path)))
     (concat (if (display-graphic-p) " ")
-            (dotemacs-modeline-maybe-icon-octicon
-             "file-directory"
-             :face face
-             :v-adjust -0.05
-             :height 1.25)
             (propertize (concat " " (abbreviate-file-name default-directory))
                         'face face))))
 
 ;;
 (dotemacs-modeline-def-modeline-segment buffer-info
-  "Combined information about the current buffer, including the current working
-directory, the file name, and its state (modified, read-only or non-existent)."
-  (concat (cond (buffer-read-only
-                 (concat (dotemacs-modeline-maybe-icon-octicon
-                          "lock"
-                          :face 'dotemacs-modeline-warning
-                          :v-adjust -0.05)
-                         " "))
-                ((buffer-modified-p)
-                 (concat (dotemacs-modeline-maybe-icon-faicon
-                          "floppy-o"
-                          :face 'dotemacs-modeline-buffer-modified
-                          :v-adjust -0.0575)
-                         " "))
-                ((and buffer-file-name
-                      (not (file-exists-p buffer-file-name)))
-                 (concat (dotemacs-modeline-maybe-icon-octicon
-                          "circle-slash"
-                          :face 'dotemacs-modeline-urgent
-                          :v-adjust -0.05)
-                         " "))
-                ((buffer-narrowed-p)
-                 (concat (dotemacs-modeline-maybe-icon-octicon
-                          "fold"
-                          :face 'dotemacs-modeline-warning
-                          :v-adjust -0.05)
-                         " ")))
-          (if buffer-file-name
-              (dotemacs-modeline-buffer-file-name)
-            "%b")))
-
-;;
-(dotemacs-modeline-def-modeline-segment buffer-info-simple
   "Display only the current buffer's name, but with fontification."
   (propertize
    "%b"
@@ -496,70 +323,36 @@ directory, the file name, and its state (modified, read-only or non-existent)."
 (dotemacs-modeline-def-modeline-segment vcs
   "Displays the current branch, colored based on its state."
   (when (and vc-mode buffer-file-name)
-    (let* ((backend (vc-backend buffer-file-name))
-           (state   (vc-state buffer-file-name backend)))
+    (let* (backend (vc-backend buffer-file-name))
       (let ((face    'mode-line-inactive)
-            (active  (dotemacs-modeline--active))
-            (all-the-icons-default-adjust -0.1))
-        (concat (when (eq system-type 'gnu/linux)
-                "  "
-                (cond ((memq state '(edited added))
-                       (if active (setq face 'dotemacs-modeline-info))
-                       (dotemacs-modeline-maybe-icon-octicon
-                        "git-compare"
-                        :face face
-                        :v-adjust -0.05))
-                      ((eq state 'needs-merge)
-                       (if active (setq face 'dotemacs-modeline-info))
-                       (dotemacs-modeline-maybe-icon-octicon "git-merge" :face face))
-                      ((eq state 'needs-update)
-                       (if active (setq face 'dotemacs-modeline-warning))
-                       (dotemacs-modeline-maybe-icon-octicon "arrow-down" :face face))
-                      ((memq state '(removed conflict unregistered))
-                       (if active (setq face 'dotemacs-modeline-urgent))
-                       (dotemacs-modeline-maybe-icon-octicon "alert" :face face))
-                      (t
-                       (if active (setq face 'font-lock-doc-face))
-                       (dotemacs-modeline-maybe-icon-octicon
-                        "git-compare"
-                        :face face
-                        :v-adjust -0.05))))
-                " "
+            (active  (dotemacs-modeline--active)))
+        (concat " "
                 (propertize (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2))
                             'face (if active face))
                 " ")))))
 
 ;;
-(defun dotemacs-ml-icon (icon &optional text face voffset)
-  "Displays an octicon ICON with FACE, followed by TEXT. Uses
-`all-the-icons-octicon' to fetch the icon."
-  (concat (if vc-mode " " "  ")
-          (when icon
-            (concat
-             (dotemacs-modeline-maybe-icon-material icon :face face :height 1.1 :v-adjust (or voffset -0.2))
-             (if text dotemacs-modeline-vspc)))
-          (when text
-            (propertize text 'face face))
-          (if vc-mode "  " " ")))
-
 (dotemacs-modeline-def-modeline-segment flycheck
   "Displays color-coded flycheck error status in the current buffer with pretty
 icons."
   (when (boundp 'flycheck-last-status-change)
     (pcase flycheck-last-status-change
-      ('finished (if flycheck-current-errors
-                     (let-alist (flycheck-count-errors flycheck-current-errors)
-                       (let ((sum (+ (or .error 0) (or .warning 0))))
-                         (dotemacs-ml-icon "do_not_disturb_alt"
-                                        (number-to-string sum)
-                                        (if .error 'dotemacs-modeline-urgent 'dotemacs-modeline-warning)
-                                        -0.25)))
-                   (dotemacs-ml-icon "check" nil 'dotemacs-modeline-info)))
-      ('running     (dotemacs-ml-icon "access_time" nil 'font-lock-doc-face -0.25))
-      ('no-checker  (dotemacs-ml-icon "sim_card_alert" "-" 'font-lock-doc-face))
-      ('errored     (dotemacs-ml-icon "sim_card_alert" "Error" 'dotemacs-modeline-urgent))
-      ('interrupted (dotemacs-ml-icon "pause" "Interrupted" 'font-lock-doc-face)))))
-      ;; ('interrupted (dotemacs-ml-icon "x" "Interrupted" 'font-lock-doc-face)))))
+      ((\` not-checked) nil)
+      ((\` no-checker) (propertize " -" 'face 'dotemacs-modeline-warning))
+      ((\` running) (propertize " ?" 'face 'dotemacs-modeline-success))
+      ((\` errored) (propertize " !" 'face 'dotemacs-modeline-error))
+      ((\` finished)
+       (let* ((error-counts (flycheck-count-errors flycheck-current-errors))
+              (no-errors (cdr (assq 'error error-counts)))
+              (no-warnings (cdr (assq 'warning error-counts)))
+              (face (cond (no-errors 'dotemacs-modeline-error)
+                          (no-warnings 'dotemacs-modeline-warning)
+                          (t 'dotemacs-modeline-success))))
+         (propertize (format "[%s/%s]" (or no-errors 0) (or no-warnings 0))
+                     'face face)))
+      ((\` interrupted) " -")
+      ((\` suspicious) '(propertize " ?" 'face 'dotemacs-modeline-warning))
+      )))
 
 ;;
 (defsubst dotemacs-column (pos)
@@ -589,21 +382,6 @@ lines are selected, or the NxM dimensions of a block selection."
 
 
 ;;
-(defun dotemacs-modeline--macro-recording ()
-  "Display current Emacs or evil macro being recorded."
-  (when (and (dotemacs-modeline--active) (or defining-kbd-macro executing-kbd-macro))
-    (let ((sep (propertize " " 'face 'dotemacs-modeline-panel)))
-      (concat sep
-              (propertize (if (bound-and-true-p evil-this-macro)
-                              (char-to-string evil-this-macro)
-                            "Macro")
-                          'face 'dotemacs-modeline-panel)
-              sep
-              (dotemacs-modeline-maybe-icon-octicon "triangle-right"
-                                     :face 'dotemacs-modeline-panel
-                                     :v-adjust -0.05)
-              sep))))
-
 (defsubst dotemacs-modeline--anzu ()
   "Show the match index and total number thereof. Requires `anzu', also
 `evil-anzu' if using `evil-mode' for compatibility with `evil-search'."
@@ -663,8 +441,7 @@ lines are selected, or the NxM dimensions of a block selection."
   "Displays: 1. the currently recording macro, 2. A current/total for the
 current search term (with anzu), 3. The number of substitutions being conducted
 with `evil-ex-substitute', and/or 4. The number of active `iedit' regions."
-  (let ((meta (concat (dotemacs-modeline--macro-recording)
-                      (dotemacs-modeline--anzu)
+  (let ((meta (concat (dotemacs-modeline--anzu)
                       (dotemacs-modeline--evil-substitute)
                       (dotemacs-modeline--iedit))))
      (or (and (not (equal meta "")) meta)
@@ -724,15 +501,15 @@ See `mode-line-percent-position'.")
 ;;
 
 (dotemacs-modeline-def-modeline main
-  (bar matches " " buffer-info-simple buffer-position selection-info)
+  (bar matches " " buffer-info buffer-position selection-info)
   (buffer-encoding major-mode vcs flycheck))
 
 (dotemacs-modeline-def-modeline minimal
-  (bar matches " " buffer-info-simple)
+  (bar matches " " buffer-info)
   (media-info major-mode))
 
 (dotemacs-modeline-def-modeline special
-  (bar matches " " buffer-info-simple buffer-position selection-info)
+  (bar matches " " buffer-info buffer-position selection-info)
   (buffer-encoding major-mode flycheck))
 
 (dotemacs-modeline-def-modeline project
