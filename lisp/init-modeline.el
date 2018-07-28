@@ -86,12 +86,12 @@
 
 (defface dotemacs-modeline-warning
   `((t (:inherit (warning bold))))
-  "Face for warnings in the modeline. Used by `*flycheck'"
+  "Face for warnings in the modeline. Used by `*flycheck'."
   :group 'dotemacs-modeline)
 
 (defface dotemacs-modeline-error
   `((t (:inherit (error bold))))
-  "Face for errors in the modeline. Used by `*flycheck'"
+  "Face for errors in the modeline. Used by `*flycheck'."
   :group 'dotemacs-modeline)
 
 ;; Bar
@@ -290,11 +290,7 @@ buffer where knowing the current project directory is important."
 icons."
   (when (boundp 'flycheck-last-status-change)
     (pcase flycheck-last-status-change
-      ;; ((\` not-checked) nil)
-      ((\` no-checker) (propertize " -" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-warning)))
-      ((\` running) (propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-success)))
-      ((\` errored) (propertize " !" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-error)))
-      ((\` finished)
+      (`finished
        (let* ((error-counts (flycheck-count-errors flycheck-current-errors))
               (no-errors (cdr (assq 'error error-counts)))
               (no-warnings (cdr (assq 'warning error-counts)))
@@ -303,8 +299,12 @@ icons."
                           (t 'dotemacs-modeline-success))))
          (propertize (format "[%s/%s]" (or no-errors 0) (or no-warnings 0))
                      'face (if (dotemacs-modeline--active) face))))
-      ((\` interrupted) " -")
-      ((\` suspicious) '(propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-warning)))
+      (`interrupted " -")
+      (`suspicious '(propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-warning)))
+      (`running (propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-success)))
+      (`errored (propertize " !" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-error)))
+      (`no-checker (propertize " -" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-warning)))
+      ;; (`not-checked nil)
       )))
 
 ;;
