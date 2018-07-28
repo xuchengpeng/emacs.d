@@ -31,78 +31,6 @@
 
 ;;; Code:
 
-(defmacro dotemacs-modeline-def-modeline-segment (name &rest forms)
-  "Defines a modeline segment and byte compiles it."
-  (declare (indent defun) (doc-string 2))
-  (let ((sym (intern (format "dotemacs-modeline-segment--%s" name))))
-    `(progn
-       (defun ,sym () ,@forms)
-       ,(unless (bound-and-true-p byte-compile-current-file)
-          `(let (byte-compile-warnings)
-             (byte-compile #',sym))))))
-
-(defsubst dotemacs--prepare-modeline-segments (segments)
-  (cl-loop for seg in segments
-           if (stringp seg)
-            collect seg
-           else
-            collect (list (intern (format "dotemacs-modeline-segment--%s" (symbol-name seg))))))
-
-(defmacro dotemacs-modeline-def-modeline (name lhs &optional rhs)
-  "Defines a modeline format and byte-compiles it. NAME is a symbol to identify
-it (used by `dotemacs-modeline' for retrieval). LHS and RHS are lists of symbols of
-modeline segments defined with `dotemacs-modeline-def-modeline-segment'.
-Example:
-  (dotemacs-modeline-def-modeline minimal
-    (bar \" \" buffer-info)
-    (media-info major-mode))
-  (dotemacs-set-modeline 'minimal t)"
-  (let ((sym (intern (format "dotemacs-modeline-format--%s" name)))
-        (lhs-forms (dotemacs--prepare-modeline-segments lhs))
-        (rhs-forms (dotemacs--prepare-modeline-segments rhs)))
-    `(progn
-       (defun ,sym ()
-         (let ((lhs (list ,@lhs-forms))
-               (rhs (list ,@rhs-forms)))
-           (let ((rhs-str (format-mode-line rhs)))
-             (list lhs
-                   (propertize
-                    " " 'display
-                    `((space :align-to (- (+ right right-fringe right-margin)
-                                          ,(+ 1 (string-width rhs-str))))))
-                   rhs-str))))
-       ,(unless (bound-and-true-p byte-compile-current-file)
-          `(let (byte-compile-warnings)
-             (byte-compile #',sym))))))
-
-(defun dotemacs-modeline (key)
-  "Returns a mode-line configuration associated with KEY (a symbol). Throws an
-error if it doesn't exist."
-  (let ((fn (intern (format "dotemacs-modeline-format--%s" key))))
-    (when (functionp fn)
-      `(:eval (,fn)))))
-
-(defun dotemacs-set-modeline (key &optional default)
-  "Set the modeline format. Does nothing if the modeline KEY doesn't exist. If
-DEFAULT is non-nil, set the default mode-line for all buffers."
-  (when-let* ((modeline (dotemacs-modeline key)))
-    (setf (if default
-              (default-value 'mode-line-format)
-            (buffer-local-value 'mode-line-format (current-buffer)))
-          modeline)))
-
-;; Keep `dotemacs-modeline-current-window' up-to-date
-(defvar dotemacs-modeline-current-window (frame-selected-window))
-(defun dotemacs-modeline|set-selected-window (&rest _)
-  "Sets `dotemacs-modeline-current-window' appropriately"
-  (when-let* ((win (frame-selected-window)))
-    (unless (minibuffer-window-active-p win)
-      (setq dotemacs-modeline-current-window win))))
-
-(add-hook 'window-configuration-change-hook #'dotemacs-modeline|set-selected-window)
-(add-hook 'focus-in-hook #'dotemacs-modeline|set-selected-window)
-(advice-add #'handle-switch-frame :after #'dotemacs-modeline|set-selected-window)
-(advice-add #'select-window :after #'dotemacs-modeline|set-selected-window)
 
 ;;
 ;; Variables
@@ -176,6 +104,79 @@ active."
   "The face used for the left-most bar on the mode-line of an inactive window."
   :group 'dotemacs-modeline)
 
+
+(defmacro dotemacs-modeline-def-modeline-segment (name &rest forms)
+  "Defines a modeline segment and byte compiles it."
+  (declare (indent defun) (doc-string 2))
+  (let ((sym (intern (format "dotemacs-modeline-segment--%s" name))))
+    `(progn
+       (defun ,sym () ,@forms)
+       ,(unless (bound-and-true-p byte-compile-current-file)
+          `(let (byte-compile-warnings)
+             (byte-compile #',sym))))))
+
+(defsubst dotemacs--prepare-modeline-segments (segments)
+  (cl-loop for seg in segments
+           if (stringp seg)
+            collect seg
+           else
+            collect (list (intern (format "dotemacs-modeline-segment--%s" (symbol-name seg))))))
+
+(defmacro dotemacs-modeline-def-modeline (name lhs &optional rhs)
+  "Defines a modeline format and byte-compiles it. NAME is a symbol to identify
+it (used by `dotemacs-modeline' for retrieval). LHS and RHS are lists of symbols of
+modeline segments defined with `dotemacs-modeline-def-modeline-segment'.
+Example:
+  (dotemacs-modeline-def-modeline minimal
+    (bar \" \" buffer-info)
+    (media-info major-mode))
+  (dotemacs-set-modeline 'minimal t)"
+  (let ((sym (intern (format "dotemacs-modeline-format--%s" name)))
+        (lhs-forms (dotemacs--prepare-modeline-segments lhs))
+        (rhs-forms (dotemacs--prepare-modeline-segments rhs)))
+    `(progn
+       (defun ,sym ()
+         (let ((lhs (list ,@lhs-forms))
+               (rhs (list ,@rhs-forms)))
+           (let ((rhs-str (format-mode-line rhs)))
+             (list lhs
+                   (propertize
+                    " " 'display
+                    `((space :align-to (- (+ right right-fringe right-margin)
+                                          ,(+ 1 (string-width rhs-str))))))
+                   rhs-str))))
+       ,(unless (bound-and-true-p byte-compile-current-file)
+          `(let (byte-compile-warnings)
+             (byte-compile #',sym))))))
+
+(defun dotemacs-modeline (key)
+  "Returns a mode-line configuration associated with KEY (a symbol). Throws an
+error if it doesn't exist."
+  (let ((fn (intern (format "dotemacs-modeline-format--%s" key))))
+    (when (functionp fn)
+      `(:eval (,fn)))))
+
+(defun dotemacs-set-modeline (key &optional default)
+  "Set the modeline format. Does nothing if the modeline KEY doesn't exist. If
+DEFAULT is non-nil, set the default mode-line for all buffers."
+  (when-let* ((modeline (dotemacs-modeline key)))
+    (setf (if default
+              (default-value 'mode-line-format)
+            (buffer-local-value 'mode-line-format (current-buffer)))
+          modeline)))
+
+;; Keep `dotemacs-modeline-current-window' up-to-date
+(defvar dotemacs-modeline-current-window (frame-selected-window))
+(defun dotemacs-modeline|set-selected-window (&rest _)
+  "Sets `dotemacs-modeline-current-window' appropriately"
+  (when-let* ((win (frame-selected-window)))
+    (unless (minibuffer-window-active-p win)
+      (setq dotemacs-modeline-current-window win))))
+
+(add-hook 'window-configuration-change-hook #'dotemacs-modeline|set-selected-window)
+(add-hook 'focus-in-hook #'dotemacs-modeline|set-selected-window)
+(advice-add #'handle-switch-frame :after #'dotemacs-modeline|set-selected-window)
+(advice-add #'select-window :after #'dotemacs-modeline|set-selected-window)
 
 ;;
 ;; Modeline helpers
@@ -275,7 +276,7 @@ buffer where knowing the current project directory is important."
 icons."
   (when (boundp 'flycheck-last-status-change)
     (pcase flycheck-last-status-change
-      ((\` not-checked) nil)
+      ;; ((\` not-checked) nil)
       ((\` no-checker) (propertize " -" 'face 'dotemacs-modeline-warning))
       ((\` running) (propertize " ?" 'face 'dotemacs-modeline-success))
       ((\` errored) (propertize " !" 'face 'dotemacs-modeline-error))
@@ -388,12 +389,11 @@ See `mode-line-percent-position'.")
   (bar " %b  ")
   (media-info major-mode))
 
-
 ;;
 ;; Hooks
 ;;
 
-(defun dotemacs-modeline|init ()
+(defun dotemacs-modeline-init ()
   "Set the default modeline."
   (dotemacs-set-modeline 'main t)
 
@@ -411,12 +411,11 @@ See `mode-line-percent-position'.")
 (defun dotemacs-modeline|set-project-modeline ()
   (dotemacs-set-modeline 'project))
 
-
 ;;
 ;; Bootstrap
 ;;
 
-(add-hook 'after-init-hook #'dotemacs-modeline|init)
+(add-hook 'after-init-hook #'dotemacs-modeline-init)
 ;; (add-hook 'dotemacs-scratch-buffer-hook #'dotemacs-modeline|set-special-modeline)
 ;; (add-hook 'dotemacs-dashboard-mode-hook #'dotemacs-modeline|set-project-modeline)
 
