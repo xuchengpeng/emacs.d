@@ -266,6 +266,7 @@ buffer where knowing the current project directory is important."
     (let* (backend (vc-backend buffer-file-name))
       (let ((face    'mode-line-inactive)
             (active  (dotemacs-modeline--active)))
+        (if active (setq face 'dotemacs-modeline-success))
         (concat " "
                 (propertize (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2))
                             'face (if active face))
@@ -278,9 +279,9 @@ icons."
   (when (boundp 'flycheck-last-status-change)
     (pcase flycheck-last-status-change
       ;; ((\` not-checked) nil)
-      ((\` no-checker) (propertize " -" 'face 'dotemacs-modeline-warning))
-      ((\` running) (propertize " ?" 'face 'dotemacs-modeline-success))
-      ((\` errored) (propertize " !" 'face 'dotemacs-modeline-error))
+      ((\` no-checker) (propertize " -" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-warning)))
+      ((\` running) (propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-success)))
+      ((\` errored) (propertize " !" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-error)))
       ((\` finished)
        (let* ((error-counts (flycheck-count-errors flycheck-current-errors))
               (no-errors (cdr (assq 'error error-counts)))
@@ -289,9 +290,9 @@ icons."
                           (no-warnings 'dotemacs-modeline-warning)
                           (t 'dotemacs-modeline-success))))
          (propertize (format "[%s/%s]" (or no-errors 0) (or no-warnings 0))
-                     'face face)))
+                     'face (if (dotemacs-modeline--active) face))))
       ((\` interrupted) " -")
-      ((\` suspicious) '(propertize " ?" 'face 'dotemacs-modeline-warning))
+      ((\` suspicious) '(propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-warning)))
       )))
 
 ;;
