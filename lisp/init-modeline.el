@@ -95,11 +95,6 @@
   "The face used for the left-most bar on the mode-line of an active window."
   :group 'dotemacs-modeline)
 
-(defface dotemacs-modeline-eldoc-bar '((t (:inherit shadow)))
-  "The face used for the left-most bar on the mode-line when eldoc-eval is
-active."
-  :group 'dotemacs-modeline)
-
 (defface dotemacs-modeline-inactive-bar '((t (:inherit warning :inverse-video t)))
   "The face used for the left-most bar on the mode-line of an inactive window."
   :group 'dotemacs-modeline)
@@ -263,10 +258,20 @@ buffer where knowing the current project directory is important."
 (dotemacs-modeline-def-modeline-segment vcs
   "Displays the current branch, colored based on its state."
   (when (and vc-mode buffer-file-name)
-    (let* (backend (vc-backend buffer-file-name))
+    (let* ((backend (vc-backend buffer-file-name))
+           (state   (vc-state buffer-file-name backend)))
       (let ((face    'mode-line-inactive)
             (active  (dotemacs-modeline--active)))
-        (if active (setq face 'dotemacs-modeline-success))
+        (cond ((memq state '(edited added))
+                (if active (setq face 'dotemacs-modeline-success)))
+               ((eq state 'needs-merge)
+                (if active (setq face 'dotemacs-modeline-success)))
+               ((eq state 'needs-update)
+                (if active (setq face 'dotemacs-modeline-warning)))
+               ((memq state '(removed conflict unregistered))
+                (if active (setq face 'dotemacs-modeline-error)))
+               (t
+                (if active (setq face 'font-lock-doc-face))))
         (concat " "
                 (propertize (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2))
                             'face (if active face))
