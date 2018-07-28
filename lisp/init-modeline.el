@@ -691,13 +691,40 @@ Returns \"\" to not break --no-window-system."
        dotemacs-modeline-bar-width)
     ""))
 
+;;
+;; position
+;;
+
+;; Be compatible with Emacs 25.
+(defvar-local dotemacs-modeline-column-zero-based
+  (or (bound-and-true-p column-number-indicator-zero-based) t)
+  "When non-nil, mode line displays column numbers zero-based.
+See `column-number-indicator-zero-based'.")
+
+(defvar-local dotemacs-modeline-percent-position
+  (or (bound-and-true-p mode-line-percent-position) '(-3 "%p"))
+  "Specification of \"percentage offset\" of window through buffer.
+See `mode-line-percent-position'.")
+
+(setq-default mode-line-position
+              '((line-number-mode
+                 (column-number-mode
+                  (dotemacs-modeline-column-zero-based " %l:%c" " %l:%C")
+                  " %l")
+                 (column-number-mode (dotemacs-modeline-column-zero-based " :%c" " :%C")))
+                (if dotemacs-modeline-percent-position (" " dotemacs-modeline-percent-position))
+                (:eval (when (or line-number-mode column-number-mode dotemacs-modeline-percent-position) " "))))
+
+(dotemacs-modeline-def-modeline-segment buffer-position
+  "The buffer position information."
+  '(" " mode-line-position " "))
 
 ;;
 ;; Mode lines
 ;;
 
 (dotemacs-modeline-def-modeline main
-  (bar matches " " buffer-info-simple "  %l:%c %p  " selection-info)
+  (bar matches " " buffer-info-simple buffer-position selection-info)
   (buffer-encoding major-mode vcs flycheck))
 
 (dotemacs-modeline-def-modeline minimal
@@ -705,7 +732,7 @@ Returns \"\" to not break --no-window-system."
   (media-info major-mode))
 
 (dotemacs-modeline-def-modeline special
-  (bar matches " " buffer-info-simple "  %l:%c %p  " selection-info)
+  (bar matches " " buffer-info-simple buffer-position selection-info)
   (buffer-encoding major-mode flycheck))
 
 (dotemacs-modeline-def-modeline project
