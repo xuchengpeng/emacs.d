@@ -277,6 +277,21 @@ active."
 ;; Modeline helpers
 ;;
 
+(defun dotemacs-modeline-maybe-icon-octicon (&rest args)
+  "Display octicon via `ARGS'."
+  (when (display-graphic-p)
+    (apply 'all-the-icons-octicon args)))
+
+(defun dotemacs-modeline-maybe-icon-faicon (&rest args)
+  "Display font awesome icon via `ARGS'."
+  (when (display-graphic-p)
+    (apply 'all-the-icons-faicon args)))
+
+(defun dotemacs-modeline-maybe-icon-material (&rest args)
+  "Display material icon via `ARGS'."
+  (when (display-graphic-p)
+    (apply 'all-the-icons-material args)))
+
 (defsubst dotemacs-modeline--active ()
   (eq (selected-window) dotemacs-modeline-current-window))
 
@@ -402,7 +417,7 @@ Example:
 buffer where knowing the current project directory is important."
   (let ((face (if (dotemacs-modeline--active) 'dotemacs-modeline-buffer-path)))
     (concat (if (display-graphic-p) " ")
-            (all-the-icons-octicon
+            (dotemacs-modeline-maybe-icon-octicon
              "file-directory"
              :face face
              :v-adjust -0.05
@@ -415,26 +430,26 @@ buffer where knowing the current project directory is important."
   "Combined information about the current buffer, including the current working
 directory, the file name, and its state (modified, read-only or non-existent)."
   (concat (cond (buffer-read-only
-                 (concat (all-the-icons-octicon
+                 (concat (dotemacs-modeline-maybe-icon-octicon
                           "lock"
                           :face 'dotemacs-modeline-warning
                           :v-adjust -0.05)
                          " "))
                 ((buffer-modified-p)
-                 (concat (all-the-icons-faicon
+                 (concat (dotemacs-modeline-maybe-icon-faicon
                           "floppy-o"
                           :face 'dotemacs-modeline-buffer-modified
                           :v-adjust -0.0575)
                          " "))
                 ((and buffer-file-name
                       (not (file-exists-p buffer-file-name)))
-                 (concat (all-the-icons-octicon
+                 (concat (dotemacs-modeline-maybe-icon-octicon
                           "circle-slash"
                           :face 'dotemacs-modeline-urgent
                           :v-adjust -0.05)
                          " "))
                 ((buffer-narrowed-p)
-                 (concat (all-the-icons-octicon
+                 (concat (dotemacs-modeline-maybe-icon-octicon
                           "fold"
                           :face 'dotemacs-modeline-warning
                           :v-adjust -0.05)
@@ -490,22 +505,22 @@ directory, the file name, and its state (modified, read-only or non-existent)."
                 "  "
                 (cond ((memq state '(edited added))
                        (if active (setq face 'dotemacs-modeline-info))
-                       (all-the-icons-octicon
+                       (dotemacs-modeline-maybe-icon-octicon
                         "git-compare"
                         :face face
                         :v-adjust -0.05))
                       ((eq state 'needs-merge)
                        (if active (setq face 'dotemacs-modeline-info))
-                       (all-the-icons-octicon "git-merge" :face face))
+                       (dotemacs-modeline-maybe-icon-octicon "git-merge" :face face))
                       ((eq state 'needs-update)
                        (if active (setq face 'dotemacs-modeline-warning))
-                       (all-the-icons-octicon "arrow-down" :face face))
+                       (dotemacs-modeline-maybe-icon-octicon "arrow-down" :face face))
                       ((memq state '(removed conflict unregistered))
                        (if active (setq face 'dotemacs-modeline-urgent))
-                       (all-the-icons-octicon "alert" :face face))
+                       (dotemacs-modeline-maybe-icon-octicon "alert" :face face))
                       (t
                        (if active (setq face 'font-lock-doc-face))
-                       (all-the-icons-octicon
+                       (dotemacs-modeline-maybe-icon-octicon
                         "git-compare"
                         :face face
                         :v-adjust -0.05))))
@@ -521,7 +536,7 @@ directory, the file name, and its state (modified, read-only or non-existent)."
   (concat (if vc-mode " " "  ")
           (when icon
             (concat
-             (all-the-icons-material icon :face face :height 1.1 :v-adjust (or voffset -0.2))
+             (dotemacs-modeline-maybe-icon-material icon :face face :height 1.1 :v-adjust (or voffset -0.2))
              (if text dotemacs-modeline-vspc)))
           (when text
             (propertize text 'face face))
@@ -584,7 +599,7 @@ lines are selected, or the NxM dimensions of a block selection."
                             "Macro")
                           'face 'dotemacs-modeline-panel)
               sep
-              (all-the-icons-octicon "triangle-right"
+              (dotemacs-modeline-maybe-icon-octicon "triangle-right"
                                      :face 'dotemacs-modeline-panel
                                      :v-adjust -0.05)
               sep))))
@@ -682,11 +697,11 @@ Returns \"\" to not break --no-window-system."
 ;;
 
 (dotemacs-modeline-def-modeline main
-  (bar matches " " buffer-info "  %l:%c %p  " selection-info)
+  (bar matches " " buffer-info-simple "  %l:%c %p  " selection-info)
   (buffer-encoding major-mode vcs flycheck))
 
 (dotemacs-modeline-def-modeline minimal
-  (bar matches " " buffer-info)
+  (bar matches " " buffer-info-simple)
   (media-info major-mode))
 
 (dotemacs-modeline-def-modeline special
