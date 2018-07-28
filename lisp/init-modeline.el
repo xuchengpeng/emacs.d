@@ -54,7 +54,7 @@ it (used by `dotemacs-modeline' for retrieval). LHS and RHS are lists of symbols
 modeline segments defined with `dotemacs-modeline-def-modeline-segment'.
 Example:
   (dotemacs-modeline-def-modeline minimal
-    (bar matches \" \" buffer-info)
+    (bar \" \" buffer-info)
     (media-info major-mode))
   (dotemacs-set-modeline 'minimal t)"
   (let ((sym (intern (format "dotemacs-modeline-format--%s" name)))
@@ -91,55 +91,6 @@ DEFAULT is non-nil, set the default mode-line for all buffers."
             (buffer-local-value 'mode-line-format (current-buffer)))
           modeline)))
 
-(use-package eldoc-eval
-  :disabled
-  :ensure t
-  :config
-  (defun dotemacs-modeline-eldoc (text)
-    (concat (when (display-graphic-p)
-              (dotemacs-modeline--make-xpm
-               (face-background 'dotemacs-modeline-eldoc-bar nil t)
-               dotemacs-modeline-height
-               dotemacs-modeline-bar-width))
-            text))
-
-  ;; Show eldoc in the mode-line with `eval-expression'
-  (defun dotemacs-modeline--show-eldoc (input)
-    "Display string STR in the mode-line next to minibuffer."
-    (with-current-buffer (eldoc-current-buffer)
-      (let* ((str              (and (stringp input) input))
-             (mode-line-format (or (and str (or (dotemacs-modeline-eldoc str) str))
-                                   mode-line-format))
-             mode-line-in-non-selected-windows)
-        (force-mode-line-update)
-        (sit-for eldoc-show-in-mode-line-delay))))
-  (setq eldoc-in-minibuffer-show-fn #'dotemacs-modeline--show-eldoc)
-
-  (eldoc-in-minibuffer-mode +1))
-
-;; anzu and evil-anzu expose current/total state that can be displayed in the
-;; mode-line.
-(use-package evil-anzu
-  :disabled
-  :requires evil
-  :init
-  (add-transient-hook! #'evil-ex-start-search (require 'evil-anzu))
-  (add-transient-hook! #'evil-ex-start-word-search (require 'evil-anzu))
-  :config
-  (setq anzu-cons-mode-line-p nil
-        anzu-minimum-input-length 1
-        anzu-search-threshold 250)
-  ;; Avoid anzu conflicts across buffers
-  (mapc #'make-variable-buffer-local
-        '(anzu--total-matched anzu--current-position anzu--state
-          anzu--cached-count anzu--cached-positions anzu--last-command
-          anzu--last-isearch-string anzu--overflow-p))
-  ;; Ensure anzu state is cleared when searches & iedit are done
-  (add-hook 'isearch-mode-end-hook #'anzu--reset-status t)
-  (add-hook '+evil-esc-hook #'anzu--reset-status t)
-  (add-hook 'iedit-mode-end-hook #'anzu--reset-status))
-
-
 ;; Keep `dotemacs-modeline-current-window' up-to-date
 (defvar dotemacs-modeline-current-window (frame-selected-window))
 (defun dotemacs-modeline|set-selected-window (&rest _)
@@ -162,13 +113,6 @@ DEFAULT is non-nil, set the default mode-line for all buffers."
 
 (defvar dotemacs-modeline-bar-width 3
   "How wide the mode-line bar should be (only respected in GUI emacs).")
-
-;; externs
-(defvar anzu--state nil)
-(defvar evil-mode nil)
-(defvar evil-state nil)
-(defvar evil-visual-selection nil)
-(defvar iedit-mode nil)
 
 ;;
 ;; Custom faces
@@ -201,12 +145,6 @@ DEFAULT is non-nil, set the default mode-line for all buffers."
 (defface dotemacs-modeline-highlight
   '((t (:inherit mode-line-emphasis)))
   "Face for bright segments of the mode-line."
-  :group 'dotemacs-modeline)
-
-(defface dotemacs-modeline-panel
-  '((t (:inherit mode-line-highlight)))
-  "Face for 'X out of Y' segments, such as `dotemacs-modeline--anzu', `dotemacs-modeline--evil-substitute' and
-`iedit'"
   :group 'dotemacs-modeline)
 
 (defface dotemacs-modeline-success
@@ -362,90 +300,20 @@ icons."
 (dotemacs-modeline-def-modeline-segment selection-info
   "Information about the current selection, such as how many characters and
 lines are selected, or the NxM dimensions of a block selection."
-  (when (and (dotemacs-modeline--active) (or mark-active (eq evil-state 'visual)))
+  (when (and (dotemacs-modeline--active) mark-active)
     (let ((reg-beg (region-beginning))
           (reg-end (region-end)))
       (propertize
        (let ((lines (count-lines reg-beg (min (1+ reg-end) (point-max)))))
-         (cond ((or (bound-and-true-p rectangle-mark-mode)
-                    (eq 'block evil-visual-selection))
+         (cond ((bound-and-true-p rectangle-mark-mode)
                 (let ((cols (abs (- (dotemacs-column reg-end)
                                     (dotemacs-column reg-beg)))))
                   (format "%dx%dB" lines cols)))
-               ((eq 'line evil-visual-selection)
-                (format "%dL" lines))
                ((> lines 1)
                 (format "%dC %dL" (- (1+ reg-end) reg-beg) lines))
                (t
                 (format "%dC" (- (1+ reg-end) reg-beg)))))
        'face 'dotemacs-modeline-highlight))))
-
-
-;;
-(defsubst dotemacs-modeline--anzu ()
-  "Show the match index and total number thereof. Requires `anzu', also
-`evil-anzu' if using `evil-mode' for compatibility with `evil-search'."
-  (when (and anzu--state (not iedit-mode))
-    (propertize
-     (let ((here anzu--current-position)
-           (total anzu--total-matched))
-       (cond ((eq anzu--state 'replace-query)
-              (format " %d replace " total))
-             ((eq anzu--state 'replace)
-              (format " %d/%d " here total))
-             (anzu--overflow-p
-              (format " %s+ " total))
-             (t
-              (format " %s/%d " here total))))
-     'face (if (dotemacs-modeline--active) 'dotemacs-modeline-panel))))
-
-(defsubst dotemacs-modeline--evil-substitute ()
-  "Show number of matches for evil-ex substitutions and highlights in real time."
-  (when (and evil-mode
-             (or (assq 'evil-ex-substitute evil-ex-active-highlights-alist)
-                 (assq 'evil-ex-global-match evil-ex-active-highlights-alist)
-                 (assq 'evil-ex-buffer-match evil-ex-active-highlights-alist)))
-    (propertize
-     (let ((range (if evil-ex-range
-                      (cons (car evil-ex-range) (cadr evil-ex-range))
-                    (cons (line-beginning-position) (line-end-position))))
-           (pattern (car-safe (evil-delimited-arguments evil-ex-argument 2))))
-       (if pattern
-           (format " %s matches " (how-many pattern (car range) (cdr range)))
-         " - "))
-     'face (if (dotemacs-modeline--active) 'dotemacs-modeline-panel))))
-
-(defun dotemacs-themes--overlay-sort (a b)
-  (< (overlay-start a) (overlay-start b)))
-
-(defsubst dotemacs-modeline--iedit ()
-  "Show the number of iedit regions matches + what match you're on."
-  (when (and iedit-mode iedit-occurrences-overlays)
-    (propertize
-     (let ((this-oc (or (let ((inhibit-message t))
-                          (iedit-find-current-occurrence-overlay))
-                        (progn (iedit-prev-occurrence)
-                               (iedit-find-current-occurrence-overlay))))
-           (length (length iedit-occurrences-overlays)))
-       (format " %s/%d "
-               (if this-oc
-                   (- length
-                      (length (memq this-oc (sort (append iedit-occurrences-overlays nil)
-                                                  #'dotemacs-themes--overlay-sort)))
-                      -1)
-                 "-")
-               length))
-     'face (if (dotemacs-modeline--active) 'dotemacs-modeline-panel))))
-
-(dotemacs-modeline-def-modeline-segment matches
-  "Displays: 1. the currently recording macro, 2. A current/total for the
-current search term (with anzu), 3. The number of substitutions being conducted
-with `evil-ex-substitute', and/or 4. The number of active `iedit' regions."
-  (let ((meta (concat (dotemacs-modeline--anzu)
-                      (dotemacs-modeline--evil-substitute)
-                      (dotemacs-modeline--iedit))))
-     (or (and (not (equal meta "")) meta)
-         (if buffer-file-name " %I "))))
 
 ;; TODO Include other information
 (dotemacs-modeline-def-modeline-segment media-info
@@ -501,15 +369,15 @@ See `mode-line-percent-position'.")
 ;;
 
 (dotemacs-modeline-def-modeline main
-  (bar matches " " buffer-info buffer-position selection-info)
+  (bar " " buffer-info buffer-position selection-info)
   (buffer-encoding major-mode vcs flycheck))
 
 (dotemacs-modeline-def-modeline minimal
-  (bar matches " " buffer-info)
+  (bar " " buffer-info)
   (media-info major-mode))
 
 (dotemacs-modeline-def-modeline special
-  (bar matches " " buffer-info buffer-position selection-info)
+  (bar " " buffer-info buffer-position selection-info)
   (buffer-encoding major-mode flycheck))
 
 (dotemacs-modeline-def-modeline project
