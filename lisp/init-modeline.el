@@ -37,10 +37,14 @@
 ;;
 
 (defvar dotemacs-modeline-height 29
-  "How tall the mode-line should be (only respected in GUI emacs).")
+  "How tall the mode-line should be (only respected in GUI Emacs).")
 
 (defvar dotemacs-modeline-bar-width 3
-  "How wide the mode-line bar should be (only respected in GUI emacs).")
+  "How wide the mode-line bar should be (only respected in GUI Emacs).")
+
+;; externs
+(defvar text-scale-mode-amount)
+(defvar flycheck-current-errors)
 
 ;;
 ;; Custom faces
@@ -101,7 +105,7 @@
 
 
 (defmacro dotemacs-modeline-def-modeline-segment (name &rest forms)
-  "Defines a modeline segment and byte compiles it."
+  "Defines a modeline segment and byte compiles it with NAME and FORMS."
   (declare (indent defun) (doc-string 2))
   (let ((sym (intern (format "dotemacs-modeline-segment--%s" name))))
     `(progn
@@ -111,16 +115,18 @@
              (byte-compile #',sym))))))
 
 (defsubst dotemacs--prepare-modeline-segments (segments)
+  "Prepare modelin SEGMENTS."
   (cl-loop for seg in segments
            if (stringp seg)
-            collect seg
+           collect seg
            else
-            collect (list (intern (format "dotemacs-modeline-segment--%s" (symbol-name seg))))))
+           collect (list (intern (format "dotemacs-modeline-segment--%s" (symbol-name seg))))))
 
 (defmacro dotemacs-modeline-def-modeline (name lhs &optional rhs)
-  "Defines a modeline format and byte-compiles it. NAME is a symbol to identify
-it (used by `dotemacs-modeline' for retrieval). LHS and RHS are lists of symbols of
-modeline segments defined with `dotemacs-modeline-def-modeline-segment'.
+  "Defines a modeline format and byte-compiles it.
+NAME is a symbol to identify it (used by `dotemacs-modeline' for retrieval).
+LHS and RHS are lists of symbols of modeline segments defined with
+`dotemacs-modeline-def-modeline-segment'.
 Example:
   (dotemacs-modeline-def-modeline minimal
     (bar \" \" buffer-info)
@@ -145,15 +151,15 @@ Example:
              (byte-compile #',sym))))))
 
 (defun dotemacs-modeline (key)
-  "Returns a mode-line configuration associated with KEY (a symbol). Throws an
-error if it doesn't exist."
+  "Return a mode-line configuration associated with KEY (a symbol).
+Throws an error if it doesn't exist."
   (let ((fn (intern (format "dotemacs-modeline-format--%s" key))))
     (when (functionp fn)
       `(:eval (,fn)))))
 
 (defun dotemacs-set-modeline (key &optional default)
-  "Set the modeline format. Does nothing if the modeline KEY doesn't exist. If
-DEFAULT is non-nil, set the default mode-line for all buffers."
+  "Set the modeline format.  Does nothing if the modeline KEY doesn't exist.
+If DEFAULT is non-nil, set the default mode-line for all buffers."
   (when-let* ((modeline (dotemacs-modeline key)))
     (setf (if default
               (default-value 'mode-line-format)
@@ -163,7 +169,7 @@ DEFAULT is non-nil, set the default mode-line for all buffers."
 ;; Keep `dotemacs-modeline-current-window' up-to-date
 (defvar dotemacs-modeline-current-window (frame-selected-window))
 (defun dotemacs-modeline|set-selected-window (&rest _)
-  "Sets `dotemacs-modeline-current-window' appropriately"
+  "Set `dotemacs-modeline-current-window' appropriately."
   (when-let* ((win (frame-selected-window)))
     (unless (minibuffer-window-active-p win)
       (setq dotemacs-modeline-current-window win))))
@@ -178,11 +184,12 @@ DEFAULT is non-nil, set the default mode-line for all buffers."
 ;;
 
 (defsubst dotemacs-modeline--active ()
+  "Check if modelne is active."
   (eq (selected-window) dotemacs-modeline-current-window))
 
 ;; Inspired from `powerline's `pl/make-xpm'.
 (defun dotemacs-modeline--make-xpm (color height width)
-  "Create an XPM bitmap."
+  "Create an XPM bitmap with COLOR, HEIGHT and WIDTH."
   (propertize
    " " 'display
    (let ((data (make-list height (make-list width 1)))
@@ -302,6 +309,7 @@ icons."
 
 ;;
 (defsubst dotemacs-column (pos)
+  "Get the column of the position `POS'."
   (save-excursion (goto-char pos)
                   (current-column)))
 
@@ -416,12 +424,15 @@ See `mode-line-percent-position'.")
     (dotemacs-set-modeline 'main)))
 
 (defun dotemacs-modeline|set-special-modeline ()
+  "Set sepcial mode-line."
   (dotemacs-set-modeline 'special))
 
 (defun dotemacs-modeline|set-media-modeline ()
+  "Set media mode-line."
   (dotemacs-set-modeline 'media))
 
 (defun dotemacs-modeline|set-project-modeline ()
+  "Set project mode-line."
   (dotemacs-set-modeline 'project))
 
 ;;
