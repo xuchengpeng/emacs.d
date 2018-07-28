@@ -32,13 +32,13 @@
 ;;; Code:
 
 ;; Environment
-(use-package exec-path-from-shell
-  :ensure t
-  :if (memq window-system '(mac ns x))
-  :config
-  ;; (setq exec-path-from-shell-variables '("PATH" "GOPATH"))
-  (exec-path-from-shell-initialize)
-  )
+(when (memq window-system '(mac ns x))
+  (use-package exec-path-from-shell
+    :ensure t
+    :config
+    ;; (setq exec-path-from-shell-variables '("PATH" "GOPATH"))
+    (exec-path-from-shell-initialize)
+    ))
 
 ;; filetree configurations
 (use-package neotree
@@ -169,7 +169,7 @@ _q_: Quit
          ("M-7" . winum-select-window-7)
          ("M-8" . winum-select-window-8)
          ("M-9" . winum-select-window-9))
-  :config  
+  :config
   (require 'winum)
   
   (defun winum-assign-9-to-calculator-8-to-flycheck-errors ()
