@@ -227,11 +227,12 @@ buffer where knowing the current project directory is important."
 ;;
 (dotemacs-modeline-def-modeline-segment buffer-info
   "Display only the current buffer's name, but with fontification."
-  (propertize
-   "%b"
-   'face (cond ((and buffer-file-name (buffer-modified-p))
-                'dotemacs-modeline-buffer-modified)
-               ((dotemacs-modeline--active) 'dotemacs-modeline-buffer-file))))
+  (concat (if buffer-file-name " %I ")
+          (propertize
+           "%b"
+           'face (cond ((and buffer-file-name (buffer-modified-p))
+                        'dotemacs-modeline-buffer-modified)
+                       ((dotemacs-modeline--active) 'dotemacs-modeline-buffer-file)))))
 
 ;;
 (dotemacs-modeline-def-modeline-segment buffer-encoding
@@ -316,7 +317,6 @@ lines are selected, or the NxM dimensions of a block selection."
                 (format "%dC" (- (1+ reg-end) reg-beg)))))
        'face 'dotemacs-modeline-highlight))))
 
-;; TODO Include other information
 (dotemacs-modeline-def-modeline-segment media-info
   "Metadata regarding the current file, such as dimensions for images."
   (cond ((eq major-mode 'image-mode)
