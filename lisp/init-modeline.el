@@ -216,10 +216,10 @@ If DEFAULT is non-nil, set the default mode-line for all buffers."
   "TODO.")
 
 (defun dotemacs-modeline-project-root ()
-  "Returns the root of your project, or `default-directory' if none was found."
+  "Return the root of your project, or `default-directory' if none was found."
   (if (fboundp 'projectile-project-root)
-    (let (projectile-require-project-root)
-      (projectile-project-root))))
+      (let (projectile-require-project-root)
+        (projectile-project-root))))
 
 (defun dotemacs-modeline--file-path (&optional path)
   "PATH."
@@ -375,8 +375,8 @@ lines are selected, or the NxM dimensions of a block selection."
                         (format "%dC %dL" (- (1+ reg-end) reg-beg) lines))
                        (t
                         (format "%dC" (- (1+ reg-end) reg-beg))))
-                  (when dotemacs-modeline-enable-word-count
-                    (format " %dW" (count-words reg-beg reg-end)))))
+                 (when dotemacs-modeline-enable-word-count
+                   (format " %dW" (count-words reg-beg reg-end)))))
        'face 'dotemacs-modeline-highlight))))
 
 (dotemacs-modeline-def-modeline-segment media-info
@@ -444,7 +444,7 @@ See `mode-line-percent-position'.")
 
 (dotemacs-modeline-def-modeline minimal
   (bar buffer-info)
-  (media-info major-mode))
+  (buffer-encoding major-mode))
 
 (dotemacs-modeline-def-modeline special
   (bar buffer-info-simple buffer-position selection-info)
@@ -455,7 +455,7 @@ See `mode-line-percent-position'.")
   (major-mode))
 
 (dotemacs-modeline-def-modeline media
-  (bar " %b  ")
+  (bar buffer-info-simple)
   (media-info major-mode))
 
 ;;
@@ -494,10 +494,12 @@ See `mode-line-percent-position'.")
 ;; Ensure modeline is inactive when Emacs is unfocused (and active otherwise)
 (defvar dotemacs-modeline-remap-face-cookie nil)
 (defun dotemacs-modeline|focus ()
+  "Modeline focus hook."
   (when dotemacs-modeline-remap-face-cookie
     (require 'face-remap)
     (face-remap-remove-relative dotemacs-modeline-remap-face-cookie)))
 (defun dotemacs-modeline|unfocus ()
+  "Modeline unfocus hook."
   (setq dotemacs-modeline-remap-face-cookie (face-remap-add-relative 'mode-line 'mode-line-inactive)))
 
 (add-hook 'focus-in-hook #'dotemacs-modeline|focus)
