@@ -350,6 +350,15 @@ icons."
   (save-excursion (goto-char pos)
                   (current-column)))
 
+(defvar-local dotemacs-modeline-enable-word-count nil
+  "If non-nil, a word count will be added to the selection-info modeline
+segment.")
+
+(defun dotemacs-modeline|enable-word-count ()
+  "Enable word count."
+  (setq dotemacs-modeline-enable-word-count t))
+(add-hook 'text-mode-hook #'dotemacs-modeline|enable-word-count)
+
 (dotemacs-modeline-def-modeline-segment selection-info
   "Information about the current selection, such as how many characters and
 lines are selected, or the NxM dimensions of a block selection."
@@ -358,14 +367,16 @@ lines are selected, or the NxM dimensions of a block selection."
           (reg-end (region-end)))
       (propertize
        (let ((lines (count-lines reg-beg (min (1+ reg-end) (point-max)))))
-         (cond ((bound-and-true-p rectangle-mark-mode)
-                (let ((cols (abs (- (dotemacs-column reg-end)
-                                    (dotemacs-column reg-beg)))))
-                  (format "%dx%dB" lines cols)))
-               ((> lines 1)
-                (format "%dC %dL" (- (1+ reg-end) reg-beg) lines))
-               (t
-                (format "%dC" (- (1+ reg-end) reg-beg)))))
+         (concat (cond ((bound-and-true-p rectangle-mark-mode)
+                        (let ((cols (abs (- (dotemacs-column reg-end)
+                                            (dotemacs-column reg-beg)))))
+                          (format "%dx%dB" lines cols)))
+                       ((> lines 1)
+                        (format "%dC %dL" (- (1+ reg-end) reg-beg) lines))
+                       (t
+                        (format "%dC" (- (1+ reg-end) reg-beg))))
+                  (when dotemacs-modeline-enable-word-count
+                    (format " %dW" (count-words reg-beg reg-end)))))
        'face 'dotemacs-modeline-highlight))))
 
 (dotemacs-modeline-def-modeline-segment media-info
