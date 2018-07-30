@@ -480,6 +480,18 @@ See `mode-line-percent-position'.")
 ;; (add-hook 'dotemacs-scratch-buffer-hook #'dotemacs-modeline|set-special-modeline)
 ;; (add-hook 'dotemacs-dashboard-mode-hook #'dotemacs-modeline|set-project-modeline)
 
+;; Ensure modeline is inactive when Emacs is unfocused (and active otherwise)
+(defvar dotemacs-modeline-remap-face-cookie nil)
+(defun dotemacs-modeline|focus ()
+  (when dotemacs-modeline-remap-face-cookie
+    (require 'face-remap)
+    (face-remap-remove-relative dotemacs-modeline-remap-face-cookie)))
+(defun dotemacs-modeline|unfocus ()
+  (setq dotemacs-modeline-remap-face-cookie (face-remap-add-relative 'mode-line 'mode-line-inactive)))
+
+(add-hook 'focus-in-hook #'dotemacs-modeline|focus)
+(add-hook 'focus-out-hook #'dotemacs-modeline|unfocus)
+
 (provide 'init-modeline)
 
 ;;; init-modeline.el ends here
