@@ -36,23 +36,9 @@
 ;; Variables
 ;;
 
-(defvar dotemacs-modeline-height 29
-  "How tall the mode-line should be (only respected in GUI Emacs).")
-
-(defvar dotemacs-modeline-bar-width 3
-  "How wide the mode-line bar should be (only respected in GUI Emacs).")
-
-;; externs
-(defvar text-scale-mode-amount)
-(defvar flycheck-current-errors)
-
-;;
-;; Custom faces
-;;
-
 (defgroup dotemacs-modeline nil
-  ""
-  :group 'dotemacs)
+  "TODO"
+  :group 'faces)
 
 (defface dotemacs-modeline-buffer-path
   '((t (:inherit (mode-line-emphasis bold))))
@@ -81,17 +67,17 @@
 
 (defface dotemacs-modeline-success
   `((t (:inherit (success bold))))
-  "Face for success messages in the modeline. Used by `*flycheck'."
+  "Face for info-level messages in the modeline. Used by `*vc' and `*flycheck'."
   :group 'dotemacs-modeline)
 
 (defface dotemacs-modeline-warning
   `((t (:inherit (warning bold))))
-  "Face for warnings in the modeline. Used by `*flycheck'."
+  "Face for warnings in the modeline. Used by `*vc' and `*flycheck'"
   :group 'dotemacs-modeline)
 
 (defface dotemacs-modeline-error
   `((t (:inherit (error bold))))
-  "Face for errors in the modeline. Used by `*flycheck'."
+  "Face for errors in the modeline. Used by `*vc' and `*flycheck'"
   :group 'dotemacs-modeline)
 
 ;; Bar
@@ -104,67 +90,29 @@
   :group 'dotemacs-modeline)
 
 
-(defmacro dotemacs-modeline-def-modeline-segment (name &rest forms)
-  "Defines a modeline segment and byte compiles it with NAME and FORMS."
-  (declare (indent defun) (doc-string 2))
-  (let ((sym (intern (format "dotemacs-modeline-segment--%s" name))))
-    `(progn
-       (defun ,sym () ,@forms)
-       ,(unless (bound-and-true-p byte-compile-current-file)
-          `(let (byte-compile-warnings)
-             (byte-compile #',sym))))))
+(defvar dotemacs-modeline-height 25
+  "How tall the mode-line should be (only respected in GUI Emacs).")
 
-(defsubst dotemacs--prepare-modeline-segments (segments)
-  "Prepare modelin SEGMENTS."
-  (cl-loop for seg in segments
-           if (stringp seg)
-           collect seg
-           else
-           collect (list (intern (format "dotemacs-modeline-segment--%s" (symbol-name seg))))))
+(defvar dotemacs-modeline-buffer-name-function
+  #'dotemacs-modeline--file-path
+  "TODO.")
 
-(defmacro dotemacs-modeline-def-modeline (name lhs &optional rhs)
-  "Defines a modeline format and byte-compiles it.
-NAME is a symbol to identify it (used by `dotemacs-modeline' for retrieval).
-LHS and RHS are lists of symbols of modeline segments defined with
-`dotemacs-modeline-def-modeline-segment'.
-Example:
-  (dotemacs-modeline-def-modeline minimal
-    (bar \" \" buffer-info)
-    (media-info major-mode))
-  (dotemacs-set-modeline 'minimal t)"
-  (let ((sym (intern (format "dotemacs-modeline-format--%s" name)))
-        (lhs-forms (dotemacs--prepare-modeline-segments lhs))
-        (rhs-forms (dotemacs--prepare-modeline-segments rhs)))
-    `(progn
-       (defun ,sym ()
-         (let ((lhs (list ,@lhs-forms))
-               (rhs (list ,@rhs-forms)))
-           (let ((rhs-str (format-mode-line rhs)))
-             (list lhs
-                   (propertize
-                    " " 'display
-                    `((space :align-to (- (+ right right-fringe right-margin)
-                                          ,(+ 1 (string-width rhs-str))))))
-                   rhs-str))))
-       ,(unless (bound-and-true-p byte-compile-current-file)
-          `(let (byte-compile-warnings)
-             (byte-compile #',sym))))))
+(defvar-local mode-line-format-left  ())
+(defvar-local mode-line-format-right ())
+(put 'mode-line-format-left  'risky-local-variable t)
+(put 'mode-line-format-right 'risky-local-variable t)
 
-(defun dotemacs-modeline (key)
-  "Return a mode-line configuration associated with KEY (a symbol).
-Throws an error if it doesn't exist."
-  (let ((fn (intern (format "dotemacs-modeline-format--%s" key))))
-    (when (functionp fn)
-      `(:eval (,fn)))))
+;;
+;; Helpers
+;;
 
-(defun dotemacs-set-modeline (key &optional default)
-  "Set the modeline format.  Does nothing if the modeline KEY doesn't exist.
-If DEFAULT is non-nil, set the default mode-line for all buffers."
-  (when-let* ((modeline (dotemacs-modeline key)))
-    (setf (if default
-              (default-value 'mode-line-format)
-            (buffer-local-value 'mode-line-format (current-buffer)))
-          modeline)))
+(defun dotemacs-modeline-project-root ()
+  "Get the path to the root of your project.
+
+If STRICT-P, return nil if no project was found, otherwise return
+`default-directory'."
+  (let (projectile-require-project-root)
+    (projectile-project-root)))
 
 ;; Keep `dotemacs-modeline-current-window' up-to-date
 (defvar dotemacs-modeline-current-window (frame-selected-window))
@@ -172,98 +120,217 @@ If DEFAULT is non-nil, set the default mode-line for all buffers."
   "Set `dotemacs-modeline-current-window' appropriately."
   (when-let* ((win (frame-selected-window)))
     (unless (minibuffer-window-active-p win)
-      (setq dotemacs-modeline-current-window win))))
+      (setq dotemacs-modeline-current-window win)
+      (force-mode-line-update))))
+
+(defun dotemacs-modeline|unset-selected-window ()
+  "Set `dotemacs-modeline-current-window' nil."
+  (setq dotemacs-modeline-current-window nil)
+  (force-mode-line-update))
 
 (add-hook 'window-configuration-change-hook #'dotemacs-modeline|set-selected-window)
-(add-hook 'focus-in-hook #'dotemacs-modeline|set-selected-window)
 (advice-add #'handle-switch-frame :after #'dotemacs-modeline|set-selected-window)
 (advice-add #'select-window :after #'dotemacs-modeline|set-selected-window)
-
-;;
-;; Modeline helpers
-;;
+(if (not (boundp 'after-focus-change-function))
+    (progn
+      (add-hook 'focus-in-hook  #'dotemacs-modeline|set-selected-window)
+      (add-hook 'focus-out-hook #'dotemacs-modeline|unset-selected-window))
+  (defun dotemacs-modeline|refresh-frame ()
+    (setq dotemacs-modeline-current-window nil)
+    (cl-loop for frame in (frame-list)
+             if (eq (frame-focus-state frame) t)
+             return (setq dotemacs-modeline-current-window (frame-selected-window frame)))
+    (force-mode-line-update t))
+  (add-function :after after-focus-change-function #'dotemacs-modeline|refresh-frame))
 
 (defsubst dotemacs-modeline--active ()
   "Check if modelne is active."
   (eq (selected-window) dotemacs-modeline-current-window))
 
-;; Inspired from `powerline's `pl/make-xpm'.
-(defun dotemacs-modeline--make-xpm (color height width)
-  "Create an XPM bitmap with COLOR, HEIGHT and WIDTH."
+;; xpm generator
+(defun dotemacs-modeline--make-xpm (width height &optional color)
+  "Create an XPM bitmap.  Inspired by `powerline''s `pl/make-xpm' with WIDTH, HEIGHT and COLOR."
   (propertize
    " " 'display
    (let ((data (make-list height (make-list width 1)))
          (color (or color "None")))
-     (create-image
-      (concat
-       (format "/* XPM */\nstatic char * percent[] = {\n\"%i %i 2 1\",\n\". c %s\",\n\"  c %s\","
-               (length (car data))
-               (length data)
-               color
-               color)
-       (apply #'concat
-              (cl-loop with idx = 0
-                       with len = (length data)
-                       for dl in data
-                       do (cl-incf idx)
-                       collect
-                       (concat "\""
-                               (cl-loop for d in dl
-                                        if (= d 0) collect (string-to-char " ")
-                                        else collect (string-to-char "."))
-                               (if (eq idx len) "\"};" "\",\n")))))
-      'xpm t :ascent 'center))))
+     (ignore-errors
+       (create-image
+        (concat
+         (format "/* XPM */\nstatic char * percent[] = {\n\"%i %i 2 1\",\n\". c %s\",\n\"  c %s\","
+                 (length (car data))
+                 (length data)
+                 color
+                 color)
+         (apply #'concat
+                (cl-loop with idx = 0
+                         with len = (length data)
+                         for dl in data
+                         do (cl-incf idx)
+                         collect
+                         (concat "\""
+                                 (cl-loop for d in dl
+                                          if (= d 0) collect (string-to-char " ")
+                                          else collect (string-to-char "."))
+                                 (if (eq idx len) "\"};" "\",\n")))))
+        'xpm t :ascent 'center)))))
+
+(defun dotemacs-modeline--file-path (&optional path)
+  "PATH."
+  (let ((buffer-file-name (or path buffer-file-name))
+        (root (dotemacs-modeline-project-root))
+        (active (dotemacs-modeline--active)))
+    (cond ((null root)
+           (propertize "%b" 'face (if active 'dotemacs-modeline-buffer-file)))
+          ((or (null buffer-file-name)
+               (directory-name-p buffer-file-name))
+           (propertize (abbreviate-file-name (or buffer-file-name default-directory))
+                       'face (if active 'dotemacs-modeline-buffer-path)))
+          ((let* ((modified-faces (if (buffer-modified-p) 'dotemacs-modeline-buffer-modified))
+                  (true-filename (file-truename buffer-file-name))
+                  (relative-dirs (file-relative-name (file-name-directory true-filename)
+                                                     (concat root "../")))
+                  (relative-faces (or modified-faces (if active 'dotemacs-modeline-buffer-path)))
+                  (file-faces (or modified-faces (if active 'dotemacs-modeline-buffer-file))))
+             (if (equal "./" relative-dirs) (setq relative-dirs ""))
+             (concat (propertize relative-dirs 'face (if relative-faces `(:inherit ,relative-faces)))
+                     (propertize (file-name-nondirectory true-filename)
+                                 'face (if file-faces `(:inherit ,file-faces)))))))))
+
+
+;;
+;; Macros
+;;
+
+(cl-defmacro dotemacs-modeline-def-modeline-segment (name &rest rest &key init faces hooks vars &allow-other-keys)
+  "TODO"
+  (let ((body rest))
+    (while (keywordp (car body))
+      (setq body (cddr body)))
+    (setq rest body))
+  (unless EMACS26+
+    (setq vars nil))
+  (let ((docstring (if (stringp (car rest)) (pop rest)))
+        (realvar (if (and rest faces) (intern (format "dotemacs-modeline--var-%s" name)) name)))
+    (macroexp-progn
+     (append (when rest
+               (if (or hooks vars)
+                   (let ((setterfn    (intern (format "dotemacs-modeline--set-%s" name)))
+                         (varsetterfn (intern (format "dotemacs-modeline--setvar-%s" name))))
+                     (append `((fset ',setterfn
+                                     (lambda (&rest _)
+                                       (when (or (memq ',name mode-line-format-left)
+                                                 (memq ',name mode-line-format-right))
+                                         (setq-local ,realvar (progn ,@rest))))))
+                             (mapcar (lambda (hook) `(add-hook ',hook #',setterfn))
+                                     hooks)
+                             (when vars
+                               `((fset ',varsetterfn
+                                       (lambda (sym val op where)
+                                         (and (eq op 'set) where
+                                              (with-current-buffer where
+                                                (set sym val)
+                                                (,setterfn)))))
+                                 ,@(mapcar (lambda (var) `(add-variable-watcher ',var #',varsetterfn))
+                                           vars)))))
+                 (setq init `(quote (:eval ,@rest)))
+                 nil))
+             (if (eq realvar name)
+                 `((defvar-local ,name ,init ,docstring))
+               `((defvar-local ,realvar nil)
+                 (defvar-local ,name
+                   '(:eval (cond ((dotemacs-modeline--active) ,realvar) (,realvar (substring-no-properties ,realvar))))
+                   ,docstring)))
+             `((put ',name 'risky-local-variable t))))))
+
+;;
+(defvar dotemacs-mode-line-alist nil)
+
+(defun dotemacs-modeline-def-modeline (name left &optional right)
+  "Defines a modeline format and byte-compiles it.
+NAME is a symbol to identify it (used by `dotemacs-modeline' for retrieval).
+LEFT and RIGHT are lists of symbols of modeline segments defined with
+`dotemacs-modeline-def-modeline-segment'.
+Example:
+  (dotemacs-modeline-def-modeline minimal
+    (bar \" \" buffer-info)
+    (media-info major-mode))
+  (dotemacs-modeline-def-modeline :project
+    '(dotemacs-modeline-bar dotemacs-modeline-buffer-directory)
+    '(dotemacs-modeline-major-mode))
+  (dotemacs-modeline-set-modeline 'project t)"
+  (setf (alist-get name dotemacs-mode-line-alist) (list left right)))
+
+(defun dotemacs-modeline-set-modeline (name &optional default)
+  "Set the modeline format.  Does nothing if the modeline NAME doesn't exist.
+If DEFAULT is non-nil, set the default mode-line for all buffers."
+  (let ((modeline (cdr (assq name dotemacs-mode-line-alist))))
+    (when modeline
+      (if default
+          (setq-default mode-line-format-left  `("" ,@(car  modeline))
+                        mode-line-format-right `("" ,@(cadr modeline)))
+        (setq mode-line-format-left  `("" ,@(car  modeline))
+              mode-line-format-right `("" ,@(cadr modeline))))
+      (force-mode-line-update))))
+
+
+;;
+;; Bars
+;;
+
+(defvar dotemacs-mode-line-bar-active nil "TODO.")
+(defvar dotemacs-mode-line-bar-inactive nil "TODO.")
+(defun dotemacs-modeline|setup-bars ()
+  "Setup bars."
+  (setq dotemacs-mode-line-bar-active
+        (dotemacs-modeline--make-xpm 3 dotemacs-modeline-height (face-background 'dotemacs-modeline-bar))
+        dotemacs-mode-line-bar-inactive
+        (dotemacs-modeline--make-xpm 3 dotemacs-modeline-height)))
+(add-hook 'dotemacs-load-modeline-hook #'dotemacs-modeline|setup-bars)
+
+(defun dotemacs-modeline|setup-bars-after-change (_sym val op _where)
+  "Setup bars after change with VAL(height) and OP(set)."
+  (when (eq op 'set)
+    (let ((dotemacs-modeline-height val))
+      (dotemacs-modeline|setup-bars))))
+(add-variable-watcher 'dotemacs-modeline-height #'dotemacs-modeline|setup-bars-after-change)
+
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-bar
+  (if (dotemacs-modeline--active) dotemacs-mode-line-bar-active dotemacs-mode-line-bar-inactive))
+
 
 ;;
 ;; Segments
 ;;
 
-(dotemacs-modeline-def-modeline-segment buffer-default-directory
-  "Displays `default-directory'. This is for special buffers like the scratch
-buffer where knowing the current project directory is important."
+(defun dotemacs-modeline|update-on-change ()
+  "TODO."
+  (dotemacs-modeline--set-dotemacs-modeline-buffer-id)
+  (remove-hook 'post-command-hook #'dotemacs-modeline|update-on-change t))
+(defun dotemacs-modeline|start-update-on-change ()
+  "TODO."
+  (add-hook 'post-command-hook #'dotemacs-modeline|update-on-change nil t))
+(add-hook 'first-change-hook #'dotemacs-modeline|start-update-on-change)
+
+(advice-add #'undo :after #'dotemacs-modeline--set-dotemacs-modeline-buffer-id)
+(advice-add #'undo-tree-undo :after #'dotemacs-modeline--set-dotemacs-modeline-buffer-id)
+
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-buffer-id
+  :hooks (find-file-hook after-change-functions read-only-mode-hook after-save-hook after-revert-hook)
+  :faces t
+  (concat " "
+          (if buffer-file-name
+              (funcall dotemacs-modeline-buffer-name-function buffer-file-name)
+            "%b")))
+
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-buffer-directory
   (let ((face (if (dotemacs-modeline--active) 'dotemacs-modeline-buffer-path)))
     (concat (if (display-graphic-p) " ")
             (propertize (concat " " (abbreviate-file-name default-directory))
                         'face face))))
 
-;;
-(dotemacs-modeline-def-modeline-segment buffer-info
-  "Display only the current buffer's name, but with fontification."
-  (concat (if buffer-file-name " %I ")
-          (propertize
-           "%b"
-           'face (cond ((and buffer-file-name (buffer-modified-p))
-                        'dotemacs-modeline-buffer-modified)
-                       ((dotemacs-modeline--active) 'dotemacs-modeline-buffer-file)))))
-
-;;
-(dotemacs-modeline-def-modeline-segment buffer-encoding
-  "Displays the encoding and eol style of the buffer the same way Atom does."
-  (concat (pcase (coding-system-eol-type buffer-file-coding-system)
-            (0 "LF  ")
-            (1 "CRLF  ")
-            (2 "CR  "))
-          (let ((sys (coding-system-plist buffer-file-coding-system)))
-            (cond ((memq (plist-get sys :category) '(coding-category-undecided coding-category-utf-8))
-                   "UTF-8")
-                  (t (upcase (symbol-name (plist-get sys :name))))))
-          "  "))
-
-;;
-(dotemacs-modeline-def-modeline-segment major-mode
-  "The major mode, including process, environment and text-scale info."
-  (propertize
-   (concat (format-mode-line mode-name)
-           (when (stringp mode-line-process)
-             mode-line-process)
-           (and (featurep 'face-remap)
-                (/= text-scale-mode-amount 0)
-                (format " (%+d)" text-scale-mode-amount)))
-   'face (if (dotemacs-modeline--active) 'dotemacs-modeline-buffer-major-mode)))
-
-;;
-(dotemacs-modeline-def-modeline-segment vcs
-  "Displays the current branch, colored based on its state."
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-vcs
+  :vars (vc-mode)
   (when (and vc-mode buffer-file-name)
     (let* ((backend (vc-backend buffer-file-name))
            (state   (vc-state buffer-file-name backend)))
@@ -284,8 +351,26 @@ buffer where knowing the current project directory is important."
                             'face (if active face))
                 " ")))))
 
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-encoding
+  :hooks (after-save-hook find-file-hook)
+  :vars (buffer-file-coding-system)
+  (concat (pcase (coding-system-eol-type buffer-file-coding-system)
+            (0 "LF  ")
+            (1 "CRLF  ")
+            (2 "CR  "))
+          (let ((sys (coding-system-plist buffer-file-coding-system)))
+            (if (memq (plist-get sys :category) '(coding-category-undecided coding-category-utf-8))
+                "UTF-8"
+              (upcase (symbol-name (plist-get sys :name)))))
+          "  "))
+
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-major-mode
+  :vars (mode-name)
+  :faces t
+  (propertize (format-mode-line mode-name) 'face 'font-lock-keyword-face))
+
 ;;
-(dotemacs-modeline-def-modeline-segment flycheck
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-flycheck
   "Displays color-coded flycheck error status in the current buffer with pretty
 icons."
   (when (boundp 'flycheck-last-status-change)
@@ -308,59 +393,36 @@ icons."
       )))
 
 ;;
-(defsubst dotemacs-column (pos)
+(defsubst dotemacs-modeline-column (pos)
   "Get the column of the position `POS'."
   (save-excursion (goto-char pos)
                   (current-column)))
 
-(dotemacs-modeline-def-modeline-segment selection-info
-  "Information about the current selection, such as how many characters and
-lines are selected, or the NxM dimensions of a block selection."
-  (when (and (dotemacs-modeline--active) mark-active)
-    (let ((reg-beg (region-beginning))
-          (reg-end (region-end)))
+(defvar-local dotemacs-modeline-enable-word-count nil
+  "If non-nil, a word count will be added to the selection-info modeline
+segment.")
+
+(defun dotemacs-modeline|enable-word-count ()
+  "Enable word count."
+  (setq dotemacs-modeline-enable-word-count t))
+(add-hook 'text-mode-hook #'dotemacs-modeline|enable-word-count)
+
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-selection-info
+  (when mark-active
+    (cl-destructuring-bind (beg . end)
+        (cons (region-beginning) (region-end))
       (propertize
-       (let ((lines (count-lines reg-beg (min (1+ reg-end) (point-max)))))
-         (cond ((bound-and-true-p rectangle-mark-mode)
-                (let ((cols (abs (- (dotemacs-column reg-end)
-                                    (dotemacs-column reg-beg)))))
-                  (format "%dx%dB" lines cols)))
-               ((> lines 1)
-                (format "%dC %dL" (- (1+ reg-end) reg-beg) lines))
-               (t
-                (format "%dC" (- (1+ reg-end) reg-beg)))))
+       (let ((lines (count-lines beg (min end (point-max)))))
+         (concat (cond ((bound-and-true-p rectangle-mark-mode)
+                        (let ((cols (abs (- (dotemacs-modeline-column end)
+                                            (dotemacs-modeline-column beg)))))
+                          (format "%dx%dB" lines cols)))
+                       ((> lines 1)
+                        (format "%dC %dL" (- end beg) lines))
+                       ((format "%dC" (- end beg))))
+                 (when dotemacs-modeline-enable-word-count
+                   (format " %dW" (count-words beg end)))))
        'face 'dotemacs-modeline-highlight))))
-
-(dotemacs-modeline-def-modeline-segment media-info
-  "Metadata regarding the current file, such as dimensions for images."
-  (cond ((eq major-mode 'image-mode)
-         (cl-destructuring-bind (width . height)
-             (image-size (image-get-display-property) :pixels)
-           (format "  %dx%d  " width height)))))
-
-(dotemacs-modeline-def-modeline-segment bar
-  "The bar regulates the height of the mode-line in GUI Emacs.
-Returns \"\" to not break --no-window-system."
-  (if (display-graphic-p)
-      (dotemacs-modeline--make-xpm
-       (face-background (if (dotemacs-modeline--active)
-                            'dotemacs-modeline-bar
-                          'dotemacs-modeline-inactive-bar)
-                        nil t)
-       dotemacs-modeline-height
-       dotemacs-modeline-bar-width)
-    ""))
-
-;;
-;; misc-info
-;;
-(dotemacs-modeline-def-modeline-segment misc-info
-  (propertize (format-time-string " %H:%M ")
-              'help-echo (format-time-string "%c")))
-
-;;
-;; position
-;;
 
 ;; Be compatible with Emacs 25.
 (defvar-local dotemacs-modeline-column-zero-based
@@ -382,70 +444,68 @@ See `mode-line-percent-position'.")
                 (if dotemacs-modeline-percent-position (" " dotemacs-modeline-percent-position))
                 (:eval (when (or line-number-mode column-number-mode dotemacs-modeline-percent-position) " "))))
 
-(dotemacs-modeline-def-modeline-segment buffer-position
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-buffer-position
   "The buffer position information."
   '(" " mode-line-position " "))
+
+;;
+(dotemacs-modeline-def-modeline-segment dotemacs-modeline-misc-info
+  (propertize (format-time-string " %H:%M ")
+              'help-echo (format-time-string "%c")))
 
 ;;
 ;; Mode lines
 ;;
 
-(dotemacs-modeline-def-modeline main
-  (bar " " buffer-info buffer-position selection-info)
-  (buffer-encoding major-mode vcs flycheck))
+(dotemacs-modeline-def-modeline :main
+  '(dotemacs-modeline-bar " " dotemacs-modeline-buffer-id dotemacs-modeline-buffer-position dotemacs-modeline-selection-info)
+  '(dotemacs-modeline-encoding dotemacs-modeline-major-mode dotemacs-modeline-vcs dotemacs-modeline-flycheck))
 
-(dotemacs-modeline-def-modeline minimal
-  (bar " " buffer-info)
-  (media-info major-mode))
+(dotemacs-modeline-def-modeline :project
+  '(dotemacs-modeline-bar dotemacs-modeline-buffer-directory)
+  '(dotemacs-modeline-major-mode))
 
-(dotemacs-modeline-def-modeline special
-  (bar " " buffer-info buffer-position selection-info)
-  (buffer-encoding major-mode flycheck))
-
-(dotemacs-modeline-def-modeline project
-  (bar buffer-default-directory)
-  (major-mode))
-
-(dotemacs-modeline-def-modeline media
-  (bar " %b  ")
-  (media-info major-mode))
 
 ;;
-;; Hooks
+;;
 ;;
 
+(dotemacs-modeline-def-modeline-segment mode-line-rest
+  (let ((rhs-str (format-mode-line mode-line-format-right)))
+    (list (propertize
+           " " 'display
+           `((space :align-to (- (+ right right-fringe right-margin)
+                                 ,(1+ (string-width rhs-str))))))
+          rhs-str)))
+
+(setq-default mode-line-format '("" mode-line-format-left mode-line-rest))
+
+
+;;
+(dotemacs-modeline-set-modeline :main t)
+
+;; (add-hook 'dotemacs-dashboard-mode-hook (dotemacs-modeline-set-modeline :project))
+
+
+;;
 (defun dotemacs-modeline-init ()
-  "Set the default modeline."
-  (dotemacs-set-modeline 'main t)
-
-  ;; This scratch buffer is already created and doesn't get a modeline. For the
-  ;; love of Emacs, someone give the man a modeline!
-  (with-current-buffer "*scratch*"
-    (dotemacs-set-modeline 'main)))
-
-(defun dotemacs-modeline|set-special-modeline ()
-  "Set sepcial mode-line."
-  (dotemacs-set-modeline 'special))
-
-(defun dotemacs-modeline|set-media-modeline ()
-  "Set media mode-line."
-  (dotemacs-set-modeline 'media))
-
-(defun dotemacs-modeline|set-project-modeline ()
-  "Set project mode-line."
-  (dotemacs-set-modeline 'project))
-
-;;
-;; Bootstrap
-;;
-
+  "Init modeline."
+  (run-hooks 'dotemacs-load-modeline-hook))
 (add-hook 'after-init-hook #'dotemacs-modeline-init)
-;; (add-hook 'dotemacs-scratch-buffer-hook #'dotemacs-modeline|set-special-modeline)
-;; (add-hook 'dotemacs-dashboard-mode-hook #'dotemacs-modeline|set-project-modeline)
 
-(add-hook 'image-mode-hook   #'dotemacs-modeline|set-media-modeline)
-(add-hook 'org-src-mode-hook #'dotemacs-modeline|set-special-modeline)
-(add-hook 'circe-mode-hook   #'dotemacs-modeline|set-special-modeline)
+;; Ensure modeline is inactive when Emacs is unfocused (and active otherwise)
+(defvar dotemacs-modeline-remap-face-cookie nil)
+(defun dotemacs-modeline|focus ()
+  "Modeline foucus."
+  (when dotemacs-modeline-remap-face-cookie
+    (require 'face-remap)
+    (face-remap-remove-relative dotemacs-modeline-remap-face-cookie)))
+(defun dotemacs-modeline|unfocus ()
+  "Modeline unfocus."
+  (setq dotemacs-modeline-remap-face-cookie (face-remap-add-relative 'mode-line 'mode-line-inactive)))
+(add-hook 'focus-in-hook #'dotemacs-modeline|focus)
+(add-hook 'focus-out-hook #'dotemacs-modeline|unfocus)
+
 
 (provide 'init-modeline)
 

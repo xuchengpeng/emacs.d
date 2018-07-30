@@ -34,9 +34,20 @@
 (setq user-full-name    dotemacs-full-name
       user-mail-address dotemacs-mail-address)
 
+(defconst EMACS26+
+  (eval-when-compile (not (version< emacs-version "26"))))
+(defconst EMACS27+
+  (eval-when-compile (not (version< emacs-version "27"))))
+
+(defconst IS-MAC     (eq system-type 'darwin))
+(defconst IS-LINUX   (eq system-type 'gnu/linux))
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+
 (eval-and-compile
-  (when (version< emacs-version "26")
+  (unless EMACS26+
     (with-no-warnings
+      ;; if-let and when-let are deprecated in Emacs 26+ in favor of their
+      ;; if-let* variants, so we alias them for 25 users.
       (defalias 'if-let* #'if-let)
       (defalias 'when-let* #'when-let))))
 
