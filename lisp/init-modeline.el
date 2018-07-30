@@ -107,12 +107,10 @@
 ;;
 
 (defun dotemacs-modeline-project-root ()
-  "Get the path to the root of your project.
-
-If STRICT-P, return nil if no project was found, otherwise return
-`default-directory'."
-  (let (projectile-require-project-root)
-    (projectile-project-root)))
+  "Returns the root of your project, or `default-directory' if none was found."
+  (if (fboundp 'projectile-project-root)
+    (let (projectile-require-project-root)
+      (projectile-project-root))))
 
 ;; Keep `dotemacs-modeline-current-window' up-to-date
 (defvar dotemacs-modeline-current-window (frame-selected-window))
