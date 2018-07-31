@@ -70,23 +70,26 @@ locate PACKAGE."
    (list
     (intern (completing-read "Switch to archives: "
                              package-archives-list))))
-  (cond
-   ((eq archives 'melpa)
-    (setq package-archives '(("gnu"   . "http://elpa.gnu.org/packages/")
-                             ("melpa" . "http://melpa.org/packages/")
-                             ("org"   . "http://orgmode.org/elpa/"))))
-   ((eq archives 'emacs-china)
-    (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-                             ("melpa" . "http://elpa.emacs-china.org/melpa/")
-                             ("org"   . "http://elpa.emacs-china.org/org/"))))
-   ((eq archives 'tuna)
-    (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                             ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-                             ("org"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/"))))
-   ((eq archives 'custom)
-    (setq package-archives dotemacs-custom-package-archives))
-   (t
-    (error "Unknown archives: '%s'" archives)))
+  (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                      (not (gnutls-available-p))))
+         (proto (if no-ssl "http" "https")))
+    (cond
+     ((eq archives 'melpa)
+      (setq package-archives `(,(cons "gnu"   (concat proto "://elpa.gnu.org/packages/"))
+                               ,(cons "melpa" (concat proto "://melpa.org/packages/"))
+                               ,(cons "org"   (concat proto "://orgmode.org/elpa/")))))
+     ((eq archives 'emacs-china)
+      (setq package-archives `(,(cons "gnu"   (concat proto "://elpa.emacs-china.org/gnu/"))
+                               ,(cons "melpa" (concat proto "://elpa.emacs-china.org/melpa/"))
+                               ,(cons "org"   (concat proto "://elpa.emacs-china.org/org/")))))
+     ((eq archives 'tuna)
+      (setq package-archives `(,(cons "gnu"   (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
+                               ,(cons "melpa" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
+                               ,(cons "org"   (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))))
+     ((eq archives 'custom)
+      (setq package-archives dotemacs-custom-package-archives))
+     (t
+      (error "Unknown archives: '%s'" archives))))
 
   (message "Set package archives to '%s'." archives))
 
