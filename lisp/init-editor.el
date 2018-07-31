@@ -171,12 +171,10 @@
 (use-package smartparens
   :ensure t
   :diminish smartparens-mode
-  :hook ((after-init . smartparens-global-mode)
-         (prog-mode . smartparens-strict-mode))
+  :hook (after-init . smartparens-global-mode)
   :config
-  (progn
-    (require 'smartparens-config)
-    )
+  (require 'smartparens-config)
+  ;; (add-hook 'prog-mode-hook #'smartparens-strict-mode)
   )
 
 (provide 'init-editor)
