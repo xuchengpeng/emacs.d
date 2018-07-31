@@ -45,7 +45,16 @@
   (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-z") 'helm-select-action)
-  (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
+  (let ((command
+         (cond
+          ((executable-find "rg")
+           "rg --color=always --smart-case --no-heading --line-number %s %s %s")
+          ((executable-find "ag")
+           "ag --color --smart-case --no-heading %s %s %s")
+          ((executable-find "pt")
+           "pt --color --smart-case --nogroup --numbers %s %s %s")
+          (t helm-grep-ag-command))))
+    (setq helm-grep-ag-command command))
   (helm-mode 1)
   )
 
