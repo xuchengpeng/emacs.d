@@ -76,9 +76,9 @@
   "Face for bright segments of the mode-line."
   :group 'dotemacs-modeline)
 
-(defface dotemacs-modeline-success
+(defface dotemacs-modeline-info
   `((t (:inherit (success bold))))
-  "Face for success messages in the modeline. Used by `*flycheck'."
+  "Face for info-level messages in the modeline. Used by `*flycheck'."
   :group 'dotemacs-modeline)
 
 (defface dotemacs-modeline-warning
@@ -86,7 +86,7 @@
   "Face for warnings in the modeline. Used by `*flycheck'."
   :group 'dotemacs-modeline)
 
-(defface dotemacs-modeline-error
+(defface dotemacs-modeline-urgent
   `((t (:inherit (error bold))))
   "Face for errors in the modeline. Used by `*flycheck'."
   :group 'dotemacs-modeline)
@@ -307,13 +307,13 @@ buffer where knowing the current project directory is important."
       (let ((face    'mode-line-inactive)
             (active  (dotemacs-modeline--active)))
         (cond ((memq state '(edited added))
-                (if active (setq face 'dotemacs-modeline-success)))
+                (if active (setq face 'dotemacs-modeline-info)))
                ((eq state 'needs-merge)
-                (if active (setq face 'dotemacs-modeline-success)))
+                (if active (setq face 'dotemacs-modeline-info)))
                ((eq state 'needs-update)
                 (if active (setq face 'dotemacs-modeline-warning)))
                ((memq state '(removed conflict unregistered))
-                (if active (setq face 'dotemacs-modeline-error)))
+                (if active (setq face 'dotemacs-modeline-urgent)))
                (t
                 (if active (setq face 'font-lock-doc-face))))
         (concat " "
@@ -331,15 +331,15 @@ icons."
        (let* ((error-counts (flycheck-count-errors flycheck-current-errors))
               (no-errors (cdr (assq 'error error-counts)))
               (no-warnings (cdr (assq 'warning error-counts)))
-              (face (cond (no-errors 'dotemacs-modeline-error)
+              (face (cond (no-errors 'dotemacs-modeline-urgent)
                           (no-warnings 'dotemacs-modeline-warning)
-                          (t 'dotemacs-modeline-success))))
+                          (t 'dotemacs-modeline-info))))
          (propertize (format "[%s/%s]" (or no-errors 0) (or no-warnings 0))
                      'face (if (dotemacs-modeline--active) face))))
       (`interrupted " -")
       (`suspicious '(propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-warning)))
-      (`running (propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-success)))
-      (`errored (propertize " !" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-error)))
+      (`running (propertize " ?" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-info)))
+      (`errored (propertize " !" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-urgent)))
       (`no-checker (propertize " -" 'face (if (dotemacs-modeline--active) 'dotemacs-modeline-warning)))
       ;; (`not-checked nil)
       )))
