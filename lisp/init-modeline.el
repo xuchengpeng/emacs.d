@@ -217,9 +217,9 @@ If DEFAULT is non-nil, set the default mode-line for all buffers."
 
 (defun dotemacs-modeline-project-root ()
   "Return the root of your project, or `default-directory' if none was found."
-  (if (fboundp 'projectile-project-root)
-      (let (projectile-require-project-root)
-        (projectile-project-root))))
+  (when (fboundp 'projectile-project-root)
+    (let (projectile-require-project-root)
+      (projectile-project-root))))
 
 (defun dotemacs-modeline--file-path (&optional path)
   "PATH."
