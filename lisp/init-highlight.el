@@ -34,7 +34,6 @@
 ;; Highlight symbols
 (use-package highlight-symbol
   :disabled
-  :ensure t
   :diminish highlight-symbol-mode
   :commands (highlight-symbol-mode)
   :hook (prog-mode . highlight-symbol-mode)
@@ -44,7 +43,6 @@
 
 ;; Highlight symbols
 (use-package symbol-overlay
-  :ensure t
   :diminish symbol-overlay-mode
   :commands symbol-overlay-mode
   :hook (prog-mode . symbol-overlay-mode)
@@ -52,21 +50,18 @@
 
 ;; Highlight brackets according to their depth
 (use-package rainbow-delimiters
-  :ensure t
   :diminish rainbow-delimiters-mode
   :hook (prog-mode . rainbow-delimiters-mode)
   )
 
 ;; Colorize color names in buffers
 (use-package rainbow-mode
-  :ensure t
   :diminish rainbow-mode
   :commands (rainbow-mode)
   )
 
 ;; Highlight uncommitted changes
 (use-package diff-hl
-  :ensure t
   :diminish diff-hl-mode
   :hook (after-init . global-diff-hl-mode)
   :config

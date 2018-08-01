@@ -104,7 +104,6 @@
 
 ;; Minor mode to aggressively keep your code always indented
 (use-package aggressive-indent
-  :ensure t
   :diminish aggressive-indent-mode
   :hook (prog-mode . aggressive-indent-mode)
   :config
@@ -113,13 +112,11 @@
 
 ;; Increase selected region by semantic units
 (use-package expand-region
-  :ensure t
   :bind ("C-=" . er/expand-region)
   )
 
 ;; Multiple cursors
 (use-package multiple-cursors
-  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->"         . mc/mark-next-like-this)
          ("C-<"         . mc/mark-previous-like-this)
@@ -130,7 +127,6 @@
 
 ;; Treat undo history as a tree
 (use-package undo-tree
-  :ensure t
   :diminish undo-tree-mode
   :hook (after-init . global-undo-tree-mode)
   :config
@@ -169,7 +165,6 @@
         uniquify-ignore-buffers-re "^\\*"))
 
 (use-package smartparens
-  :ensure t
   :diminish smartparens-mode
   :hook (after-init . smartparens-global-mode)
   :config

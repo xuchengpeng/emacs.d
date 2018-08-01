@@ -34,7 +34,6 @@
 ;; Environment
 (when (memq window-system '(mac ns x))
   (use-package exec-path-from-shell
-    :ensure t
     :config
     ;; (setq exec-path-from-shell-variables '("PATH" "GOPATH"))
     (exec-path-from-shell-initialize)
@@ -43,12 +42,10 @@
 ;; filetree configurations
 (use-package neotree
   :disabled
-  :ensure t
   :bind ("<f8>" . neotree-toggle)
   )
 
 (use-package treemacs
-  :ensure t
   :commands (treemacs)
   :bind ("<f8>" . treemacs)
   :config
@@ -78,22 +75,18 @@
   )
 
 (use-package treemacs-projectile
-  :after treemacs projectile
-  :ensure t)
+  :after treemacs projectile)
 
 (use-package pt
   :disabled
-  :ensure t
   :commands (pt-regexp projectile-pt)
   )
 
 (use-package ace-window
-  :ensure t
   :bind ("M-o" . ace-window)
   )
 
 (use-package hydra
-  :ensure t
   :bind (("C-x t" . hydra-toggle/body)
          ("C-M-o" . hydra-window/body))
   :config
@@ -158,7 +151,6 @@ _q_: Quit
 
 (use-package winum
   :disabled
-  :ensure t
   :bind (("M-0" . winum-select-window-0-or-10)
          ("M-1" . winum-select-window-1)
          ("M-2" . winum-select-window-2)
@@ -198,7 +190,6 @@ _q_: Quit
 
 (use-package dashboard
   :disabled
-  :ensure t
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")

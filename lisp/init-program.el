@@ -57,7 +57,6 @@
 
 ;; markdown
 (use-package markdown-mode
-  :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -66,7 +65,6 @@
 
 ;; web
 (use-package web-mode
-  :ensure t
   :commands (web-mode)
   :mode (("\\.html?\\'" . web-mode)
          ("\\.phtml\\'" . web-mode)
@@ -87,7 +85,6 @@
 
 ;;js
 (use-package js2-mode
-  :ensure t
   :mode ("\\.js\\'" . js2-mode)
   :diminish (js2-mode . "JS2")
   :config
@@ -101,20 +98,17 @@
   )
 
 (use-package js2-refactor
-  :ensure t
   :diminish
   :commands (js2-refactor-mode)
   )
 
 ;; toml
 (use-package toml-mode
-  :ensure t
   :mode ("\\.toml$" . toml-mode)
   )
 
 ;; yaml
 (use-package yaml-mode
-  :ensure t
   :mode ("\\.yaml\\'" "\\.yml\\'")
   )
 

@@ -55,7 +55,6 @@
 (if (fboundp 'display-line-numbers-mode)
     (add-hook 'after-init-hook #'global-display-line-numbers-mode)
   (use-package nlinum
-    :ensure t
     :hook (after-init . global-nlinum-mode)
     ))
 
@@ -99,18 +98,10 @@
     (dotemacs-set-custom-theme 'dotemacs-one))
   
    ((eq theme 'dark)
-    (use-package color-theme-sanityinc-tomorrow
-      :ensure t
-      :config
-      (load-theme 'sanityinc-tomorrow-night t)
-      ))
+    (load-theme 'sanityinc-tomorrow-night t))
   
    ((eq theme 'light)
-    (use-package color-theme-sanityinc-tomorrow
-      :ensure t
-      :config
-      (load-theme 'sanityinc-tomorrow-day t)
-      ))
+    (load-theme 'sanityinc-tomorrow-day t))
    
    ((string-prefix-p "dotemacs" (symbol-name theme))
      (dotemacs-set-custom-theme theme))
@@ -220,21 +211,18 @@
 ;;                  ))
 
 ;; (use-package powerline
-;;   :ensure t
 ;;   :config
 ;;   (setq powerline-default-separator 'arrow)
 ;;   (powerline-default-theme)
 ;;   )
 ;; 
 ;; (use-package spaceline
-;;   :ensure t
 ;;   :config
 ;;   (require 'spaceline-config)
 ;;   (spaceline-spacemacs-theme)
 ;;   )
 ;; 
 ;; (use-package smart-mode-line
-;;   :ensure t
 ;;   :config
 ;;   (setq sml/no-confirm-load-theme t)
 ;;   (setq sml/theme 'respectful)
@@ -343,7 +331,6 @@
     (dotemacs-set-font))
 
 (use-package which-key
-  :ensure t
   :diminish which-key-mode
   :commands which-key-mode
   :hook (after-init . which-key-mode)

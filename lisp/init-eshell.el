@@ -32,7 +32,6 @@
 ;;; Code:
 
 (use-package eshell
-  :ensure t
   :commands (eshell)
   :config
   (setq
@@ -50,7 +49,6 @@
   )
 
 (use-package shell-pop
-  :ensure t
   :bind ("C-c t" . shell-pop)
   :config
   (custom-set-variables

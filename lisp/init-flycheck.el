@@ -32,7 +32,6 @@
 ;;; Code:
 
 (use-package flycheck
-  :ensure t
   :hook (after-init . global-flycheck-mode)
   :commands (flycheck-mode global-flycheck-mode)
   )

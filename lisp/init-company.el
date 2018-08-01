@@ -32,7 +32,6 @@
 ;;; Code:
 
 (use-package company
-  :ensure t
   :diminish company-mode
   :hook (after-init . global-company-mode)
   :bind (("M-/" . company-complete)

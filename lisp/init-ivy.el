@@ -32,7 +32,6 @@
 ;;; Code:
 
 (use-package ivy
-  :ensure t
   :diminish
   :hook (after-init . ivy-mode)
   :config
@@ -57,12 +56,10 @@
   )
 
 (use-package swiper
-  :ensure t
   :after ivy
   :diminish)
 
 (use-package counsel
-  :ensure t
   :after ivy
   :diminish)
 

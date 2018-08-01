@@ -32,7 +32,6 @@
 ;;; Code:
 
 (use-package helm
-  :ensure t
   :bind (("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
          ("C-x r b" . helm-filtered-bookmarks)
@@ -59,7 +58,6 @@
   )
 
 (use-package helm-swoop
-  :ensure t
   :after (helm)
   :bind (("M-i" . helm-swoop)
          ("M-I" . helm-swoop-back-to-last-point)
@@ -109,7 +107,6 @@
   )
 
 (use-package helm-projectile
-  :ensure t
   :after (helm)
   )
 

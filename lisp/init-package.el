@@ -31,37 +31,11 @@
 
 ;;; Code:
 
+(require 'cl)
 (require 'package)
 
 (when dotemacs-benchmark-enabled
   (require 'init-benchmark))
-
-(defun require-package (package &optional min-version no-refresh)
-  "Install given PACKAGE, optionally requiring MIN-VERSION.
-If NO-REFRESH is non-nil, the available package lists will not be
-re-downloaded in order to locate PACKAGE."
-  (if (package-installed-p package min-version)
-      t
-    (if (or (assoc package package-archive-contents) no-refresh)
-        (if (boundp 'package-selected-packages)
-            ;; Record this as a package the user installed explicitly
-            (package-install package nil)
-          (package-install package))
-      (progn
-        (package-refresh-contents)
-        (require-package package min-version t)))))
-
-(defun maybe-require-package (package &optional min-version no-refresh)
-  "Try to install PACKAGE, and return non-nil if successful.
-In the event of failure, return nil and print a warning message.
-Optionally require MIN-VERSION.  If NO-REFRESH is non-nil, the
-available package lists will not be re-downloaded in order to
-locate PACKAGE."
-  (condition-case err
-      (require-package package min-version no-refresh)
-    (error
-     (message "Couldn't install optional package `%s': %S" package err)
-     nil)))
 
 (defvar-local package-archives-list '(melpa emacs-china tuna custom))
 (defun dotemacs-set-package-archives (archives)
@@ -101,23 +75,107 @@ locate PACKAGE."
 (setq package-enable-at-startup nil)
 (package-initialize)
 
+(defvar dotemacs-packages
+  '(ace-window
+    aggressive-indent
+    bind-key
+    color-theme-sanityinc-tomorrow
+    company
+    ;; counsel
+    ;; dashboard
+    diff-hl
+    diminish
+    eshell
+    exec-path-from-shell
+    expand-region
+    flycheck
+    helm
+    helm-projectile
+    helm-swoop
+    ;; highlight-symbol
+    hydra
+    ;; ivy
+    js2-mode
+    js2-refactor
+    magit
+    magithub
+    markdown-mode
+    multiple-cursors
+    ;; neotree
+    nlinum
+    org-plus-contrib
+    ox-hugo
+    ;; powerline
+    projectile
+    ;; pt
+    rainbow-delimiters
+    rainbow-mode
+    shell-pop
+    ;; smart-mode-line
+    smartparens
+    ;; spaceline
+    ;; swiper
+    symbol-overlay
+    toml-mode
+    treemacs
+    treemacs-projectile
+    undo-tree
+    use-package
+    web-mode
+    which-key
+    ;; winum
+    yaml-mode
+    yasnippet)
+  "A list of packages to ensure are installed at launch.")
+
 ;; update the package metadata is the local cache is missing
-(unless package-archive-contents
-  (package-refresh-contents))
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(defun dotemacs-packages-installed-p ()
+  "Check if all packages in `dotemacs-packages' are installed."
+  (every #'package-installed-p dotemacs-packages))
 
-(eval-when-compile
-  (require 'use-package))
+(defun dotemacs-install-packages ()
+  "Install all packages listed in `dotemacs-packages'."
+  (unless (dotemacs-packages-installed-p)
+    (message "%s" "dotemacs is now refreshing its package database...")
+    (package-refresh-contents)
+    (dolist (package dotemacs-packages)
+      (unless (package-installed-p package)
+        (package-install package)))))
 
-(use-package diminish
-  :ensure t)
-(use-package bind-key
-  :ensure t)
+;; run package installation
+(dotemacs-install-packages)
 
 (setq use-package-verbose t)
+
+(defun require-package (package &optional min-version no-refresh)
+  "Install given PACKAGE, optionally requiring MIN-VERSION.
+If NO-REFRESH is non-nil, the available package lists will not be
+re-downloaded in order to locate PACKAGE."
+  (if (package-installed-p package min-version)
+      t
+    (if (or (assoc package package-archive-contents) no-refresh)
+        (if (boundp 'package-selected-packages)
+            ;; Record this as a package the user installed explicitly
+            (package-install package nil)
+          (package-install package))
+      (progn
+        (package-refresh-contents)
+        (require-package package min-version t)))))
+
+(defun maybe-require-package (package &optional min-version no-refresh)
+  "Try to install PACKAGE, and return non-nil if successful.
+In the event of failure, return nil and print a warning message.
+Optionally require MIN-VERSION.  If NO-REFRESH is non-nil, the
+available package lists will not be re-downloaded in order to
+locate PACKAGE."
+  (condition-case err
+      (require-package package min-version no-refresh)
+    (error
+     (message "Couldn't install optional package `%s': %S" package err)
+     nil)))
 
 (provide 'init-package)
 

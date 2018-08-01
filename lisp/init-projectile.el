@@ -32,7 +32,6 @@
 ;;; Code:
 
 (use-package projectile
-  :ensure t
   :bind-keymap ("C-c p" . projectile-command-map)
   :hook (after-init . projectile-mode)
   :config
