@@ -62,8 +62,6 @@
 (column-number-mode t)
 (size-indication-mode t)
 
-(setq scroll-preserve-screen-position 'always)
-
 ;; enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
 
