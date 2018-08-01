@@ -32,6 +32,8 @@
 ;;; Code:
 
 ;; maximized startup
+(unless (frame-parameter nil 'fullscreen)
+  (toggle-frame-maximized))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (setq frame-title-format
@@ -86,8 +88,7 @@
   ;; Corrects (and improves) org-mode's native fontification.
   (dotemacs-themes-org-config)
   
-  (message "Set custom color theme '%s'." theme)
-  )
+  (message "Set custom color theme '%s'." theme))
 
 (defun dotemacs-set-theme (theme)
   "Set color theme."
@@ -105,8 +106,7 @@
      (dotemacs-set-custom-theme theme))
    
    (t
-    (error "Unknown color theme: '%s'" theme)))
-  )
+    (error "Unknown color theme: '%s'" theme))))
 
 ;; Color theme
 ;; (dotemacs-set-theme dotemacs-color-theme)
@@ -281,8 +281,7 @@
 (defun dotemacs-set-font()
   (dotemacs-set-english-chinese-font
     '("DejaVu Sans Mono" "Source Code Pro" "Monaco" "Consolas") 11
-    '("STXihei" "STHeiti" "STFangsong" "STZhongsong" "Microsoft Yahei" "黑体" "新宋体" "宋体") 16)
-  )
+    '("STXihei" "STHeiti" "STFangsong" "STZhongsong" "Microsoft Yahei" "黑体" "新宋体" "宋体") 16))
 
 ;; Solution 2
 ;; (defun dotemacs-set-font()
