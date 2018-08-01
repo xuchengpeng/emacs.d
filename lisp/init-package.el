@@ -103,7 +103,7 @@
     multiple-cursors
     ;; neotree
     nlinum
-    ox-hugo
+    ;; ox-hugo
     ;; powerline
     projectile
     ;; pt

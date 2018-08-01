@@ -94,6 +94,7 @@
   )
 
 (use-package ox-hugo
+  :disabled
   :after ox)
 
 (provide 'init-org)
