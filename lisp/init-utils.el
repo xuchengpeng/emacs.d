@@ -31,19 +31,22 @@
 
 ;;; Code:
 
+(use-package which-key
+  :diminish which-key-mode
+  :commands which-key-mode
+  :hook (after-init . which-key-mode))
+
 ;; Environment
-(when (memq window-system '(mac ns x))
-  (use-package exec-path-from-shell
-    :config
-    ;; (setq exec-path-from-shell-variables '("PATH" "GOPATH"))
-    (exec-path-from-shell-initialize)
-    ))
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns x))
+  :config
+  ;; (setq exec-path-from-shell-variables '("PATH" "GOPATH"))
+  (exec-path-from-shell-initialize))
 
 ;; filetree configurations
 (use-package neotree
   :disabled
-  :bind ("<f8>" . neotree-toggle)
-  )
+  :bind ("<f8>" . neotree-toggle))
 
 (use-package treemacs
   :commands (treemacs)
@@ -71,20 +74,17 @@
         treemacs-width                      35)
   
   (treemacs-follow-mode t)
-  (treemacs-filewatch-mode t)
-  )
+  (treemacs-filewatch-mode t))
 
 (use-package treemacs-projectile
   :after treemacs projectile)
 
 (use-package pt
   :disabled
-  :commands (pt-regexp projectile-pt)
-  )
+  :commands (pt-regexp projectile-pt))
 
 (use-package ace-window
-  :bind ("M-o" . ace-window)
-  )
+  :bind ("M-o" . ace-window))
 
 (use-package hydra
   :bind (("C-x t" . hydra-toggle/body)
@@ -146,8 +146,7 @@ _q_: Quit
     ("<S-right>" hydra-move-splitter-right nil)
     ("u" hydra--universal-argument nil)
     ("q" nil)
-    )
-  )
+    ))
 
 (use-package winum
   :disabled
@@ -185,8 +184,7 @@ _q_: Quit
         winum-mode-line-position          1
         winum-ignored-buffers             '(" *which-key*"))
   
-  (winum-mode)
-  )
+  (winum-mode))
 
 (use-package dashboard
   :disabled
@@ -198,8 +196,7 @@ _q_: Quit
                           (bookmarks . 5)
                           (projects . 5)
                           (agenda . 5)
-                          (registers . 5)))
-  )
+                          (registers . 5))))
 
 (provide 'init-utils)
 

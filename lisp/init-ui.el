@@ -328,12 +328,6 @@
 (if (display-graphic-p)
     (dotemacs-set-font))
 
-(use-package which-key
-  :diminish which-key-mode
-  :commands which-key-mode
-  :hook (after-init . which-key-mode)
-  )
-
 (provide 'init-ui)
 
 ;;; init-ui.el ends here

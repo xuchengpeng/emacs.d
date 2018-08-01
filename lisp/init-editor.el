@@ -51,14 +51,18 @@
       scroll-margin 0
       scroll-preserve-screen-position t)
 
+(setq uniquify-buffer-name-style 'forward
+      uniquify-separator "/"
+      uniquify-after-kill-buffer-p t
+      uniquify-ignore-buffers-re "^\\*")
+
 (setq-default major-mode 'text-mode)
 
 (setq-default
   make-backup-files nil
   auto-save-default nil
   auto-save-list-file-name (concat dotemacs-cache-directory "autosave")
-  backup-directory-alist   (list (cons "." (concat dotemacs-cache-directory "backup/")))
-  )
+  backup-directory-alist   (list (cons "." (concat dotemacs-cache-directory "backup/"))))
 
 (setq bookmark-default-file  (concat dotemacs-cache-directory "bookmarks")
       bookmark-save-flag     1)
@@ -113,14 +117,13 @@
 (use-package aggressive-indent
   :diminish aggressive-indent-mode
   :hook (prog-mode . aggressive-indent-mode)
-  :config
+  ;; :config
   ;; (global-aggressive-indent-mode)
   )
 
 ;; Increase selected region by semantic units
 (use-package expand-region
-  :bind ("C-=" . er/expand-region)
-  )
+  :bind ("C-=" . er/expand-region))
 
 ;; Multiple cursors
 (use-package multiple-cursors
@@ -129,8 +132,7 @@
          ("C-<"         . mc/mark-previous-like-this)
          ("C-c C-<"     . mc/mark-all-like-this))
   :config
-  (setq mc/list-file (concat dotemacs-cache-directory ".mc-lists.el"))
-  )
+  (setq mc/list-file (concat dotemacs-cache-directory ".mc-lists.el")))
 
 ;; Treat undo history as a tree
 (use-package undo-tree
@@ -140,8 +142,7 @@
   (setq undo-tree-history-directory-alist `(("." . ,(concat dotemacs-cache-directory "undo")))
         undo-tree-auto-save-history t
         undo-tree-visualizer-timestamps t
-        undo-tree-visualizer-diff t)
-  )
+        undo-tree-visualizer-diff t))
 
 ;; Hideshow
 (use-package hideshow
@@ -149,8 +150,7 @@
   :commands (hs-toggle-hiding)
   :hook (prog-mode . hs-minor-mode)
   :bind (:map prog-mode-map
-              ("C-c h" . hs-toggle-hiding))
-  )
+              ("C-c h" . hs-toggle-hiding)))
 
 ;; recent files
 (use-package recentf
@@ -161,15 +161,7 @@
         recentf-max-menu-items 15
         recentf-auto-cleanup 600
         recentf-exclude (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$"
-                              "^/var/folders/.+$" "/elpa/"))
-  )
-
-(use-package uniquify
-  :config
-  (setq uniquify-buffer-name-style 'forward
-        uniquify-separator "/"
-        uniquify-after-kill-buffer-p t
-        uniquify-ignore-buffers-re "^\\*"))
+                              "^/var/folders/.+$" "/elpa/")))
 
 (use-package smartparens
   :diminish smartparens-mode
