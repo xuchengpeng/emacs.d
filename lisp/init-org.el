@@ -32,7 +32,6 @@
 ;;; Code:
 
 (use-package org
-  :ensure org-plus-contrib
   :mode (("\\.org$" . org-mode)
          ("\\.txt$" . org-mode))
   :bind (("C-c a" . org-agenda)

@@ -103,7 +103,6 @@
     multiple-cursors
     ;; neotree
     nlinum
-    org-plus-contrib
     ox-hugo
     ;; powerline
     projectile
