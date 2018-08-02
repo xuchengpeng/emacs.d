@@ -33,9 +33,7 @@ If `dotemacs-package-archives` is set to `custom`, you need to set `dotemacs-cus
 (setq dotemacs-package-archives         'custom     ; Package repo: melpa, emacs-china, tuna or custom
       dotemacs-custom-package-archives  '(("gnu"   . "D:/Software/emacs/elpa-mirror/gnu/")
                                           ("melpa" . "D:/Software/emacs/elpa-mirror/melpa/")
-                                          ("org"   . "D:/Software/emacs/elpa-mirror/org/")
-                                         )
-)
+                                          ("org"   . "D:/Software/emacs/elpa-mirror/org/")))
 ```
 
 You and can use [emacs-china](https://elpa.emacs-china.org/) or [tuna](https://mirror.tuna.tsinghua.edu.cn/help/elpa/), or clone it from [d12frosted/elpa-mirror](https://github.com/d12frosted/elpa-mirror) to local disk.
