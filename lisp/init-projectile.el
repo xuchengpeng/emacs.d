@@ -35,15 +35,10 @@
   :bind-keymap ("C-c p" . projectile-command-map)
   :hook (after-init . projectile-mode)
   :config
-  (setq projectile-completion-system 'helm
-        projectile-enable-caching t
+  (setq projectile-enable-caching t
         projectile-cache-file (concat dotemacs-cache-directory "projectile.cache")
-        projectile-known-projects-file (concat dotemacs-cache-directory "projectile-bookmarks.eld")
-        )
-  (setq-default projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
-
-  (helm-projectile-on)
-  )
+        projectile-known-projects-file (concat dotemacs-cache-directory "projectile-bookmarks.eld"))
+  (setq-default projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name)))))
 
 (provide 'init-projectile)
 

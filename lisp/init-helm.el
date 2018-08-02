@@ -38,6 +38,7 @@
          ("C-x C-f" . helm-find-files)
          ("C-x b" . helm-mini)
          ("C-x C-b" . helm-buffers-list))
+  :hook (after-init . helm-mode)
   :config
   (require 'helm)
   (require 'helm-config)
@@ -54,7 +55,7 @@
            "pt --color --smart-case --nogroup --numbers %s %s %s")
           (t helm-grep-ag-command))))
     (setq helm-grep-ag-command command))
-  (helm-mode 1)
+  ;;(helm-mode 1)
   )
 
 (use-package helm-swoop
@@ -108,6 +109,9 @@
 
 (use-package helm-projectile
   :after (helm)
+  :config
+  (setq projectile-completion-system 'helm)
+  (helm-projectile-on)
   )
 
 (provide 'init-helm)
