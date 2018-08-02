@@ -81,10 +81,10 @@
               (diminish 'auto-fill-function)
               (diminish 'visual-line-mode))
 
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
+;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+;; (global-set-key (kbd "C-M-s") 'isearch-forward)
+;; (global-set-key (kbd "C-M-r") 'isearch-backward)
 
 ;; Highlight the current line
 (add-hook 'after-init-hook #'global-hl-line-mode)
@@ -162,6 +162,9 @@
         recentf-auto-cleanup 600
         recentf-exclude (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$"
                               "^/var/folders/.+$" "/elpa/")))
+
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer))
 
 (use-package smartparens
   :diminish smartparens-mode

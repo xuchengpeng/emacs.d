@@ -77,9 +77,9 @@ by Prelude.")
 (require 'init-editor)
 
 (require 'init-utils)
-(require 'init-helm)
+;; (require 'init-helm)
 ;; ivy & swiper & counsel
-;; (require 'init-ivy)
+(require 'init-ivy)
 (require 'init-company)
 (require 'init-yasnippet)
 (require 'init-highlight)

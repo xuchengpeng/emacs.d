@@ -81,7 +81,8 @@
     bind-key
     color-theme-sanityinc-tomorrow
     company
-    ;; counsel
+    counsel
+    counsel-projectile
     ;; dashboard
     diff-hl
     diminish
@@ -89,12 +90,14 @@
     exec-path-from-shell
     expand-region
     flycheck
-    helm
-    helm-projectile
-    helm-swoop
+    ;; helm
+    ;; helm-projectile
+    ;; helm-swoop
     ;; highlight-symbol
     hydra
-    ;; ivy
+    ivy
+    ivy-hydra
+    ivy-rich
     js2-mode
     js2-refactor
     json-mode
@@ -115,7 +118,7 @@
     ;; smart-mode-line
     smartparens
     ;; spaceline
-    ;; swiper
+    swiper
     symbol-overlay
     toml-mode
     treemacs

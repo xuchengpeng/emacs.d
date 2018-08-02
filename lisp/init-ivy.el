@@ -34,34 +34,53 @@
 (use-package ivy
   :diminish
   :hook (after-init . ivy-mode)
+  :bind (("C-x b" . ivy-switch-buffer)
+         ("C-x B" . ivy-switch-buffer-other-window)
+         ("C-c C-r" . ivy-resume))
   :config
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (global-set-key "\C-s" 'swiper)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  (global-set-key (kbd "<f6>") 'ivy-resume)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  (global-set-key (kbd "<f1> l") 'counsel-find-library)
-  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  (global-set-key (kbd "C-c g") 'counsel-git)
-  (global-set-key (kbd "C-c j") 'counsel-git-grep)
-  (global-set-key (kbd "C-c k") 'counsel-ag)
-  (global-set-key (kbd "C-x l") 'counsel-locate)
-  (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-  )
+  (setq ivy-height 15
+        ivy-wrap t
+        ivy-fixed-height-minibuffer t
+        ivy-initial-inputs-alist nil
+        ivy-use-virtual-buffers t
+        ivy-virtual-abbreviate 'full
+        ivy-magic-tilde nil
+        ivy-dynamic-exhibit-delay-ms 150
+        projectile-completion-system 'ivy)
+  (define-key ivy-minibuffer-map (kbd "<return>") 'ivy-alt-done))
+
+(use-package ivy-rich
+  :after ivy
+  :config
+  (ivy-set-display-transformer 'ivy-switch-buffer
+                               'ivy-rich-switch-buffer-transformer)
+  (setq ivy-virtual-abbreviate 'full
+        ivy-rich-switch-buffer-align-virtual-buffer t
+        ivy-rich-path-style 'abbrev))
+
+(use-package ivy-hydra
+  :after (ivy hydra))
 
 (use-package swiper
   :after ivy
-  :diminish)
+  :diminish
+  :bind ("C-s" . swiper))
 
 (use-package counsel
   :after ivy
-  :diminish)
+  :demand t
+  :diminish
+  :hook (after-init . counsel-mode)
+  :bind (("M-x"     . counsel-M-x)
+         ("M-y"     . counsel-yank-pop)
+         ("C-x r b" . counsel-bookmark)
+         ("C-x C-f" . counsel-find-file)
+         ("C-h f"   . counsel-describe-function)))
+
+(use-package counsel-projectile
+  :after (counsel projectile)
+  :config
+  (counsel-projectile-mode))
 
 (provide 'init-ivy)
 
