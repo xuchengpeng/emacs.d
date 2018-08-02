@@ -50,7 +50,7 @@
         ivy-use-selectable-prompt t
         ivy-virtual-abbreviate 'full
         ivy-magic-tilde nil
-        ivy-dynamic-exhibit-delay-ms 150
+        ;;ivy-dynamic-exhibit-delay-ms 150
         ivy-count-format "(%d/%d) "
         projectile-completion-system 'ivy)
   ;; Integration with `magit'
@@ -76,9 +76,8 @@
 
 (use-package counsel
   :after ivy
-  :demand t
   :diminish counsel-mode
-  :hook (after-init . counsel-mode)
+  :hook (ivy-mode . counsel-mode)
   :bind (("M-x"     . counsel-M-x)
          ("M-y"     . counsel-yank-pop)
          ("C-x r b" . counsel-bookmark)
@@ -99,6 +98,7 @@
 
 (use-package counsel-projectile
   :after (counsel projectile)
+  :bind-keymap ("C-c p" . counsel-projectile-command-map)
   :config
   (counsel-projectile-mode))
 
