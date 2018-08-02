@@ -1,5 +1,6 @@
 # dotemacs-themes
 
+A comprehensive configuration example:
 ```el
 (require 'dotemacs-themes)
 
@@ -9,7 +10,7 @@
 
 ;; Load the theme (dotemacs-one, dotemacs-molokai, etc); keep in mind that each theme
 ;; may have their own settings.
-(load-theme theme dotemacs-one)
+(load-theme dotemacs-one t)
 
 ;; Enable flashing mode-line on errors
 (dotemacs-themes-visual-bell-config)
