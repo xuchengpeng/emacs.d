@@ -109,6 +109,7 @@
 
 (use-package helm-projectile
   :after (helm)
+  :demand t
   :config
   (setq projectile-completion-system 'helm)
   (helm-projectile-on)

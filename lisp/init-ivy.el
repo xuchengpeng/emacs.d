@@ -41,6 +41,7 @@
          ("TAB" . ivy-next-line)
          ("RET" . ivy-alt-done))
   :config
+  (setq enable-recursive-minibuffers t) ; Allow commands in minibuffers
   (setq ivy-height 15
         ivy-wrap t
         ivy-fixed-height-minibuffer t
