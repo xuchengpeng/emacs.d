@@ -37,7 +37,6 @@
   :config
   (setq projectile-completion-system 'helm
         projectile-enable-caching t
-        projectile-indexing-method (if IS-WINDOWS 'native 'alien)
         projectile-cache-file (concat dotemacs-cache-directory "projectile.cache")
         projectile-known-projects-file (concat dotemacs-cache-directory "projectile-bookmarks.eld")
         )
