@@ -49,7 +49,7 @@
   )
 
 (use-package shell-pop
-  :bind ("C-c t" . shell-pop)
+  :commands (shell-pop)
   :config
   (custom-set-variables
    '(shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))))

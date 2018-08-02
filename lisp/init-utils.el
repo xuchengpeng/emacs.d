@@ -87,9 +87,31 @@
   :bind ("M-o" . ace-window))
 
 (use-package hydra
-  :bind (("C-x t" . hydra-toggle/body)
-         ("C-M-o" . hydra-window/body))
+  :bind (("C-c f" . hydra-flycheck/body)
+         ("C-c t" . hydra-toggle/body)
+         ("C-c w" . hydra-window/body))
   :config
+  (defhydra hydra-flycheck (:color pink)
+  "
+^
+^Flycheck^          ^Errors^            ^Checker^
+^©¤©¤©¤©¤©¤©¤©¤©¤^©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤^©¤©¤©¤©¤©¤©¤^©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤^©¤©¤©¤©¤©¤©¤©¤^©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
+_q_ quit            _<_ previous        _?_ describe
+_m_ manual          _>_ next            _d_ disable
+_v_ verify setup    _f_ check           _s_ select
+^^                  _l_ list            ^^
+^^                  ^^                  ^^
+"
+    ("q" nil)
+    ("<" flycheck-previous-error)
+    (">" flycheck-next-error)
+    ("?" flycheck-describe-checker :color blue)
+    ("d" flycheck-disable-checker :color blue)
+    ("f" flycheck-buffer)
+    ("l" flycheck-list-errors :color blue)
+    ("m" flycheck-manual :color blue)
+    ("s" flycheck-select-checker :color blue)
+    ("v" flycheck-verify-setup :color blue))
   (defhydra hydra-toggle (:color pink
                           :hint nil)
     "
@@ -108,8 +130,7 @@ _q_: Quit
     ("o" org-mode nil)
     ("t" toggle-truncate-lines nil)
     ("w" whitespace-mode nil)
-    ("q" nil)
-    )
+    ("q" nil))
   (defhydra hydra-window (:color pink
                           :hint nil)
     "
@@ -145,8 +166,7 @@ _q_: Quit
     ("<S-up>" hydra-move-splitter-up nil)
     ("<S-right>" hydra-move-splitter-right nil)
     ("u" hydra--universal-argument nil)
-    ("q" nil)
-    ))
+    ("q" nil)))
 
 (use-package winum
   :disabled
