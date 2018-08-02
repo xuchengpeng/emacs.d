@@ -487,7 +487,8 @@ See `mode-line-percent-position'.")
 ;; Bootstrap
 ;;
 
-(add-hook 'after-init-hook #'dotemacs-modeline-init)
+(dotemacs-modeline-init)
+;; (add-hook 'after-init-hook #'dotemacs-modeline-init)
 ;; (add-hook 'dotemacs-scratch-buffer-hook #'dotemacs-modeline|set-special-modeline)
 ;; (add-hook 'dotemacs-dashboard-mode-hook #'dotemacs-modeline|set-project-modeline)
 

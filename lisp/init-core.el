@@ -31,6 +31,9 @@
 
 ;;; Code:
 
+(require 'subr-x)
+(require 'cl-lib)
+
 (setq user-full-name    dotemacs-full-name
       user-mail-address dotemacs-mail-address)
 
