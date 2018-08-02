@@ -32,22 +32,25 @@
 ;;; Code:
 
 (use-package ivy
-  :diminish
+  :diminish ivy-mode
   :hook (after-init . ivy-mode)
   :bind (("C-x b" . ivy-switch-buffer)
          ("C-x B" . ivy-switch-buffer-other-window)
-         ("C-c C-r" . ivy-resume))
+         ("C-c C-r" . ivy-resume)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-next-line)
+         ("RET" . ivy-alt-done))
   :config
   (setq ivy-height 15
         ivy-wrap t
         ivy-fixed-height-minibuffer t
         ivy-initial-inputs-alist nil
         ivy-use-virtual-buffers t
+        ivy-use-selectable-prompt t
         ivy-virtual-abbreviate 'full
         ivy-magic-tilde nil
         ivy-dynamic-exhibit-delay-ms 150
-        projectile-completion-system 'ivy)
-  (define-key ivy-minibuffer-map (kbd "<return>") 'ivy-alt-done))
+        projectile-completion-system 'ivy))
 
 (use-package ivy-rich
   :after ivy
@@ -69,13 +72,22 @@
 (use-package counsel
   :after ivy
   :demand t
-  :diminish
+  :diminish counsel-mode
   :hook (after-init . counsel-mode)
   :bind (("M-x"     . counsel-M-x)
          ("M-y"     . counsel-yank-pop)
          ("C-x r b" . counsel-bookmark)
          ("C-x C-f" . counsel-find-file)
-         ("C-h f"   . counsel-describe-function)))
+         ("C-h f"   . counsel-describe-function))
+  :config
+  (let ((command
+         (cond
+          ((executable-find "rg")
+           "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+          ((executable-find "ag")
+           "ag -i --noheading --nocolor --nofilename --numbers '%s' %s")
+          (t counsel-grep-base-command))))
+    (setq counsel-grep-base-command command)))
 
 (use-package counsel-projectile
   :after (counsel projectile)
