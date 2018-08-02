@@ -83,16 +83,19 @@
          ("M-y"     . counsel-yank-pop)
          ("C-x r b" . counsel-bookmark)
          ("C-x C-f" . counsel-find-file)
-         ("C-h f"   . counsel-describe-function))
+         ("C-h f"   . counsel-describe-function)
+         ("C-h v"   . counsel-describe-variable))
   :config
   (let ((command
          (cond
           ((executable-find "rg")
-           "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+           "rg -M 120 --smart-case --no-heading --line-number --color never %s %s")
           ((executable-find "ag")
-           "ag -i --noheading --nocolor --nofilename --numbers '%s' %s")
+           "ag --smart-case --noheading --nocolor --numbers %s %s")
           (t counsel-grep-base-command))))
-    (setq counsel-grep-base-command command)))
+    (setq counsel-grep-base-command command))
+  (setq counsel-rg-base-command "rg -M 120 --smart-case --no-heading --line-number --color never %s ."
+        counsel-ag-base-command "ag --smart-case --nocolor --nogroup --numbers %s"))
 
 (use-package counsel-projectile
   :after (counsel projectile)
