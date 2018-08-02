@@ -97,6 +97,7 @@
     ;; ivy
     js2-mode
     js2-refactor
+    json-mode
     magit
     magithub
     markdown-mode

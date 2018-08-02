@@ -60,8 +60,7 @@
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  )
+         ("\\.markdown\\'" . markdown-mode)))
 
 ;; web
 (use-package web-mode
@@ -80,8 +79,7 @@
         web-mode-css-indent-offset 2
         web-mode-code-indent-offset 2
         web-mode-enable-current-element-highlight t
-        web-mode-enable-auto-expanding t)
-  )
+        web-mode-enable-auto-expanding t))
 
 ;;js
 (use-package js2-mode
@@ -94,23 +92,22 @@
                 js2-mode-show-parse-errors nil
                 js2-mode-show-strict-warnings nil)
   (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
-  (add-hook 'js2-mode-hook 'js2-refactor-mode)
-  )
+  (add-hook 'js2-mode-hook 'js2-refactor-mode))
 
 (use-package js2-refactor
   :diminish
-  :commands (js2-refactor-mode)
-  )
+  :commands (js2-refactor-mode))
+
+(use-package json-mode
+  :mode ("\\.json$" . json-mode))
 
 ;; toml
 (use-package toml-mode
-  :mode ("\\.toml$" . toml-mode)
-  )
+  :mode ("\\.toml$" . toml-mode))
 
 ;; yaml
 (use-package yaml-mode
-  :mode ("\\.yaml\\'" "\\.yml\\'")
-  )
+  :mode ("\\.yaml\\'" "\\.yml\\'"))
 
 (provide 'init-program)
 
