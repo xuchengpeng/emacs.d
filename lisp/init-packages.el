@@ -1,4 +1,4 @@
-;; init-package.el --- Initialize package configurations.
+;; init-packages.el --- Initialize packages configurations.
 ;;
 ;; Copyright (C) 2018 xuchengpeng
 ;;
@@ -26,7 +26,7 @@
 
 ;;; Commentary:
 ;;
-;; Package configurations.
+;; Packages configurations.
 ;;
 
 ;;; Code:
@@ -104,6 +104,7 @@
     ;; neotree
     nlinum
     ;; ox-hugo
+    package-utils
     ;; powerline
     projectile
     ;; pt
@@ -176,6 +177,9 @@ locate PACKAGE."
      (message "Couldn't install optional package `%s': %S" package err)
      nil)))
 
-(provide 'init-package)
+(use-package package-utils
+  :commands (package-utils-list-upgrade package-utils-upgrade-all))
 
-;;; init-package.el ends here
+(provide 'init-packages)
+
+;;; init-packages.el ends here

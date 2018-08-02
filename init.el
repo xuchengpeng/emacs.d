@@ -71,7 +71,7 @@ by Prelude.")
   (mapc 'load (directory-files dotemacs-personal-preload-dir 't "^[^#\.].*el$")))
 
 (require 'init-custom)
-(require 'init-package)
+(require 'init-packages)
 (require 'init-core)
 (require 'init-ui)
 (require 'init-editor)
