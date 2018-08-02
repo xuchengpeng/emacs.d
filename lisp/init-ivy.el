@@ -51,7 +51,11 @@
         ivy-virtual-abbreviate 'full
         ivy-magic-tilde nil
         ivy-dynamic-exhibit-delay-ms 150
-        projectile-completion-system 'ivy))
+        ivy-count-format "(%d/%d) "
+        projectile-completion-system 'ivy)
+  ;; Integration with `magit'
+  (dotemacs-after-load 'magit
+    (setq magit-completing-read-function 'ivy-completing-read)))
 
 (use-package ivy-rich
   :after ivy
