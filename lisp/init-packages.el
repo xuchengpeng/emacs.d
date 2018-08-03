@@ -148,7 +148,9 @@
     (package-refresh-contents)
     (dolist (package dotemacs-packages)
       (unless (package-installed-p package)
-        (package-install package)))))
+        (message "dotemacs installing %s" package)
+        (let ((inhibit-message t))
+          (package-install package))))))
 
 ;; run package installation
 (dotemacs-install-packages)
