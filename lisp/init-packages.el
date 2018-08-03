@@ -118,6 +118,7 @@
     shell-pop
     ;; smart-mode-line
     smartparens
+    smex
     ;; spaceline
     swiper
     symbol-overlay
