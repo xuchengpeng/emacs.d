@@ -107,6 +107,7 @@
     multiple-cursors
     ;; neotree
     nlinum
+    org-plus-contrib
     ;; ox-hugo
     package-utils
     ;; powerline
