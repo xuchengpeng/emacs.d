@@ -78,6 +78,7 @@
 (defvar dotemacs-packages
   '(ace-window
     aggressive-indent
+    amx
     bind-key
     color-theme-sanityinc-tomorrow
     company
@@ -118,7 +119,7 @@
     shell-pop
     ;; smart-mode-line
     smartparens
-    smex
+    ;; smex
     ;; spaceline
     swiper
     symbol-overlay

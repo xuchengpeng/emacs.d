@@ -110,11 +110,17 @@
   :config
   (counsel-projectile-mode))
 
-(use-package smex
+;; (use-package smex
+;;   :defer t
+;;   :config
+;;   (setq smex-history-length 15
+;;         smex-save-file (concat dotemacs-cache-directory ".smex-items")))
+
+(use-package amx
   :defer t
   :config
-  (setq smex-history-length 32
-        smex-save-file (concat dotemacs-cache-directory ".smex-items")))
+  (setq amx-history-length 10
+        amx-save-file (concat dotemacs-cache-directory "amx-items")))
 
 (provide 'init-ivy)
 
