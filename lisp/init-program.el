@@ -91,12 +91,7 @@
                 js2-bounce-indent-p nil
                 js2-mode-show-parse-errors nil
                 js2-mode-show-strict-warnings nil)
-  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
-  (add-hook 'js2-mode-hook 'js2-refactor-mode))
-
-(use-package js2-refactor
-  :diminish
-  :commands (js2-refactor-mode))
+  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode))
 
 (use-package json-mode
   :mode ("\\.json$" . json-mode))

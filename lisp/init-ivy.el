@@ -113,7 +113,7 @@
 ;; (use-package smex
 ;;   :defer t
 ;;   :config
-;;   (setq smex-history-length 15
+;;   (setq smex-history-length 10
 ;;         smex-save-file (concat dotemacs-cache-directory ".smex-items")))
 
 (use-package amx
