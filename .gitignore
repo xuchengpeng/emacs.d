@@ -1,6 +1,5 @@
 .cache/
 elpa/
-magithub/
 org/
 personal/*.el*
 personal/preload/*.el*
