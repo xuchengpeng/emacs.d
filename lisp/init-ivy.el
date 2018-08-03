@@ -72,7 +72,8 @@
 (use-package swiper
   :after ivy
   :diminish
-  :bind ("C-s" . swiper))
+  :bind (("C-s" . swiper)
+         ("C-r" . swiper)))
 
 (use-package counsel
   :after ivy
