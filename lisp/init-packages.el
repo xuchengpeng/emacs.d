@@ -107,7 +107,7 @@
     multiple-cursors
     ;; neotree
     nlinum
-    org-plus-contrib
+    ;; org-plus-contrib
     ;; ox-hugo
     package-utils
     ;; powerline
@@ -148,9 +148,7 @@
     (package-refresh-contents)
     (dolist (package dotemacs-packages)
       (unless (package-installed-p package)
-        (message "dotemacs installing %s" package)
-        (let ((inhibit-message t))
-          (package-install package))))))
+        (package-install package)))))
 
 ;; run package installation
 (dotemacs-install-packages)
