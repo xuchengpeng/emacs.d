@@ -869,7 +869,7 @@
     (treemacs-git-untracked-face :inherit 'font-lock-doc-face)
 
     ;; twittering-mode
-    (twitter-divider  ; custom face in Doom Emacs
+    (twitter-divider  ; custom face in dotemacs Emacs
      (&light :underline '(:color (dotemacs-lighten vertical-bar 0.2)))
      (&dark  :underline '(:color (dotemacs-darken vertical-bar 0.2))))
 
@@ -927,8 +927,8 @@
     (font-latex-bold-face         :inherit 'bold)
     (font-latex-italic-face       :inherit 'italic)
     (font-latex-math-face         :foreground blue)
-    (font-latex-sectioning-0-face :foreground blue    :weight 'ultra-bold :height 1.4)
-    (font-latex-sectioning-1-face :foreground magenta :weight 'semi-bold  :height 1.2)
+    (font-latex-sectioning-0-face :foreground blue    :weight 'ultra-bold)
+    (font-latex-sectioning-1-face :foreground magenta :weight 'semi-bold)
     (font-latex-sectioning-2-face :foreground violet  :weight 'semi-bold)
     (font-latex-sectioning-3-face :foreground (dotemacs-lighten blue 0.3)    :weight 'semi-bold)
     (font-latex-sectioning-4-face :foreground (dotemacs-lighten magenta 0.3) :weight 'semi-bold)
@@ -988,7 +988,7 @@
     (markdown-header-delimiter-face :inherit 'markdown-header-face)
     (markdown-metadata-key-face     :foreground red)
     (markdown-list-face             :foreground red)
-    (markdown-link-face             :inherit 'bold :foreground blue)
+    (markdown-link-face             :foreground highlight)
     (markdown-url-face              :foreground magenta :weight 'normal)
     (markdown-italic-face           :inherit 'italic :foreground violet)
     (markdown-bold-face             :inherit 'bold   :foreground orange)
@@ -996,7 +996,13 @@
     (markdown-blockquote-face       :inherit 'italic :foreground doc-comments)
     (markdown-pre-face              :foreground strings)
     (markdown-code-face :background base3)
-    (markdown-inline-code-face :inherit '(markdown-code-face markdown-pre-face))
+    (markdown-reference-face        :foreground doc-comments)
+    (markdown-inline-code-face      :inherit '(markdown-code-face markdown-pre-face))
+    (markdown-html-attr-name-face     :inherit 'font-lock-variable-name-face)
+    (markdown-html-attr-value-face    :inherit 'font-lock-string-face)
+    (markdown-html-entity-face        :inherit 'font-lock-variable-name-face)
+    (markdown-html-tag-delimiter-face :inherit 'markdown-markup-face)
+    (markdown-html-tag-name-face      :inherit 'font-lock-keyword-face)
 
     ;; notmuch
     ;; (notmuch-crypto-decryption               :foreground blue-l)
@@ -1035,14 +1041,14 @@
     (notmuch-wash-toggle-button :foreground fg)
 
     ;; outline
-    (outline-1 :inherit 'org-level-1)
-    (outline-2 :inherit 'org-level-2)
-    (outline-3 :inherit 'org-level-3)
-    (outline-4 :inherit 'org-level-4)
-    (outline-5 :inherit 'org-level-5)
-    (outline-6 :inherit 'org-level-6)
-    (outline-7 :inherit 'org-level-7)
-    (outline-8 :inherit 'org-level-8)
+    (outline-1 :foreground blue     :background base3  :weight 'ultra-bold :height 1.25)
+    (outline-2 :foreground magenta                     :weight 'semi-bold)
+    (outline-3 :foreground violet                      :weight 'semi-bold)
+    (outline-4 :foreground (dotemacs-lighten blue 0.25)    :weight 'semi-bold)
+    (outline-5 :foreground (dotemacs-lighten magenta 0.25) :weight 'semi-bold)
+    (outline-6 :foreground (dotemacs-lighten blue 0.5)     :weight 'semi-bold)
+    (outline-7 :foreground (dotemacs-lighten magenta 0.5)  :weight 'semi-bold)
+    (outline-8 :foreground (dotemacs-lighten blue 0.8)     :weight 'semi-bold)
 
     ;; org-mode
     (org-archived                 :foreground doc-comments)
@@ -1065,14 +1071,15 @@
     (org-headline-done            :foreground base5)
     (org-hide                     :foreground bg)
 
-    (org-level-1 :foreground blue     :background base3 :weight 'ultra-bold :height 1.25)
-    (org-level-2 :foreground magenta  :weight 'semi-bold)
-    (org-level-3 :foreground violet   :weight 'semi-bold)
-    (org-level-4 :foreground (dotemacs-lighten blue 0.25)    :weight 'semi-bold)
-    (org-level-5 :foreground (dotemacs-lighten magenta 0.25) :weight 'semi-bold)
-    (org-level-6 :foreground (dotemacs-lighten blue 0.5)  :weight 'semi-bold)
-    (org-level-7 :foreground (dotemacs-lighten magenta 0.5)    :weight 'semi-bold)
-    (org-level-8 :foreground (dotemacs-lighten blue 0.8) :weight 'semi-bold)
+    ;; extends from outline-N
+    ;; (org-level-1)
+    ;; (org-level-2)
+    ;; (org-level-3)
+    ;; (org-level-4)
+    ;; (org-level-5)
+    ;; (org-level-6)
+    ;; (org-level-7)
+    ;; (org-level-8)
 
     (org-list-dt         :foreground highlight)
     (org-meta-line       :foreground doc-comments)

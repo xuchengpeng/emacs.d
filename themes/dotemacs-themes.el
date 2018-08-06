@@ -88,11 +88,12 @@
 ;; Color helper functions
 ;; Shamelessly *borrowed* from solarized
 ;;;###autoload
-(defun dotemacs-name-to-rgb (color &optional frame)
+(defun dotemacs-name-to-rgb (color)
   "Retrieves the hexidecimal string repesented the named COLOR (e.g. \"red\")
 for FRAME (defaults to the current frame)."
-  (cl-loop for x in (color-values color frame)
-           collect (/ x (float (car (color-values "#ffffff"))))))
+  (cl-loop with div = (float (car (tty-color-standard-values "#ffffff")))
+           for x in (tty-color-standard-values (downcase color))
+           collect (/ x div)))
 
 ;;;###autoload
 (defun dotemacs-blend (color1 color2 alpha)
@@ -181,7 +182,7 @@ between 0 and 1)."
     ,@(mapcar #'dotemacs-themes--build-face faces)))
 
 (defmacro def-dotemacs-theme (name docstring defs &optional extra-faces extra-vars)
-  "Define a DOOM theme, named NAME (a symbol)."
+  "Define a dotemacs theme, named NAME (a symbol)."
   (declare (doc-string 2))
   (let ((dotemacs-themes--colors defs))
     `(let* ((bold   dotemacs-themes-enable-bold)
