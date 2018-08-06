@@ -96,12 +96,12 @@
   (let ((command
          (cond
           ((executable-find "rg")
-           "rg -M 120 --smart-case --no-heading --line-number --color never %s %s")
+           "rg --smart-case --no-heading --line-number --color never %s %s")
           ((executable-find "ag")
            "ag --smart-case --noheading --nocolor --numbers %s %s")
           (t counsel-grep-base-command))))
     (setq counsel-grep-base-command command))
-  (setq counsel-rg-base-command "rg -M 120 --smart-case --no-heading --line-number --color never %s ."
+  (setq counsel-rg-base-command "rg --smart-case --no-heading --line-number --color never %s ."
         counsel-ag-base-command "ag --smart-case --nocolor --nogroup --numbers %s"))
 
 (use-package counsel-projectile
