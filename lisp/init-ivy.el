@@ -38,7 +38,7 @@
          ("C-x B" . ivy-switch-buffer-other-window)
          ("C-c C-r" . ivy-resume)
          :map ivy-minibuffer-map
-         ("TAB" . ivy-next-line)
+         ("TAB" . ivy-partial-or-done)
          ("RET" . ivy-alt-done))
   :config
   (setq enable-recursive-minibuffers t) ; Allow commands in minibuffers
