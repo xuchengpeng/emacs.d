@@ -98,6 +98,7 @@
     hydra
     ivy
     ivy-hydra
+    ivy-prescient
     ivy-rich
     js2-mode
     json-mode
@@ -111,6 +112,7 @@
     ;; ox-hugo
     package-utils
     ;; powerline
+    prescient
     projectile
     ;; pt
     rainbow-delimiters

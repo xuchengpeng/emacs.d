@@ -69,6 +69,26 @@
 (use-package ivy-hydra
   :after (ivy hydra))
 
+;; Package `prescient' is a library for intelligent sorting and
+;; filtering in various contexts.
+(use-package prescient
+  :defer t
+  :config
+  (setq prescient-filter-method 'regexp
+        prescient-save-file (concat dotemacs-cache-directory "prescient-save.el"))
+  ;; Remember usage statistics across Emacs sessions.
+  (prescient-persist-mode +1))
+
+;; Package `ivy-prescient' provides intelligent sorting and filtering
+;; for candidates in Ivy menus.
+(use-package ivy-prescient
+  :demand t
+  :after ivy
+  :config
+  (setq ivy-prescient-retain-classic-highlighting t)
+  ;; Use `prescient' for Ivy menus.
+  (ivy-prescient-mode +1))
+
 (use-package swiper
   :after ivy
   :diminish
