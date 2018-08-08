@@ -79,6 +79,7 @@
   '(ace-window
     aggressive-indent
     amx
+    avy
     bind-key
     color-theme-sanityinc-tomorrow
     company
