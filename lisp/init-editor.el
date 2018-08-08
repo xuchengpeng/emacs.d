@@ -131,7 +131,7 @@
          ("C->"         . mc/mark-next-like-this)
          ("C-<"         . mc/mark-previous-like-this)
          ("C-c C-<"     . mc/mark-all-like-this))
-  :config
+  :init
   (setq mc/list-file (concat dotemacs-cache-directory ".mc-lists.el")))
 
 ;; Treat undo history as a tree
