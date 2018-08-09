@@ -90,7 +90,7 @@
   :bind (("C-c f" . hydra-flycheck/body)
          ("C-c t" . hydra-toggle/body)
          ("C-c w" . hydra-window/body))
-  :config
+  :init
   (defhydra hydra-flycheck (:color pink)
   "
 ^
