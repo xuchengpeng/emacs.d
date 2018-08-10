@@ -45,6 +45,9 @@
   (magithub-feature-autoinject t)
   (setq magithub-clone-default-directory "~/"))
 
+(use-package magit-todos
+  :hook (magit-mode . magit-todos-mode))
+
 (provide 'init-magit)
 
 ;;; init-magit.el ends here

@@ -105,6 +105,7 @@
     json-mode
     magit
     magithub
+    magit-todos
     markdown-mode
     multiple-cursors
     ;; neotree
