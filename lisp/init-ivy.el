@@ -52,6 +52,7 @@
         ivy-magic-tilde nil
         ;;ivy-dynamic-exhibit-delay-ms 150
         ivy-count-format "(%d/%d) "
+        ivy-format-function #'ivy-format-function-line
         projectile-completion-system 'ivy)
   ;; Integration with `magit'
   (dotemacs-after-load 'magit
@@ -122,11 +123,13 @@
           (t counsel-grep-base-command))))
     (setq counsel-grep-base-command command))
   (setq counsel-rg-base-command "rg --smart-case --no-heading --line-number --color never %s ."
-        counsel-ag-base-command "ag --smart-case --nocolor --nogroup --numbers %s"))
+        counsel-ag-base-command "ag --smart-case --nocolor --nogroup --numbers %s")
+  (when (executable-find "rg")
+    (setq counsel-git-cmd "rg --files")))
 
 (use-package counsel-projectile
+  :disabled
   :after (counsel projectile)
-  :bind-keymap ("C-c p" . counsel-projectile-command-map)
   :config
   (counsel-projectile-mode))
 
